@@ -1,1 +1,2 @@
 "Hello World" 
+Can we only check out the whole trunk or can we check out individual files?
