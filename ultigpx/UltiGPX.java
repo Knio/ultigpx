@@ -16,7 +16,6 @@ public class UltiGPX
     {
         System.out.println("Hello, World!");
         view = new MainView(this);
-        view.run();
     }
     
 }
