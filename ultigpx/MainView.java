@@ -1,4 +1,4 @@
-// stub to test MapView. Please implement me
+// driver to test MapView classes
 
 package ultigpx;
 
@@ -19,10 +19,10 @@ public class MainView extends JFrame
         
         setLayout(new GridLayout(1, 1));
         
-        map = new BasicMapView(main);
+        map = new MapView(main);
         add(map);
         
-        setSize(300, 200);
+        setSize(600, 600);
         setVisible(true);
     }
     

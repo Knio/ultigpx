@@ -2,7 +2,6 @@
 package ultigpx;
 
 import java.util.*;
-//import ultigpx.*;
 
 
 public class UGPXFile
