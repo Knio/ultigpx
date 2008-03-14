@@ -22,5 +22,7 @@ public class Track extends ArrayList<TrackSegment>
         this.name = name;
     }
     
-    String getName() { return name; }
+    String getName() {
+    	return name;
+    }
 }

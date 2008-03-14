@@ -46,4 +46,16 @@ public class UGPXFile
     {
         return waypoint.get(n);
     }
+    
+    public void addTrack(Track t) {
+    	track.add(t);
+    }
+    
+    public void addRoute(Route r) {
+    	route.add(r);
+    }
+    
+    public void addWaypoint(Waypoint w) {
+    	waypoint.add(w);
+    }
 }

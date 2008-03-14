@@ -7,6 +7,9 @@ public class Waypoint
 {
     private String name;
     private String desc;
+    private String colour;
+    
+    public boolean enabled;
     
     public double lat;
     public double lon;
@@ -26,8 +29,39 @@ public class Waypoint
         lon     = _lon;
         ele     = _ele;
         time    = _time;
+        enabled = true;
+        colour = null;
     }
     
-    public String getName() { return name; }
-    public String getDesc() { return desc; }
+    public String getName() {
+    	return name; 
+    }
+    
+    public String getDesc() {
+    	return desc;
+    }
+    
+    public double getLat {
+    	return lat;
+    }
+    
+    public double getLon {
+    	return lon;
+    }
+    
+    public double getEle {
+    	return ele;
+    }
+    
+    public double getTime {
+    	return time;
+    }
+    
+    public boolean getEnabled {
+    	return enabled;
+    }
+    
+    public String getColour {
+    	return colour;
+    }
 }
