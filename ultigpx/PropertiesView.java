@@ -59,6 +59,7 @@ public class PropertiesView extends JPanel {
     protected void paintinfo(Graphics2D g2d) {
     	painttest(g2d);
     	return;
+    	/*
     	switch (selected)
         {
             case (0):
@@ -69,15 +70,21 @@ public class PropertiesView extends JPanel {
             	painttrk(g2d);
             case (3):
             	paintrt(g2d);
-        }
+        }*/
     }
     
     protected void painttest(Graphics2D g2d) {
-    	Graphics2D.drawString("Test", 20, 20);
+    	g2d.drawString("Test", 20, 20);
     }
     
-    protected void paintwp(Graphics2D g2d);
-    protected void painttrk(Graphics2D g2d);
-    protected void paintrt(Graphics2D g2d);
+    protected void paintwp(Graphics2D g2d){
+    	
+    }
+    protected void painttrk(Graphics2D g2d){
+    	
+    }
+    protected void paintrt(Graphics2D g2d){
+    	
+    }
     
 }

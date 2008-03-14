@@ -41,27 +41,27 @@ public class Waypoint
     	return desc;
     }
     
-    public double getLat {
+    public double getLat() {
     	return lat;
     }
     
-    public double getLon {
+    public double getLon() {
     	return lon;
     }
     
-    public double getEle {
+    public double getEle() {
     	return ele;
     }
     
-    public double getTime {
+    public double getTime() {
     	return time;
     }
     
-    public boolean getEnabled {
+    public boolean getEnabled() {
     	return enabled;
     }
     
-    public String getColour {
+    public String getColour() {
     	return colour;
     }
 }
