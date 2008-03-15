@@ -17,15 +17,28 @@ public class MainView extends JFrame
         main = _main;
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // makes a gridbag
+        GridBagLayout gridbag = new GridBagLayout();
+        // initializes the constraints
+        GridBagConstraints c = new GridBagConstraints();
+        // i don't quite know what this does
+        c.fill = GridBagConstraints.BOTH;
+        // sets vertical weight
+        c.weighty = 1.0;
+        setLayout(gridbag);
         
-        setLayout(new GridLayout(1, 1));
-        
+        // sets horiz weight of PropertiesView
+        c.weightx = 1.0;
         // creates a properties view and adds it as a pane
         prop = new PropertiesView();
-        add(prop);
+        add(prop, c);
+        
+        // sets horiz weight of the map
+        c.weightx = 3.0;
         // creates a map view and adds it as a pane
         map = new MapView(main);
-        add(map);
+        add(map, c);
 
         
         setSize(600, 600);
