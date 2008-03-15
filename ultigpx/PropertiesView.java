@@ -1,7 +1,7 @@
 
 package ultigpx;
 
-// yeah some of these aren't used
+// needed imports
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
