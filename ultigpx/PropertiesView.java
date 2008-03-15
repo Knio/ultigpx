@@ -1,64 +1,79 @@
 
 package ultigpx;
 
+// yeah some of these aren't used
 import java.awt.*;
-import java.awt.geom.*; 
-import java.awt.event.*; 
-
+import java.awt.geom.*;
 import javax.swing.*;
-import java.util.*;
 
 public class PropertiesView extends JPanel {
+	static final long serialVersionUID = 0;
+	// selected waypoint
 	Waypoint selwp;
+	// selected track
 	Track seltrk;
+	// selected route
 	Route selrt;
+	// integer that tells which type of data is selected
+	// 0 = none, 1 = wp, 2 = trk, 3 = rt, else = crashed program
 	int selected;
 	
+	// displays a waypoint
 	public void select(Waypoint wp) {
 		selwp = wp;
 		selected = 1;
 		repaint();
 	}
+	// displays a track
 	public void select(Track trk) {
 		seltrk = trk;
 		selected = 2;
 		repaint();
 	}
+	// displays a route 
 	public void select(Route rt) {
 		selrt = rt;
 		selected = 3;
 		repaint();
 	}
+	// displays nothing
 	public void select() {
 		selected = 0;
 		repaint();
 	}
 	
+	// constructor that will initially display nothing
 	public PropertiesView() {
 		super();
 		selected = 0;
 		repaint();
 	}
 	
+	// draws the panel/frame/pane on the screen
     public void paintComponent(Graphics g) {
+    	// paints the background
         super.paintComponent(g);
         
+        // converts the graphic into a 2D graphic
         Graphics2D g2d = (Graphics2D)g;
         
+        // writes the info on the screen
         paintinfo(g2d);
         
-        g2d.setPaint(Color.BLACK);
-        
+        // draws the outer frame
         g2d.draw(new Rectangle2D.Double(5, 5, getWidth()-10, getHeight()-10));
+        // draws the inner frame
+        g2d.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
+
         
-        Rectangle r = getBounds();
-        r.grow(-10,-10);
-        g2d.draw(r);
     }
     
     protected void paintinfo(Graphics2D g2d) {
+    	// prints a test string to the frame
     	painttest(g2d);
     	return;
+    	// the code below will later print different info
+    	// based on what type of data is selected
     	/*
     	switch (selected)
         {
@@ -73,16 +88,20 @@ public class PropertiesView extends JPanel {
         }*/
     }
     
+    // writes a test string on the frame
     protected void painttest(Graphics2D g2d) {
-    	g2d.drawString("Test", 20, 20);
+    	g2d.drawString("Test", 20, 30);
     }
     
+    // writes a waypoint on the frame
     protected void paintwp(Graphics2D g2d){
     	
     }
+    // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
     	
     }
+    // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
     	
     }

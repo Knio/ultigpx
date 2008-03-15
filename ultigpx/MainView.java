@@ -9,6 +9,7 @@ public class MainView extends JFrame
 {
     UltiGPX main;
     MapView map;
+    PropertiesView prop;
     
     public MainView(UltiGPX _main)
     {
@@ -19,8 +20,13 @@ public class MainView extends JFrame
         
         setLayout(new GridLayout(1, 1));
         
+        // creates a properties view and adds it as a pane
+        prop = new PropertiesView();
+        add(prop);
+        // creates a map view and adds it as a pane
         map = new MapView(main);
         add(map);
+
         
         setSize(600, 600);
         setVisible(true);

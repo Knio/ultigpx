@@ -166,11 +166,9 @@ public class MapView extends JPanel
         
         g2d.setPaint(Color.BLACK);
         
+        // *fixed by Steven* rectangle does not draw when in a secondary pane
+        g2d.draw(new Rectangle2D.Double(5, 5, getWidth()-10, getHeight()-10));
         g2d.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
-        
-        Rectangle r = getBounds();
-        r.grow(-20,-20);
-        g2d.draw(r);
         
         render(g2d);
         
