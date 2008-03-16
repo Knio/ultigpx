@@ -75,7 +75,7 @@ public class PropertiesView extends JPanel {
     	
     	// the code below prints different info
     	// based on what type of data is selected
-    	/*switch (selected)
+    	switch (selected)
         {
             case (0):
                 return;
@@ -85,11 +85,14 @@ public class PropertiesView extends JPanel {
             	painttrk(g2d);
             case (3):
             	paintrt(g2d);
-        }*/
+        }
     }
     
     // writes a test string on the frame
     protected void painttest(Graphics2D g2d) {
+    	// prints a waypoint and then on repaint prints
+    	// a track and then on repaint prints a route
+    	// and then repeats cycle.
     	if (selected == 0)
     	{
     	selwp = new Waypoint("Name", "This is a super long description used to test how well my line splitter works. I really have nothing to say in the description so I'm just typing a lot of words because it will help me test.", 10.0, 5.21483726152, 72.7162535412365213, 11.2);
@@ -112,15 +115,21 @@ public class PropertiesView extends JPanel {
     
     // writes a waypoint on the frame
     protected void paintwp(Graphics2D g2d){
+    	// width of usable space without border
     	int workingwidth = this.getWidth() - 50;
+    	// where draw method is in regards to height
     	int workingheight = 30;
+    	// prints enabled or disabled
     	if (selwp.enabled == true)
     		g2d.drawString("Waypoint: enabled", 20, workingheight);
     	else
     		g2d.drawString("Waypoint: disabled", 20, workingheight);
+    	// increment for next print (all lines like this are the same)
     	workingheight += 11;
+    	// prints name
     	g2d.drawString("Name: " + selwp.getName(), 20, workingheight);
     	workingheight += 11;
+    	// prints description so that it fits window
     	g2d.drawString("Description:", 20, workingheight);
     	workingheight += 11;
     	for (int i = 0; i < selwp.getDesc().length(); i += (workingwidth / 5))
@@ -133,37 +142,49 @@ public class PropertiesView extends JPanel {
     		g2d.drawString("  " + selwp.getDesc().substring(i, endofstring), 20, workingheight);
     		workingheight += 11;
     	}
+    	// prints latitude
     	g2d.drawString("Latitude: " + selwp.getLat(), 20, workingheight);
     	workingheight += 11;
+    	// prints longitude
     	g2d.drawString("Longitude: " + selwp.getLon(), 20, workingheight);
     	workingheight += 11;
+    	// prints elevation
     	g2d.drawString("Elevation: " + selwp.getEle(), 20, workingheight);
     	workingheight += 11;
+    	// prints colour
     	g2d.drawString("Colour: " + selwp.getColour(), 20, workingheight);
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
+    	// where draw method should draw with regards to height
     	int workingheight = 30;
+    	// prints enabled or disabled
     	if (seltrk.enabled == true)
     		g2d.drawString("Track: enabled", 20, workingheight);
     	else
     		g2d.drawString("Track: disabled", 20, workingheight);
     	workingheight += 11;
+    	// prints name
     	g2d.drawString("Name: " + seltrk.getName(), 20, workingheight);
     	workingheight += 11;
+    	// prints number of track segments
     	g2d.drawString("Number of Segments: " + seltrk.size(), 20, workingheight);
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
+    	// where draw method should draw with regards to height
     	int workingheight = 30;
+    	// prints enabled or disabled
     	if (selrt.enabled == true)
     		g2d.drawString("Route: enabled", 20, workingheight);
     	else
     		g2d.drawString("Route: disabled", 20, workingheight);
     	workingheight += 11;
+    	// prints name
     	g2d.drawString("Name: " + "", 20, workingheight);
     	workingheight += 11;
-    	g2d.drawString("Number of Segments: " + selrt.size(), 20, workingheight);
+    	// prints number of waypoints
+    	g2d.drawString("Number of Waypoints: " + selrt.size(), 20, workingheight);
     }
     
 }
