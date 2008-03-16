@@ -13,7 +13,10 @@ public class MapView extends JPanel
     UltiGPX         main;
     UGPXFile        file;
     EventHandler    evt;
-    Waypoint        selected;
+    Object          selected;
+    Graphics2D      g;
+    
+    ArrayList<Rectangle2D> labelhints;
     
     java.util.List<Waypoint> entities;
     
@@ -21,9 +24,15 @@ public class MapView extends JPanel
     double lat;
     double scale;
     
-    static final int        WAYPOINT_SIZE   = 20;
-    static final double     MAX_SCALE       = 1000.0;
-    static final double     MIN_SCALE       = 1.0;
+    static final int        WAYPOINT_SIZE   = 5;
+    static final int        FONT_SIZE       = 9;
+    
+    static final double     MAX_SCALE       = 10000.0;
+    static final double     MIN_SCALE       = 2.0;
+    
+    static final double     ZOOM_IN         = 1.1;
+    static final double     ZOOM_OUT        = 0.9;
+    
     
     public MapView(UltiGPX main)
     {
@@ -37,6 +46,8 @@ public class MapView extends JPanel
         addKeyListener          (evt);
         
         entities = new ArrayList<Waypoint>();
+        labelhints = new ArrayList<Rectangle2D>();
+        
         load();
     }
     
@@ -48,6 +59,9 @@ public class MapView extends JPanel
         file = main.file;
         
         entities.clear();
+        
+        if (file == null)
+            return;
         
         for (Waypoint i:file.waypoints())
             entities.add(i);
@@ -88,8 +102,10 @@ public class MapView extends JPanel
             min_lat = Math.min(min_lat, i.lat);
         }
         
-        lon = (max_lon + min_lon) / 2;
-        lat = (max_lat + min_lat) / 2;
+        double lon = (max_lon + min_lon) / 2;
+        double lat = (max_lat + min_lat) / 2;
+        
+        scroll(lon, lat);
         
         scale(0.9 * getWidth() / (max_lon - min_lon));
         
@@ -97,6 +113,12 @@ public class MapView extends JPanel
     
     protected void scroll(double lon, double lat)
     {
+        lon = Math.max(-180, lon);
+        lon = Math.min( 180, lon);
+        
+        lat = Math.max(-80, lat);
+        lat = Math.min( 80, lat);
+        
         this.lon = lon;
         this.lat = lat;
         
@@ -108,11 +130,20 @@ public class MapView extends JPanel
         scroll(lon+this.lon, lat+this.lat);
     }
     
-    protected void scrollByScreen(int x, int y)
+    protected void scrollByScreen(double x, double y)
     {
-        double lon =-x / scale;
-        double lat = y / scale * Math.cos(Math.PI*this.lat/180);
-        scrollBy(lon, lat);
+        x = getWidth()  / 2.0 - x;
+        y = getHeight() / 2.0 - y;
+        
+        Point2D p = new Point2D.Double(x, y);
+        p = inverseproject(p);
+        scroll(p.getX(), p.getY());
+        
+        
+        //double lon =-x / scale;
+        //double lat = y / scale * Math.cos(Math.PI*this.lat/180);
+        //scrollBy(lon, lat);
+        
     }
     
     protected void scale(double s)
@@ -122,7 +153,6 @@ public class MapView extends JPanel
         scale = s;
         repaint();
         
-        //System.out.println(scale);
     }
     
     protected void scaleBy(double s)
@@ -132,19 +162,32 @@ public class MapView extends JPanel
     
     protected void select(Waypoint wp)
     {
-        System.out.println("Select");
         selected = wp;
         repaint();
     }
     
+    protected void select(Track tk)
+    {
+        selected = tk;
+        repaint();
+    }
+    
+    protected void select(Route rt)
+    {
+        selected = rt;
+        repaint();
+    }
+    
+    // returns a screen coordinate from a world coordinate,
+    // by applying the Mercator map projection, scale, and scroll
     protected Point2D project(Waypoint wp)
     {
-        
+        // http://en.wikipedia.org/wiki/Mercator_projection
         double x = wp.lon - lon;
         double y = Math.log(Math.tan(Math.PI*(0.25 + wp.lat/360))) -
                    Math.log(Math.tan(Math.PI*(0.25 +    lat/360)));
         
-        y *= 180/Math.PI;
+        y  = Math.toDegrees(y);
         
         x *= scale;
         y *= scale; 
@@ -155,41 +198,148 @@ public class MapView extends JPanel
         return new Point2D.Double(x, -y);
     }
     
-    
-    public void paintComponent(Graphics g)
+    // returns a world coordinate from a screen coordinate
+    protected Point2D inverseproject(Point2D p)
     {
-        super.paintComponent(g);
+        double lon = p.getX();
+        double lat =-p.getY();
         
+        lon -= getWidth() /2.0;
+        lat += getHeight()/2.0;
+        
+        lon /= scale;
+        lat /= scale;
+        
+        lon = lon + this.lon;
+        
+        lat = Math.toRadians(lat);
+        lat+= Math.log(Math.tan(Math.PI*(0.25 + this.lat/360)));
+        lat = Math.atan(Math.sinh(lat));
+        
+        lat = Math.toDegrees(lat);
+        
+        return new Point2D.Double(lon, lat);
+    }
+    
+    
+    public void paintComponent(Graphics gfx)
+    {
+        super.paintComponent(gfx);
         load();
         
-        Graphics2D g2d = (Graphics2D)g;
         
-        g2d.setPaint(Color.BLACK);
+        g = (Graphics2D)gfx;
         
-        // *fixed by Steven* rectangle does not draw when in a secondary pane
-        g2d.draw(new Rectangle2D.Double(5, 5, getWidth()-10, getHeight()-10));
-        g2d.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
+        g.setPaint(Color.BLACK);
         
-        render(g2d);
+        g.draw(new Rectangle2D.Double(5, 5,   getWidth()-10, getHeight()-10));
+        g.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
+        
+        if (file == null)
+            return;
+        
+        render();
         
     }
     
-    protected void render(Graphics2D g)
+    protected void render()
     {
-        
-        g.setPaint(Color.BLUE);
-        
-        for (Waypoint i : entities)
-            render(g, i);
+        labelhints.clear();
         
         
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                           RenderingHints.VALUE_ANTIALIAS_ON);
         
+        
+        
+        g.setFont(new Font("Arial", 0, FONT_SIZE));
+        
+        
+        // render selected so it has label priority
         if (selected != null)
-            render(g, selected);
+        {
+            g.setPaint(Color.RED);
+            g.setStroke(new BasicStroke(3.0f));
+            render(selected);
+        }
         
+        
+        // render tracks and routes
+        g.setColor(Color.BLUE);
+        g.setStroke(new BasicStroke(2.0f));
+        
+        for (Track i : file.tracks())
+            if (i.enabled)
+                render(i);
+        
+        for (Route i : file.routes())
+            if (i.enabled)
+                render(i);
+        
+        
+        
+        // render all waypoints
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(1.0f));
+        
+        
+        for (Track tk : file.tracks())
+            if (tk.enabled)
+                for (TrackSegment ts : tk)
+                    for (Waypoint i : ts)
+                        render(i);
+        
+        for (Route rt : file.routes())
+            if (rt.enabled)
+                for (Waypoint i : rt)
+                    render(i);
+        
+        for (Waypoint i : file.waypoints())
+            if (i.enabled)
+                render(i);
+        
+        
+        // rerender selected so that it is on top
+        if (selected != null)
+        {
+            g.setPaint(Color.RED);
+            g.setStroke(new BasicStroke(3.0f));
+            render(selected);
+        }
     }
     
-    protected void render(Graphics2D g, Waypoint i)
+    
+    protected void render(Object o)
+    {
+        if (o instanceof Route)     render((Route)o);
+        if (o instanceof Track)     render((Track)o);
+        if (o instanceof Waypoint)  render((Waypoint)o);
+    }
+    
+    protected void render(Track tk)
+    {
+        for (TrackSegment i : tk)
+            render(i);
+    }
+    
+    protected void render(ArrayList<Waypoint> ts)
+    {
+        GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD, ts.size()+1);
+        Point2D t = project(ts.get(0));
+        
+        p.moveTo(t.getX(), t.getY());
+        
+        for (Waypoint i : ts)
+        {
+            t = project(i);
+            p.lineTo(t.getX(), t.getY());
+        }
+        
+        g.draw(p);
+    }
+    
+    
+    protected void render(Waypoint i)
     {
         Point2D  p = project(i);
         
@@ -197,16 +347,26 @@ public class MapView extends JPanel
                                            p.getY() - WAYPOINT_SIZE/2,
                                            WAYPOINT_SIZE,
                                            WAYPOINT_SIZE);
-        
-        g.setPaint(Color.BLACK);
-        
-        if (i == selected)
-            g.setPaint(Color.RED);
-        
+        renderLabel(i.getName(), p);
         g.fill(e);
     }
     
-    
+    protected void renderLabel(String name, Point2D p)
+    {
+        double x = p.getX() + WAYPOINT_SIZE;
+        double y = p.getY() + WAYPOINT_SIZE;
+        
+        Rectangle2D r = new Rectangle2D.Double(x, y, name.length()*FONT_SIZE*4/3, FONT_SIZE);
+        for (Rectangle2D t : labelhints)
+        {
+            if (r.intersects(t))
+            {
+                return;
+            }
+        }
+        labelhints.add(r);
+        g.drawString(name, (float)x, (float)y);
+    }
     
     
     
@@ -221,52 +381,108 @@ public class MapView extends JPanel
         
         public void mouseClicked(MouseEvent e) 
         {
-            System.out.println(e);
+            //System.out.println(e);
             
             Point2D click = new Point2D.Double(e.getX(), e.getY());
-            Waypoint min  = null;
+            
+            Route       min_r  = null;
+            Track       min_t  = null;
+            Waypoint    min_w  = null;
+            
             double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+            boolean first = true;
+            
+            Line2D line = new Line2D.Double(0,0,0,0);
+            tk: for (Track tk : file.tracks())
+            {
+                if (!tk.enabled) continue;
+                for (TrackSegment ts : tk)
+                    for (Waypoint i : ts)
+                    {
+                        line.setLine(line.getP2(), project(i));
+                        if (first)
+                        {
+                            first = false;
+                            continue;
+                        }
+                        double t = line.ptLineDistSq(click);
+                        if (t < min_d)
+                        {
+                            min_d = t;
+                            min_t = tk;
+                            
+                            break tk;
+                        }
+                    }
+            }
+            
+            min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+            rt: for (Route rt : file.routes())
+            {
+                if (!rt.enabled) continue;
+                for (Waypoint i : rt)
+                {
+                    line.setLine(line.getP2(), project(i));
+                    if (first)
+                    {
+                        first = false;
+                        continue;
+                    }
+                    double t = line.ptLineDistSq(click);
+                    if (t < min_d)
+                    {
+                        min_d = t;
+                        min_r = rt;
+                        
+                        break rt;
+                    }
+                }
+            }
+            
+            min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
             
             for (Waypoint i : entities)
             {
+                if (!i.enabled) continue;
                 double t = click.distanceSq(project(i));
                 if (t < min_d)
                 {
                     min_d = t;
-                    min   = i;
+                    min_w = i;
                 }
             }
             
-            if (min == null) return;
+            if (min_t != null) select(min_t);
+            if (min_r != null) select(min_r);
+            if (min_w != null) select(min_w);
             
-            select(min);
         }
         
         public void mouseEntered(MouseEvent e) 
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
         
         public void mouseExited(MouseEvent e) 
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
         
         public void mousePressed(MouseEvent e) 
         {
-            System.out.println(e);
+            //System.out.println(e);
             sx = e.getX();
             sy = e.getY();
         }
         
         public void mouseReleased(MouseEvent e)
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
         
         public void mouseDragged(MouseEvent e)
         {
-            System.out.println(e);
+            //System.out.println(e);
             
             scrollByScreen(e.getX() - sx, (e.getY() - sy));
             
@@ -276,20 +492,26 @@ public class MapView extends JPanel
         
         public void mouseMoved(MouseEvent e)
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
         
         public void mouseWheelMoved(MouseWheelEvent e)
         {
             //System.out.println(e);
+            
+            int x = getWidth() /2 - e.getX();
+            int y = getHeight()/2 - e.getY();
+            
+            scrollByScreen( x, y);
             scaleBy(1.0 + (e.getWheelRotation() * 0.1));
+            scrollByScreen(-x,-y);
         }
         
         
         // these don't work
         public void keyPressed(KeyEvent e) 
         {
-            System.out.println(e);
+            //System.out.println(e);
             switch (e.getKeyCode())
             {
                 case (KeyEvent.VK_ESCAPE):
@@ -299,12 +521,12 @@ public class MapView extends JPanel
         
         public void keyReleased(KeyEvent e) 
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
         
         public void keyTyped(KeyEvent e)
         {
-            System.out.println(e);
+            //System.out.println(e);
         }
         
     }

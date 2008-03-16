@@ -6,13 +6,16 @@ import java.util.*;
 public class Track extends ArrayList<TrackSegment>
 {
     String name;
+    public boolean enabled;
     
     public Track()
     {
         super();
+        enabled = true;
     }
     public Track(String name)
     {
+        super();
         this.name = name;
     }
     
@@ -23,6 +26,6 @@ public class Track extends ArrayList<TrackSegment>
     }
     
     String getName() {
-    	return name;
+        return name;
     }
 }

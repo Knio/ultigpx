@@ -34,34 +34,34 @@ public class Waypoint
     }
     
     public String getName() {
-    	return name; 
+        return name; 
     }
     
     public String getDesc() {
-    	return desc;
+        return desc;
     }
     
     public double getLat() {
-    	return lat;
+        return lat;
     }
     
     public double getLon() {
-    	return lon;
+        return lon;
     }
     
     public double getEle() {
-    	return ele;
+        return ele;
     }
     
     public double getTime() {
-    	return time;
+        return time;
     }
     
     public boolean getEnabled() {
-    	return enabled;
+        return enabled;
     }
     
     public String getColour() {
-    	return colour;
+        return colour;
     }
 }
