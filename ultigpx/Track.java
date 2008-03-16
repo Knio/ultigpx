@@ -17,12 +17,14 @@ public class Track extends ArrayList<TrackSegment>
     {
         super();
         this.name = name;
+        enabled = true;
     }
     
     public Track(String name, Collection<TrackSegment> c)
     {
         super(c);
         this.name = name;
+        enabled = true;
     }
     
     String getName() {

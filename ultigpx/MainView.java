@@ -15,6 +15,9 @@ public class MainView extends JFrame
     {
         super("UltiGPX");
         main = _main;
+        // so that the program doesn't get too small
+        // PropertiesView needs at least 55 pixels width
+        this.setMinimumSize(new Dimension(250, 250));
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
