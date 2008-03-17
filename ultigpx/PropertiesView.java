@@ -27,6 +27,7 @@ public class PropertiesView extends JPanel {
 	JSlider sliderr;
 	JSlider sliderg;
 	JSlider sliderb;
+	Button setcolor;
 	
 	// displays a waypoint
 	public void select(Waypoint wp) {
@@ -55,7 +56,6 @@ public class PropertiesView extends JPanel {
 	// constructor that will initially display nothing
 	public PropertiesView() {
 		super();
-		selected = 0;
 		setLayout(new GridBagLayout());
     	mllabel = new TextArea("",5,5,TextArea.SCROLLBARS_VERTICAL_ONLY);
     	mllabel.setEditable(false);
@@ -67,7 +67,7 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10,10,0,9);
     	add(mllabel,c);
-    	Button y = new Button("Set Color");
+    	setcolor = new Button("Set Color");
     	Label r = new Label("Red");
     	Label g = new Label("Green");
     	Label b = new Label("Blue");
@@ -80,8 +80,7 @@ public class PropertiesView extends JPanel {
     	labels.weighty = 0.05;
     	labels.weightx = 1;
     	labels.gridwidth = GridBagConstraints.REMAINDER;
-    	c.weighty = 0.05
-    	;
+    	c.weighty = 0.05;
     	add(r, labels);
     	add(sliderr, c);
     	add(g, labels);
@@ -89,9 +88,10 @@ public class PropertiesView extends JPanel {
     	add(b, labels);
     	add(sliderb, c);
     	c.insets = new Insets(0,10,9,9);
-    	add(y, c);
-    	y.setActionCommand("SetColor");
-    	y.addActionListener(new submitactionlistener());
+    	add(setcolor, c);
+    	setcolor.setActionCommand("SetColor");
+    	setcolor.addActionListener(new submitactionlistener());
+		selected = 0;
 		repaint();
 	}
 	
@@ -114,22 +114,34 @@ public class PropertiesView extends JPanel {
     
     protected void paintinfo(Graphics2D g2d) {
     	// prints a changing test string to the frame
-    	painttest(g2d);
+    	/*painttest(g2d);
     	return;//*/
     	
     	// the code below prints different info
     	// based on what type of data is selected
-    	/*switch (selected)
+    	switch (selected)
         {
             case (0):
-                return;
+                paintnull(g2d);
+            	break;
             case (1):
             	paintwp(g2d);
+            	break;
             case (2):
             	painttrk(g2d);
+            	break;
             case (3):
             	paintrt(g2d);
-        }//*/
+            	break;
+        }
+    }
+    
+    protected void paintnull(Graphics2D g2d) {
+    	// enables sliders+button
+    	sliderr.setEnabled(false);
+    	sliderg.setEnabled(false);
+    	sliderb.setEnabled(false);
+    	setcolor.setEnabled(false);
     }
     
     // writes a test string on the frame
@@ -162,6 +174,11 @@ public class PropertiesView extends JPanel {
     
     // writes a waypoint on the frame
     protected void paintwp(Graphics2D g2d){
+    	// enables sliders+button
+    	sliderr.setEnabled(true);
+    	sliderg.setEnabled(true);
+    	sliderb.setEnabled(true);
+    	setcolor.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
     	// displays name
@@ -187,6 +204,11 @@ public class PropertiesView extends JPanel {
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
+    	// enables sliders
+    	sliderr.setEnabled(true);
+    	sliderg.setEnabled(true);
+    	sliderb.setEnabled(true);
+    	setcolor.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
     	// displays name
@@ -206,6 +228,11 @@ public class PropertiesView extends JPanel {
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
+    	// enables sliders
+    	sliderr.setEnabled(true);
+    	sliderg.setEnabled(true);
+    	sliderb.setEnabled(true);
+    	setcolor.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
     	// displays name
@@ -238,12 +265,12 @@ public class PropertiesView extends JPanel {
     		else if (e.getActionCommand().equals("SetColor") && (selected == 2))
     		{
     			seltrk.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
-    			System.out.println("trkcolor: " + seltrk.color);
+    			//System.out.println("trkcolor: " + seltrk.color);
     		}
     		else if (e.getActionCommand().equals("SetColor") && (selected == 3))
     		{
     			selrt.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
-    			System.out.println("rtcolor: " + selrt.color);
+    			//System.out.println("rtcolor: " + selrt.color);
     		}
     	}
     }
