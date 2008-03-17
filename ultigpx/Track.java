@@ -2,11 +2,13 @@
 package ultigpx;
 
 import java.util.*;
+import java.awt.Color;
 
 public class Track extends ArrayList<TrackSegment>
 {
     String name;
     public boolean enabled;
+    public Color color;
     
     //Constructor for collection of track segments, making empty list
     public Track()

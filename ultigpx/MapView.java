@@ -24,6 +24,11 @@ public class MapView extends JPanel
     double lat;
     double scale;
     
+    static Color            WAYPOINT_COLOR  = Color.BLACK;
+    static Color            TRACK_COLOR     = Color.BLUE;
+    static Color            ROUTE_COLOR     = Color.GREEN;
+    static Color            SELECTED_COLOR  = Color.RED;
+    
     static final int        WAYPOINT_SIZE   = 5;
     static final int        FONT_SIZE       = 9;
     
@@ -49,6 +54,7 @@ public class MapView extends JPanel
         labelhints = new ArrayList<Rectangle2D>();
         
         load();
+        repaint();
     }
     
     protected void load()
@@ -222,6 +228,14 @@ public class MapView extends JPanel
     }
     
     
+    protected void setColor(Color c1, Color c2)
+    {
+        if (c1 != null)
+            g.setPaint(c1);
+        else
+            g.setPaint(c2);
+    }
+    
     public void paintComponent(Graphics gfx)
     {
         super.paintComponent(gfx);
@@ -258,28 +272,31 @@ public class MapView extends JPanel
         // render selected so it has label priority
         if (selected != null)
         {
-            g.setPaint(Color.RED);
+            g.setPaint(SELECTED_COLOR);
             g.setStroke(new BasicStroke(3.0f));
             render(selected);
         }
         
         
         // render tracks and routes
-        g.setColor(Color.BLUE);
         g.setStroke(new BasicStroke(2.0f));
         
         for (Track i : file.tracks())
             if (i.enabled)
+            {
+                setColor(i.color, TRACK_COLOR);
                 render(i);
-        
+            }
         for (Route i : file.routes())
             if (i.enabled)
+            {
+                setColor(i.color, ROUTE_COLOR);
                 render(i);
-        
+            }
         
         
         // render all waypoints
-        g.setColor(Color.BLACK);
+        g.setColor(WAYPOINT_COLOR);
         g.setStroke(new BasicStroke(1.0f));
         
         
@@ -296,13 +313,15 @@ public class MapView extends JPanel
         
         for (Waypoint i : file.waypoints())
             if (i.enabled)
+            {
+                setColor(i.color, WAYPOINT_COLOR);
                 render(i);
-        
+            }
         
         // rerender selected so that it is on top
         if (selected != null)
         {
-            g.setPaint(Color.RED);
+            g.setPaint(SELECTED_COLOR);
             g.setStroke(new BasicStroke(3.0f));
             render(selected);
         }
@@ -347,6 +366,7 @@ public class MapView extends JPanel
                                            p.getY() - WAYPOINT_SIZE/2,
                                            WAYPOINT_SIZE,
                                            WAYPOINT_SIZE);
+        
         renderLabel(i.getName(), p);
         g.fill(e);
     }
@@ -382,6 +402,8 @@ public class MapView extends JPanel
         public void mouseClicked(MouseEvent e) 
         {
             //System.out.println(e);
+            if (file == null)
+                return;
             
             Point2D click = new Point2D.Double(e.getX(), e.getY());
             

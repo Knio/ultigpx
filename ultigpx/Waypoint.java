@@ -2,15 +2,15 @@
 package ultigpx;
 
 import java.util.*;
+import java.awt.Color;
 
 public class Waypoint
 {
     private String name;
     private String desc;
-    private String colour;
     
     public boolean enabled;
-    
+    public Color  color;
     public double lat;
     public double lon;
     public double ele;
@@ -30,7 +30,7 @@ public class Waypoint
         ele     = _ele;
         time    = _time;
         enabled = true;
-        colour = null;
+        color = null;
     }
     
     public String getName() {
@@ -61,7 +61,7 @@ public class Waypoint
         return enabled;
     }
     
-    public String getColour() {
-        return colour;
+    public Color getColour() {
+        return color;
     }
 }
