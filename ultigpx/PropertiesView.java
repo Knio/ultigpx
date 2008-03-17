@@ -5,6 +5,7 @@ package ultigpx;
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
+import java.awt.event.*;
 
 public class PropertiesView extends JPanel {
 	static final long serialVersionUID = 0;
@@ -21,6 +22,11 @@ public class PropertiesView extends JPanel {
 	// It works a lot better than my code but doesn't
 	// necessarily stay resized. Anyone got an idea to fix it?
 	TextArea mllabel;
+	
+	// RGB sliders
+	JSlider sliderr;
+	JSlider sliderg;
+	JSlider sliderb;
 	
 	// displays a waypoint
 	public void select(Waypoint wp) {
@@ -54,11 +60,38 @@ public class PropertiesView extends JPanel {
     	mllabel = new TextArea("",5,5,TextArea.SCROLLBARS_VERTICAL_ONLY);
     	mllabel.setEditable(false);
     	GridBagConstraints c = new GridBagConstraints();
+    	GridBagConstraints labels = new GridBagConstraints();
     	c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
-        c.weighty = 1.0;
-        c.insets = new Insets(10,10,9,9);
+        c.weighty = 2.0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,10,0,9);
     	add(mllabel,c);
+    	Button y = new Button("Set Color");
+    	Label r = new Label("Red");
+    	Label g = new Label("Green");
+    	Label b = new Label("Blue");
+    	sliderr = new JSlider(0, 255, 0);
+    	sliderg = new JSlider(0, 255, 0);
+    	sliderb = new JSlider(0, 255, 0);
+    	c.insets = new Insets(0,10,0,9);
+    	labels.insets = new Insets(0,10,0,9);
+    	labels.fill = GridBagConstraints.BOTH;
+    	labels.weighty = 0.05;
+    	labels.weightx = 1;
+    	labels.gridwidth = GridBagConstraints.REMAINDER;
+    	c.weighty = 0.05
+    	;
+    	add(r, labels);
+    	add(sliderr, c);
+    	add(g, labels);
+    	add(sliderg, c);
+    	add(b, labels);
+    	add(sliderb, c);
+    	c.insets = new Insets(0,10,9,9);
+    	add(y, c);
+    	y.setActionCommand("SetColor");
+    	y.addActionListener(new submitactionlistener());
 		repaint();
 	}
 	
@@ -83,10 +116,10 @@ public class PropertiesView extends JPanel {
     	// prints a changing test string to the frame
     	painttest(g2d);
     	return;//*/
-    	/*
+    	
     	// the code below prints different info
     	// based on what type of data is selected
-    	switch (selected)
+    	/*switch (selected)
         {
             case (0):
                 return;
@@ -146,11 +179,11 @@ public class PropertiesView extends JPanel {
     	mllabel.append("Longitude: " + selwp.getLon() + "\n\n");
     	// displays elevation
     	mllabel.append("Elevation: " + selwp.getEle() + "\n\n");
-    	// displays colour
-    	if (selwp.getColour() != null)
-    		mllabel.append("Colour: " + selwp.getColour() + "\n\n");
+    	// displays color
+    	if (selwp.getColor() != null)
+    		mllabel.append("Color: " + selwp.getColor() + "\n\n");
     	else
-    		mllabel.append("Colour: Default\n\n");
+    		mllabel.append("Color: Default\n\n");
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
@@ -165,6 +198,11 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Status: Disabled\n\n");
     	// displays description
     	mllabel.append("Number of Segments: " + seltrk.size() + "\n\n");
+    	// displays color
+    	if (seltrk.color != null)
+    		mllabel.append("Color: " + seltrk.color + "\n\n");
+    	else
+    		mllabel.append("Color: Default\n\n");
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
@@ -179,6 +217,35 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Status: Disabled\n\n");
     	// displays description
     	mllabel.append("Number of Waypoints: " + selrt.size() + "\n\n");
+    	// displays color
+    	if (selrt.color != null)
+    		mllabel.append("Color: " + selrt.color + "\n\n");
+    	else
+    		mllabel.append("Color: Default\n\n");
+    }
+    
+    // action listener for the set color button
+    class submitactionlistener implements ActionListener {
+    	public submitactionlistener() {
+    		super();
+    	}
+    	public void actionPerformed(ActionEvent e) {
+    		if (e.getActionCommand().equals("SetColor") && (selected == 1))
+    		{
+    			selwp.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
+    			System.out.println("wpcolor: " + selwp.color);
+    		}
+    		else if (e.getActionCommand().equals("SetColor") && (selected == 2))
+    		{
+    			seltrk.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
+    			System.out.println("trkcolor: " + seltrk.color);
+    		}
+    		else if (e.getActionCommand().equals("SetColor") && (selected == 3))
+    		{
+    			selrt.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
+    			System.out.println("rtcolor: " + selrt.color);
+    		}
+    	}
     }
     
 }
