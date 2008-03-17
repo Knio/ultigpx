@@ -8,9 +8,8 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class BasicMapView extends BasicMapView
+public class BasicMapView extends MapView
 {
-    UltiGPX         main;
     UGPXFile        file;
     EventHandler    evt;
     Object          selected;
@@ -24,8 +23,7 @@ public class BasicMapView extends BasicMapView
     
     public BasicMapView(UltiGPX main)
     {
-        super();
-        this.main = main;
+        super(main);
         evt = new EventHandler();
         
         addMouseListener        (evt);
