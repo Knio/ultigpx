@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class MapView extends JPanel
+public class BasicMapView extends BasicMapView
 {
     UltiGPX         main;
     UGPXFile        file;
@@ -20,26 +20,9 @@ public class MapView extends JPanel
     
     java.util.List<Waypoint> entities;
     
-    double lon;
-    double lat;
-    double scale;
-    
-    static Color            WAYPOINT_COLOR  = Color.BLACK;
-    static Color            TRACK_COLOR     = Color.BLUE;
-    static Color            ROUTE_COLOR     = Color.GREEN;
-    static Color            SELECTED_COLOR  = Color.RED;
-    
-    static final int        WAYPOINT_SIZE   = 5;
-    static final int        FONT_SIZE       = 9;
-    
-    static final double     MAX_SCALE       = 10000.0;
-    static final double     MIN_SCALE       = 2.0;
-    
-    static final double     ZOOM_IN         = 1.1;
-    static final double     ZOOM_OUT        = 0.9;
     
     
-    public MapView(UltiGPX main)
+    public BasicMapView(UltiGPX main)
     {
         super();
         this.main = main;
