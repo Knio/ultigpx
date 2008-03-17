@@ -61,7 +61,7 @@ public class Waypoint
         return enabled;
     }
     
-    public Color getColour() {
+    public Color getColor() {
         return color;
     }
 }

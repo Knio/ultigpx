@@ -14,5 +14,6 @@ public class Route extends ArrayList<Waypoint>
     {
         super();
         enabled = true;
+        color = null;
     }
 }
