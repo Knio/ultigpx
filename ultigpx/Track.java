@@ -28,7 +28,7 @@ public class Track extends ArrayList<TrackSegment>
         color = null;
     }
     
-    //Constrcutor for collection of track segments, populated by c with specified name
+    //Constructor for collection of track segments, populated by c with specified name
     public Track(String name, Collection<TrackSegment> c)
     {
         super(c);

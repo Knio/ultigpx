@@ -10,7 +10,7 @@ public class UGPXFile
     private List<Track>     track;
     private List<Route>     route;
     
-    // Constructor to send in list lf data
+    // Constructor to send in list with list of data
     public UGPXFile(List<Waypoint> wp, List<Track> tk, List<Route> rt)
     {
         waypoint = new ArrayList<Waypoint>(wp);
