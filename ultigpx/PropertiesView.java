@@ -17,6 +17,10 @@ public class PropertiesView extends JPanel {
 	// integer that tells which type of data is selected
 	// 0 = none, 1 = wp, 2 = trk, 3 = rt, else = crashed program
 	int selected;
+	// TextArea that holds the info
+	// It works a lot better than my code but doesn't
+	// necessarily stay resized. Anyone got an idea to fix it?
+	TextArea mllabel;
 	
 	// displays a waypoint
 	public void select(Waypoint wp) {
@@ -46,6 +50,15 @@ public class PropertiesView extends JPanel {
 	public PropertiesView() {
 		super();
 		selected = 0;
+		setLayout(new GridBagLayout());
+    	mllabel = new TextArea("",5,5,TextArea.SCROLLBARS_VERTICAL_ONLY);
+    	mllabel.setEditable(false);
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.insets = new Insets(10,10,9,9);
+    	add(mllabel,c);
 		repaint();
 	}
 	
@@ -57,22 +70,20 @@ public class PropertiesView extends JPanel {
         // converts the graphic into a 2D graphic
         Graphics2D g2d = (Graphics2D)g;
         
-        // writes the info on the screen
-        paintinfo(g2d);
-        
         // draws the outer frame
         g2d.draw(new Rectangle2D.Double(5, 5, getWidth()-10, getHeight()-10));
         // draws the inner frame
         g2d.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
-
         
+        // writes the info on the screen
+        paintinfo(g2d);
     }
     
     protected void paintinfo(Graphics2D g2d) {
     	// prints a changing test string to the frame
-    	//painttest(g2d);
-    	//return;
-    	
+    	painttest(g2d);
+    	return;//*/
+    	/*
     	// the code below prints different info
     	// based on what type of data is selected
     	switch (selected)
@@ -85,7 +96,7 @@ public class PropertiesView extends JPanel {
             	painttrk(g2d);
             case (3):
             	paintrt(g2d);
-        }
+        }//*/
     }
     
     // writes a test string on the frame
@@ -111,80 +122,63 @@ public class PropertiesView extends JPanel {
     	paintrt(g2d);
     	selected = 0;
     	}
+    	// disclaimer cause people might think my part works without
+    	// all of the other parts done. It does not!
+    	mllabel.append("\n\nThis data is for testing only!");
     }
     
     // writes a waypoint on the frame
     protected void paintwp(Graphics2D g2d){
-    	// width of usable space without border
-    	int workingwidth = this.getWidth() - 50;
-    	// where draw method is in regards to height
-    	int workingheight = 30;
-    	// prints enabled or disabled
-    	if (selwp.enabled == true)
-    		g2d.drawString("Waypoint: enabled", 20, workingheight);
+    	// Clear the text
+    	mllabel.setText("");
+    	// displays name
+    	mllabel.append("Waypoint: " + selwp.getName() + "\n\n");
+    	// displays status
+    	if (selwp.getEnabled())
+    		mllabel.append("Status: Enabled\n\n");
     	else
-    		g2d.drawString("Waypoint: disabled", 20, workingheight);
-    	// increment for next print (all lines like this are the same)
-    	workingheight += 11;
-    	// prints name
-    	g2d.drawString("Name: " + selwp.getName(), 20, workingheight);
-    	workingheight += 11;
-    	// prints description so that it fits window
-    	g2d.drawString("Description:", 20, workingheight);
-    	workingheight += 11;
-    	for (int i = 0; i < selwp.getDesc().length(); i += (workingwidth / 5))
-    	{
-    		int endofstring;
-    		if (i + (workingwidth / 5) >= selwp.getDesc().length())
-    			endofstring = selwp.getDesc().length();
-    		else
-    			endofstring = i + (workingwidth / 5);
-    		g2d.drawString("  " + selwp.getDesc().substring(i, endofstring), 20, workingheight);
-    		workingheight += 11;
-    	}
-    	// prints latitude
-    	g2d.drawString("Latitude: " + selwp.getLat(), 20, workingheight);
-    	workingheight += 11;
-    	// prints longitude
-    	g2d.drawString("Longitude: " + selwp.getLon(), 20, workingheight);
-    	workingheight += 11;
-    	// prints elevation
-    	g2d.drawString("Elevation: " + selwp.getEle(), 20, workingheight);
-    	workingheight += 11;
-    	// prints colour
-    	g2d.drawString("Colour: " + selwp.getColour(), 20, workingheight);
+    		mllabel.append("Status: Disabled\n\n");
+    	// displays description
+    	mllabel.append("Description: " + selwp.getDesc() + "\n\n");
+    	// displays latitude
+    	mllabel.append("Latitude: " + selwp.getLat() + "\n\n");
+    	// displays longitude
+    	mllabel.append("Longitude: " + selwp.getLon() + "\n\n");
+    	// displays elevation
+    	mllabel.append("Elevation: " + selwp.getEle() + "\n\n");
+    	// displays colour
+    	if (selwp.getColour() != null)
+    		mllabel.append("Colour: " + selwp.getColour() + "\n\n");
+    	else
+    		mllabel.append("Colour: Default\n\n");
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
-    	// where draw method should draw with regards to height
-    	int workingheight = 30;
-    	// prints enabled or disabled
-    	if (seltrk.enabled == true)
-    		g2d.drawString("Track: enabled", 20, workingheight);
+    	// Clear the text
+    	mllabel.setText("");
+    	// displays name
+    	mllabel.append("Track: " + seltrk.getName() + "\n\n");
+    	// displays status
+    	if (seltrk.enabled)
+    		mllabel.append("Status: Enabled\n\n");
     	else
-    		g2d.drawString("Track: disabled", 20, workingheight);
-    	workingheight += 11;
-    	// prints name
-    	g2d.drawString("Name: " + seltrk.getName(), 20, workingheight);
-    	workingheight += 11;
-    	// prints number of track segments
-    	g2d.drawString("Number of Segments: " + seltrk.size(), 20, workingheight);
+    		mllabel.append("Status: Disabled\n\n");
+    	// displays description
+    	mllabel.append("Number of Segments: " + seltrk.size() + "\n\n");
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
-    	// where draw method should draw with regards to height
-    	int workingheight = 30;
-    	// prints enabled or disabled
-    	if (selrt.enabled == true)
-    		g2d.drawString("Route: enabled", 20, workingheight);
+    	// Clear the text
+    	mllabel.setText("");
+    	// displays name
+    	mllabel.append("Route: " + "\n\n");
+    	// displays status
+    	if (selrt.enabled)
+    		mllabel.append("Status: Enabled\n\n");
     	else
-    		g2d.drawString("Route: disabled", 20, workingheight);
-    	workingheight += 11;
-    	// prints name
-    	g2d.drawString("Name: " + "", 20, workingheight);
-    	workingheight += 11;
-    	// prints number of waypoints
-    	g2d.drawString("Number of Waypoints: " + selrt.size(), 20, workingheight);
+    		mllabel.append("Status: Disabled\n\n");
+    	// displays description
+    	mllabel.append("Number of Waypoints: " + selrt.size() + "\n\n");
     }
     
 }
