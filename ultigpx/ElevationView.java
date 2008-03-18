@@ -22,8 +22,8 @@ public class ElevationView extends JPanel
 
 	private double elev_low;
 	private double elev_high;
-	private double lon_low;
-	private double lon_high;
+	private double time_low;
+	private double time_high;
 
 	public ElevationView(UltiGPX main)
 	{
@@ -42,14 +42,16 @@ public class ElevationView extends JPanel
 	}
 
 	private void updateBounds(Waypoint wpt) {
-		if(wpt.getEle() > elev_high)
-			elev_high = wpt.getEle();
-		if(wpt.getEle() < elev_low)
-			elev_low = wpt.getEle();
-		if(wpt.getLon() > lon_high)
-			lon_high = wpt.getLon();
-		if(wpt.getLon() < lon_low)
-			lon_low = wpt.getLon();
+		if(wpt.getTime() > 0) {
+			if(wpt.getEle() > elev_high)
+				elev_high = wpt.getEle();
+			if(wpt.getEle() < elev_low)
+				elev_low = wpt.getEle();
+			if(wpt.getTime() > time_high)
+				time_high = wpt.getTime();
+			if(wpt.getTime() < time_low)
+				time_low = wpt.getTime();
+		}
 	}
 	/**
 	 * Refreshes the elevation view
@@ -73,9 +75,9 @@ public class ElevationView extends JPanel
 		// We'll iterate over the waypoints looking for the highest and lowest
 		// to properly scale the graph.        
 		elev_low = 999999999;
-		lon_low = 999999999;
+		time_low = 999999999;
 		elev_high = -999999999;
-		lon_high = -999999999;
+		time_high = -999999999;
 		for(Route rt : main.file.routes()) {       
 			for(Waypoint wpt : rt) {
 				updateBounds(wpt);
@@ -91,9 +93,16 @@ public class ElevationView extends JPanel
 		for(Waypoint wpt : main.file.waypoints() ) {
 			updateBounds(wpt);
 		}
+		
+		// This is another "out." Basically we have no points
+		// that have a time value, (we haven't changed the time bounds)
+		// or else all points have the same time.
+		// so we shouldn't display anything
+		if(time_high <= time_low)
+			return;
 
 		//The scaling factors for longitude and elevation
-		Double ls = getWidth()/(lon_high-lon_low);
+		Double ls = getWidth() / (time_high-time_low);
 		Double le = getHeight() / (elev_high - elev_low);
 		Waypoint last = null;
 		
@@ -107,7 +116,7 @@ public class ElevationView extends JPanel
 			gscale *= 10;
 		}
 		// double the density of lines if we can "afford" it, eg: from 100m lines to 50m lines.
-		if((elev_high-elev_low)/gscale < 5) {
+		if(((elev_high-elev_low)/gscale < 5) && (gscale > 1)) {
 			gscale /= 2;
 		}
 		//actually draw the lines
@@ -133,11 +142,13 @@ public class ElevationView extends JPanel
 		g2d.setPaint(Color.BLACK);
 		for(Route rt : main.file.routes()) {       
 			for(Waypoint wpt : rt) {
-				if(last != null) {					
-					g2d.drawLine((int)(last.getLon()*ls), (int)(getHeight() - (last.getEle()*le)), 
-							(int)(wpt.getLon()*ls), (int)(getHeight() - (wpt.getEle()*le)));
+				if(wpt.getTime() > 0) {
+					if(last != null) {					
+						g2d.drawLine((int)(last.getTime()*ls), (int)(getHeight() - (last.getEle()*le)), 
+								(int)(wpt.getTime()*ls), (int)(getHeight() - (wpt.getEle()*le)));
+					}
+					last = wpt;
 				}
-				last = wpt;
 			}
 		}
 		last = null;
@@ -145,10 +156,10 @@ public class ElevationView extends JPanel
 			for(TrackSegment ts : trk) {
 				for(Waypoint wpt : ts ) {
 					if(last != null) {
-						System.out.println(lon_low);
-						System.out.println(lon_high);
-						g2d.drawLine((int)((last.getLon() - lon_low)*ls), (int)(getHeight() - ((last.getEle() - elev_low)*le)), 
-								(int)((wpt.getLon() - lon_low)*ls), (int)(getHeight() - ((wpt.getEle() - elev_low)*le)));
+						if(wpt.getTime() > 0) {
+							g2d.drawLine((int)((last.getTime() - time_low)*ls), (int)(getHeight() - ((last.getEle() - elev_low)*le)), 
+									(int)((wpt.getTime() - time_low)*ls), (int)(getHeight() - ((wpt.getEle() - elev_low)*le)));
+						}
 					}
 					last = wpt;
 				}
@@ -156,40 +167,10 @@ public class ElevationView extends JPanel
 		}
 
 		for(Waypoint wpt : main.file.waypoints() ) {
-			g2d.drawOval((int)(wpt.getLon()*ls), (int)(getHeight() - (wpt.getEle()*le)), 
-					2,2);
+			if(wpt.getTime() > 0) {
+				g2d.drawOval((int)(wpt.getTime()*ls), (int)(getHeight() - (wpt.getEle()*le)), 
+						2,2);
+			}
 		}				
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
