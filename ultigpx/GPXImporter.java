@@ -106,7 +106,7 @@ public class GPXImporter {
                     while(trackChildIterator.hasNext()) {
                         Element currentTrackChild = (Element) trackChildIterator.next();
                         if (currentTrackChild.getName().equals("trkseg")) {
-                            List trackSegmentList = currentElement.getChildren();
+                            List trackSegmentList = currentTrackChild.getChildren();
                             Iterator trackSegmentIterator = trackSegmentList.iterator();
                             TrackSegment newTrackSegment = new TrackSegment();
                             
@@ -114,7 +114,7 @@ public class GPXImporter {
                             while (trackSegmentIterator.hasNext()){
                                 Element currentTrackSegment = (Element) trackSegmentIterator.next();
                                 if (currentTrackSegment.getName().equals("trkpt")) {
-                                    List waypointChildList = currentElement.getChildren();
+                                    List waypointChildList = currentTrackSegment.getChildren();
                                     Iterator waypointChildIterator = waypointChildList.iterator();
                                     String name = "";
                                     String desc = "";
