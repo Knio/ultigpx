@@ -324,6 +324,7 @@ public class BasicMapView extends MapView
     
     protected void render(ArrayList<Waypoint> ts)
     {
+        if (ts.size() == 0) return;
         GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD, ts.size()+1);
         Point2D t = project(ts.get(0));
         

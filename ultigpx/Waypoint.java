@@ -95,4 +95,9 @@ public class Waypoint
     public void setColor(Color x) {
     	color = x;
     }
+    
+    public String toString()
+    {
+        return String.format("<WP name=%s lat=%.3f lon=%.3f>", name, lat, lon);
+    }
 }

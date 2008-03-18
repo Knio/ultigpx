@@ -24,11 +24,32 @@ public class UltiGPX
         System.out.println("Hello, World!");
         
         //file = sample(); // stub until importer works
-        importGPX("example1.gpx");
+        importGPX("example2.gpx");
         
         view = new MainView(this);
         //view = GuiGTXApp.getApplication();
         //view.startup(this);
+        
+        for (Route rt : file.routes())
+        {
+            System.out.println(rt);
+        }
+        
+        for (Track tk : file.tracks())
+        {
+            System.out.println(tk);
+        }
+        
+        for (Waypoint wp : file.waypoints())
+        {
+            System.out.println(wp);
+        }
+        
+        
+        
+        
+        
+        
     }
     
     public void importGPX(String filename)
