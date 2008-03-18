@@ -50,8 +50,9 @@ public class MainView extends JFrame
         c.gridwidth = GridBagConstraints.REMAINDER;
         
         // creates a map view and adds it as a pane
-        //map = new MapView(main);
-        map = new BasicMapView(main);
+        map = new MapView(main);
+        //map = new GoogleMapView(main);
+	//map = new BasicMapView(main);
         add(map, c);
         
         // resets the gridwidth for next row

@@ -20,9 +20,9 @@ public class UGPXFile
     
     //Constructor to create null UGPXFile, to be populated by add methods
     public UGPXFile() {
-    	waypoint = null;
-    	track = null;
-    	route = null;
+    	waypoint = new ArrayList<Waypoint>();
+    	track = new ArrayList<Track>();
+    	route = new ArrayList<Route>();
     }
     
     public List<Track> tracks()
