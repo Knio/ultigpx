@@ -8,7 +8,8 @@ import java.awt.*;
 public class MainView extends JFrame
 {
     UltiGPX main;
-    MapView map;
+    MapView map1;
+    MapView map2;
     PropertiesView prop;
     
     public MainView(UltiGPX _main)
@@ -49,11 +50,16 @@ public class MainView extends JFrame
         // first row we set gridwidth to remainder
         c.gridwidth = GridBagConstraints.REMAINDER;
         
+        // creates a tabbed pane to switch between the maps
+        JTabbedPane x = new JTabbedPane();
+        add(x,c);
+        x.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        
         // creates a map view and adds it as a pane
-        map = new MapView(main);
-        //map = new GoogleMapView(main);
-	//map = new BasicMapView(main);
-        add(map, c);
+        map2 = new GoogleMapView(main);
+        map1 = new BasicMapView(main);
+        x.add("Basic Map",map1);
+        x.add("Google Map", map2);
         
         // resets the gridwidth for next row
         c.gridwidth = 1;

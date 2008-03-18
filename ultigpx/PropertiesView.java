@@ -94,6 +94,7 @@ public class PropertiesView extends JPanel {
     	setcolor.addActionListener(new submitactionlistener());
     	// set selected element to nothing
 		selected = 0;
+		this.setPreferredSize(new Dimension(100, 100));
 		repaint();
 	}
 	
