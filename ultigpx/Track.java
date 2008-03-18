@@ -61,4 +61,9 @@ public class Track extends ArrayList<TrackSegment>
     public void setColor(Color x) {
     	color = x;
     }
+    
+    public String toString()
+    {
+        return String.format("<TRACK name=%s n=%d>", name, size());
+    }
 }

@@ -51,4 +51,9 @@ public class Route extends ArrayList<Waypoint>
     public void setDesc(String x) {
     	desc = x;
     }
+    
+    public String toString()
+    {
+        return String.format("<ROUTE name=%s n=%d>", name, size());
+    }
 }

@@ -30,16 +30,19 @@ public class UltiGPX
         //view = GuiGTXApp.getApplication();
         //view.startup(this);
         
+        System.out.println("ROUTES\n\n");
         for (Route rt : file.routes())
         {
             System.out.println(rt);
         }
         
+        System.out.println("TRACKS\n\n");
         for (Track tk : file.tracks())
         {
             System.out.println(tk);
         }
         
+        System.out.println("WAYPOINTS\n\n");
         for (Waypoint wp : file.waypoints())
         {
             System.out.println(wp);
