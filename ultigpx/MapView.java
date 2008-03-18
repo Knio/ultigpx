@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class MapView extends JPanel
+abstract public class MapView extends JPanel
 {
     UltiGPX         main;
     Object          selected;
@@ -37,4 +37,6 @@ public class MapView extends JPanel
         super();
         this.main = main;
     }
+    
+    abstract public void fill();
 }

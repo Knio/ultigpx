@@ -73,6 +73,9 @@ public class MainView extends JFrame
         
         setSize(600, 600);
         setVisible(true);
+        
+        map1.fill();
+        map3.fill();
     }
     
 }

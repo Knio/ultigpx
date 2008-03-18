@@ -66,7 +66,7 @@ public class BasicMapView extends MapView
         
     }
     
-    protected void fill()
+    public void fill()
     {
         if (entities.size()==0)
         {
@@ -94,8 +94,7 @@ public class BasicMapView extends MapView
         
         scroll(lon, lat);
         
-        scale(0.9 * getWidth() / (max_lon - min_lon));
-        
+        scale(0.9 * getWidth() / Math.abs((max_lon - min_lon)));
     }
     
     protected void scroll(double lon, double lat)
@@ -125,11 +124,6 @@ public class BasicMapView extends MapView
         Point2D p = new Point2D.Double(x, y);
         p = inverseproject(p);
         scroll(p.getX(), p.getY());
-        
-        
-        //double lon =-x / scale;
-        //double lat = y / scale * Math.cos(Math.PI*this.lat/180);
-        //scrollBy(lon, lat);
         
     }
     

@@ -29,6 +29,8 @@ public class GoogleMapView extends MapView {
 		
 		return;
 	}
+    
+    public void fill() {}
 
 	private UGPXFile conTestFile () {
 		// Construct a new UGPXFile with nothing in it
