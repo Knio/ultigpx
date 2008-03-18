@@ -61,8 +61,6 @@ public class UGPXFile
     
     public void addRoute(Route r) {
     	route.add(r);
-        System.out.println("hi");
-        System.out.println(r);
         
     }
     
