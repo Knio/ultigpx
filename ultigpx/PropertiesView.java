@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class PropertiesView extends JPanel {
 	static final long serialVersionUID = 0;
@@ -136,7 +137,7 @@ public class PropertiesView extends JPanel {
             case (3):
             	paintrt(g2d);
             	break;
-        }
+        }//*/
     }
     
     protected void paintnull(Graphics2D g2d) {
@@ -191,6 +192,9 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Status: Enabled\n\n");
     	else
     		mllabel.append("Status: Disabled\n\n");
+    	// displays time
+    	Date x = new Date((long)selwp.getTime());
+    	mllabel.append("Time: " + x.toString() + "\n\n");
     	// displays description
     	mllabel.append("Description: " + selwp.getDesc() + "\n\n");
     	// displays latitude
@@ -239,13 +243,15 @@ public class PropertiesView extends JPanel {
     	// Clear the text
     	mllabel.setText("");
     	// displays name
-    	mllabel.append("Route: " + "\n\n");
+    	mllabel.append("Route: " + selrt.getName() + "\n\n");
     	// displays status
     	if (selrt.enabled)
     		mllabel.append("Status: Enabled\n\n");
     	else
     		mllabel.append("Status: Disabled\n\n");
     	// displays description
+    	mllabel.append("Description: " + selrt.getDesc() + "\n\n");
+    	// displays number of waypoints in the route
     	mllabel.append("Number of Waypoints: " + selrt.size() + "\n\n");
     	// displays color
     	if (selrt.color != null)
@@ -263,7 +269,7 @@ public class PropertiesView extends JPanel {
     		if (e.getActionCommand().equals("SetColor") && (selected == 1))
     		{
     			selwp.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
-    			System.out.println("wpcolor: " + selwp.color);
+    			//System.out.println("wpcolor: " + selwp.color);
     		}
     		else if (e.getActionCommand().equals("SetColor") && (selected == 2))
     		{

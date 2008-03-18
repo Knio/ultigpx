@@ -40,16 +40,16 @@ public class GoogleMapView extends MapView {
 		//Route	 		tempRT;
 		
 		// Add a Waypoint to the UGPXFile
-		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),null);
+		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),0);
 		file.addWaypoint(tempWP);
 		
 		// Create a new TrackSegment with 5 points
 		tempTS = new TrackSegment();
-		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),null));
-		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),null));
-		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),null));
-		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),null));
-		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),null));
+		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),0));
+		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),0));
+		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),0));
+		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),0));
+		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),0));
 		
 		// Create a new Track and add the TrackSegment to it
 		tempTK = new Track();
