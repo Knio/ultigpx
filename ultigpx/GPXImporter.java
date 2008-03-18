@@ -1,7 +1,5 @@
 package ultigpx;
 
-
-
 import java.util.*;
 import java.io.*;
 import org.jdom.*;
@@ -106,7 +104,7 @@ public class GPXImporter {
                     while(trackChildIterator.hasNext()) {
                         Element currentTrackChild = (Element) trackChildIterator.next();
                         if (currentTrackChild.getName().equals("trkseg")) {
-                            List trackSegmentList = currentTrackChild.getChildren();
+                            List trackSegmentList = currentElement.getChildren();
                             Iterator trackSegmentIterator = trackSegmentList.iterator();
                             TrackSegment newTrackSegment = new TrackSegment();
                             
@@ -114,7 +112,7 @@ public class GPXImporter {
                             while (trackSegmentIterator.hasNext()){
                                 Element currentTrackSegment = (Element) trackSegmentIterator.next();
                                 if (currentTrackSegment.getName().equals("trkpt")) {
-                                    List waypointChildList = currentTrackSegment.getChildren();
+                                    List waypointChildList = currentElement.getChildren();
                                     Iterator waypointChildIterator = waypointChildList.iterator();
                                     String name = "";
                                     String desc = "";
@@ -132,12 +130,12 @@ public class GPXImporter {
                                             ele = Double.parseDouble(currentWaypointChild.getText());
                                         else if (currentWaypointChild.getName().equals("time"))
                                             time = getTime(currentWaypointChild.getText());
-                                        
-                                        //Add waypoints to track segments
-                                        Waypoint newWaypoint = new Waypoint(name, desc, currentWaypointChild.getAttribute("lat").getDoubleValue(), currentWaypointChild.getAttribute("lon").getDoubleValue(), ele, time);
-                                        newTrackSegment.add(newWaypoint);
-                                        
                                     } //end while
+                                    
+                                    //Add waypoints to track segments
+                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute("lat").getDoubleValue(), currentTrackSegment.getAttribute("lon").getDoubleValue(), ele, time);
+                                    newTrackSegment.add(newWaypoint);
+                                    
                                     
                                 } //end if track point
                             } //end while get trackpoints
