@@ -1,7 +1,6 @@
 
 package ultigpx;
 
-import java.util.*;
 import java.awt.Color;
 
 public class Waypoint
@@ -37,31 +36,63 @@ public class Waypoint
         return name; 
     }
     
+    public void setName(String x) {
+    	name = x;
+    }
+    
     public String getDesc() {
         return desc;
+    }
+    
+    public void setDesc(String x) {
+    	desc = x;
     }
     
     public double getLat() {
         return lat;
     }
     
+    public void setLat(double x) {
+    	lat = x;
+    }
+    
     public double getLon() {
         return lon;
+    }
+    
+    public void setLon(double x) {
+    	lon = x;
     }
     
     public double getEle() {
         return ele;
     }
     
+    public void setEle(double x) {
+    	ele = x;
+    }
+    
     public double getTime() {
         return time;
+    }
+    
+    public void setTime(double x) {
+    	time = x;
     }
     
     public boolean getEnabled() {
         return enabled;
     }
     
+    public void setEnabled(boolean x) {
+    	enabled = x;
+    }
+    
     public Color getColor() {
         return color;
+    }
+    
+    public void setColor(Color x) {
+    	color = x;
     }
 }
