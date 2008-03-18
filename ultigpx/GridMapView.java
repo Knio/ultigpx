@@ -23,7 +23,7 @@ class GridMapView extends BasicMapView
     protected void renderGrid()
     {
         
-        
+        return;
         
     }
     
