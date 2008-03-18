@@ -12,6 +12,7 @@ public class MainView extends JFrame
     MapView map2;
     MapView map3;
     PropertiesView prop;
+    ElevationView ele;
     
     public MainView(UltiGPX _main)
     {
@@ -65,8 +66,8 @@ public class MainView extends JFrame
         x.add("Google Map", map2);
         
         c.weighty = .5;
-        ElevationView v = new ElevationView(this.main);
-        add(v, c);
+        ele = new ElevationView(this.main);
+        add(ele, c);
         
         // resets the gridwidth for next row
         c.gridwidth = 1;
