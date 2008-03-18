@@ -64,6 +64,10 @@ public class MainView extends JFrame
         x.add("Grid Map", map3);
         x.add("Google Map", map2);
         
+        c.weighty = .5;
+        ElevationView v = new ElevationView(this.main);
+        add(v, c);
+        
         // resets the gridwidth for next row
         c.gridwidth = 1;
         
