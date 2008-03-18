@@ -1,5 +1,6 @@
 package ultigpx;
 
+
 import java.util.*;
 import java.io.*;
 import org.jdom.*;
@@ -94,22 +95,54 @@ public class GPXImporter {
                 
                 //If it is a track
                 else if (currentElement.getName().equals("trk")) {
-                    ;
-                    //Get <name> xsd:string </name> [0..1] ?
-                    //Get <cmt> xsd:string </cmt> [0..1] ?
-                    //Get <desc> xsd:string </desc> [0..1] ?
-                    //Get <src> xsd:string </src> [0..1] ?
-                    //Get <link> linkType </link> [0..*] ?
-                    //Get <number> xsd:nonNegativeInteger </number> [0..1] ?
-                    //Get <type> xsd:string </type> [0..1] ?
-                    //Get <extensions> extensionsType </extensions> [0..1] ?
-                    //Get <trkseg> trksegType </trkseg> [0..*] ?
+                    List trackChildList = currentElement.getChildren();
+                    Iterator trackChildIterator = trackChildList.iterator();
+                    Track newTrack = new Track();
                     
-                    //Track segment stuff
-                    //Get <trkpt> wptType </trkpt> [0..*] ?
-                    //Get <extensions> extensionsType </extensions> [0..1] ?
-                    
-                    //returnValue.addTrack(name);
+                    //Get track segments
+                    while(trackChildIterator.hasNext()) {
+                        Element currentTrackChild = (Element) trackChildIterator.next();
+                        if (currentElement.getName().equals("trkseg")) {
+                            List trackSegmentList = currentElement.getChildren();
+                            Iterator trackSegmentIterator = trackSegmentList.iterator();
+                            TrackSegment newTrackSegment = new TrackSegment();
+                            
+                            //Get trackpoints
+                            while (trackSegmentIterator.hasNext()){
+                                Element currentTrackSegment = (Element) trackSegmentIterator.next();
+                                if (currentElement.getName().equals("trkpt")) {
+                                    List waypointChildList = currentElement.getChildren();
+                                    Iterator waypointChildIterator = waypointChildList.iterator();
+                                    String name = "";
+                                    String desc = "";
+                                    double ele = 0;
+                                    double time = 0;
+                                    
+                                    while(waypointChildIterator.hasNext()) {
+                                        Element currentWaypointChild = (Element) waypointChildIterator.next();
+                                        if (currentWaypointChild.getName().equals("name"))
+                                            name = currentWaypointChild.getText();
+                                        else if (currentWaypointChild.getName().equals("desc"))
+                                            desc = currentWaypointChild.getText();
+                                        else if (currentWaypointChild.getName().equals("ele"))
+                                            ele = Double.parseDouble(currentWaypointChild.getText());
+                                        else if (currentWaypointChild.getName().equals("time"))
+                                            time = Double.parseDouble(currentWaypointChild.getText());
+                                    } //end while
+                                    
+                                    //Add waypoints to track segments
+                                    Waypoint newWaypoint = new Waypoint(name, desc, currentElement.getAttribute("lat").getDoubleValue(), currentElement.getAttribute("lon").getDoubleValue(), ele, time);
+                                    newTrackSegment.add(newWaypoint);
+                                    
+                                } //end if track point
+                            } //end while get trackpoints
+                            
+                            //Add track segments to track
+                            newTrack.add(newTrackSegment);
+                            
+                        } //end if track segment
+                    } //end while for getting track segments
+                    returnValue.addTrack(newTrack);
                 } //end if track
                 
             } //end while
