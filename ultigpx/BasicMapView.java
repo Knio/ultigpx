@@ -326,8 +326,10 @@ public class BasicMapView extends MapView
         
         for (Waypoint i : ts)
         {
-            t = project(i);
-            p.lineTo((float)t.getX(), (float)t.getY());
+	    if (i.enabled) {
+            	t = project(i);
+            	p.lineTo((float)t.getX(), (float)t.getY());
+	    }
         }
         
         g.draw(p);
@@ -336,15 +338,17 @@ public class BasicMapView extends MapView
     
     protected void render(Waypoint i)
     {
-        Point2D  p = project(i);
+		if (i.enabled) {
+			Point2D  p = project(i);
         
-        Ellipse2D e = new Ellipse2D.Double(p.getX() - WAYPOINT_SIZE/2,
-                                           p.getY() - WAYPOINT_SIZE/2,
-                                           WAYPOINT_SIZE,
-                                           WAYPOINT_SIZE);
+			Ellipse2D e = new Ellipse2D.Double(p.getX() - WAYPOINT_SIZE/2,
+												p.getY() - WAYPOINT_SIZE/2,
+												WAYPOINT_SIZE,
+												WAYPOINT_SIZE);
         
-        renderLabel(i.getName(), p);
-        g.fill(e);
+			renderLabel(i.getName(), p);
+			g.fill(e);
+		}
     }
     
     protected void renderLabel(String name, Point2D p)

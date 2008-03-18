@@ -24,8 +24,8 @@ public class GoogleMapView extends MapView {
 		
 		if (DEBUG_MODE) System.out.println("GoogleMapView initialization started.");
 		this.main = main;
-		//file = main.file;
-		file = conTestFile();
+		file = main.file;
+		
 		
 		webBrowser = new WebBrowser();
 		
@@ -54,10 +54,10 @@ public class GoogleMapView extends MapView {
 		
 		outputHTML();
 		
+		webBrowser.setVisible(false);
 		try {
-				
 			webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
-				
+			webBrowser.setVisible(true);
 		} catch (MalformedURLException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -70,7 +70,7 @@ public class GoogleMapView extends MapView {
         this.setLayout(new BorderLayout());
         webBrowser.setPreferredSize(new Dimension(getWidth(), getHeight()));
         add(webBrowser, BorderLayout.CENTER);
-		webBrowser.setVisible(true);
+		
 		
 		return;
 	}
@@ -79,8 +79,19 @@ public class GoogleMapView extends MapView {
 		super.repaint();
 		if ((file == null) && (main != null) && (main.file != null)) {
 			file = main.file;
-			//outputHTML();
-			//webBrowser.setVisible(true);
+			
+			outputHTML();
+			
+			try {
+				webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
+				webBrowser.setVisible(true);
+			} catch (MalformedURLException e) {
+				System.out.println(e.getMessage());
+				return;
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+				return;
+			}
 			
 			repaint();
 		}
@@ -127,12 +138,6 @@ public class GoogleMapView extends MapView {
 		return;
 	}
 
-    
-/*	public void refresh () {
-
-		return;
-		
-	}*/
 	
 	private String getPolyString (Color color, ArrayList<Waypoint> elements) {
 		
@@ -168,7 +173,7 @@ public class GoogleMapView extends MapView {
 		// Remove the last comma we wrote, it isn't needed
 		retString = retString.substring(0, retString.length() - 1);
 		retString = retString + "];\n";
-		retString = retString + "		map.addOverlay(new GPolyline(points,'#000000',3,1));\n\n";
+		retString = retString + "		map.addOverlay(new GPolyline(points,'#000000',1,1));\n\n";
 		
 		return retString;
 		
@@ -245,8 +250,8 @@ public class GoogleMapView extends MapView {
 			
 			wtext = wtext + "		var icon1 = new GIcon();\n";
    			wtext = wtext + "		icon1.image = \"point_b.png\";\n";
-			wtext = wtext + "		icon1.iconSize = new GSize(20, 20);\n";
-    		wtext = wtext + "		icon1.iconAnchor = new GPoint(10,10);\n";
+			wtext = wtext + "		icon1.iconSize = new GSize(6, 6);\n";
+    		wtext = wtext + "		icon1.iconAnchor = new GPoint(3,3);\n";
 			wtext = wtext + "		var points;\n\n";
 			
 			wtext = wtext + drawcode;

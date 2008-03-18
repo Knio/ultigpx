@@ -4,7 +4,7 @@ package ultigpx;
 import java.io.*;
 import java.util.*;
 import org.jdom.*;
-//import org.jdesktop.application.SingleFrameApplication;
+import java.awt.geom.*;		// For calculating distance between points
 
 public class UltiGPX
 {
@@ -23,8 +23,8 @@ public class UltiGPX
         
         System.out.println("Hello, World!");
         
-        //file = sample(); // stub until importer works
-        importGPX("example2.gpx");
+		importGPX("example2.gpx");
+		reduceFile(file);
         
         view = new MainView(this);
         //view = GuiGTXApp.getApplication();
@@ -111,6 +111,43 @@ public class UltiGPX
         
         return new UGPXFile(wp, tk, rt);
     }
+	
+	// Reduce the number of waypoints in a file
+	public void reduceFile (UGPXFile file) {
+		if (file == null) return;
+		
+		// If two points are closer than this, the later will not be drawn
+		double cutoff = 0.01;
+		
+		Point2D oldPT;
+		
+		for (Track tk : file.tracks()) {
+			for (TrackSegment ts : tk) {
+					oldPT = null;
+				for (Waypoint wp : ts) {
+					if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
+					else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+				}
+			}
+			
+		}
+		
+		for (Route rt : file.routes()) {
+			oldPT = null;
+			for (Waypoint wp : rt) {
+				if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
+				else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+			}
+		}
+		
+		oldPT = null;
+		for (Waypoint wp : file.waypoints()) {
+			if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
+			else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+		}
+		
+		return;
+	}
     
     
 }
