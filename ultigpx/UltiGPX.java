@@ -4,7 +4,7 @@ package ultigpx;
 import java.io.*;
 import java.util.*;
 import org.jdom.*;
-import org.jdesktop.application.SingleFrameApplication;
+//import org.jdesktop.application.SingleFrameApplication;
 
 public class UltiGPX
 {
