@@ -1,4 +1,6 @@
 package ultigpx;
+
+
 import java.util.*;
 import java.io.*;
 import org.jdom.*;
@@ -53,8 +55,8 @@ public class GPXImporter {
                             desc = currentWaypointChild.getText();
                         else if (currentWaypointChild.getName().equals("ele"))
                             ele = Double.parseDouble(currentWaypointChild.getText());
-                        else if (currentWaypointChild.getName().equals("time"));
-                            //time = Double.parseDouble(currentWaypointChild.getText());
+                        else if (currentWaypointChild.getName().equals("time"))
+                            time = getTime(currentWaypointChild.getText());
                     } //end while
                     returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute("lat").getDoubleValue(), currentElement.getAttribute("lon").getDoubleValue(), ele, time));
                 } //end if waypoint
@@ -67,7 +69,7 @@ public class GPXImporter {
                     
                     while(routeChildIterator.hasNext()) {
                         Element currentRouteChild = (Element) routeChildIterator.next();
-                        if (currentElement.getName().equals("rtept")) {
+                        if (currentRouteChild.getName().equals("rtept")) {
                             List waypointChildList = currentElement.getChildren();
                             Iterator waypointChildIterator = waypointChildList.iterator();
                             String name = "";
@@ -83,11 +85,11 @@ public class GPXImporter {
                                     desc = currentWaypointChild.getText();
                                 else if (currentWaypointChild.getName().equals("ele"))
                                     ele = Double.parseDouble(currentWaypointChild.getText());
-                                else if (currentWaypointChild.getName().equals("time"));
-                                    //time = Double.parseDouble(currentWaypointChild.getText());
+                                else if (currentWaypointChild.getName().equals("time"))
+                                    time = getTime(currentWaypointChild.getText());
                             } //end while
                             
-                            Waypoint newWaypoint = new Waypoint(name, desc, currentElement.getAttribute("lat").getDoubleValue(), currentElement.getAttribute("lon").getDoubleValue(), ele, time);
+                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute("lat").getDoubleValue(), currentRouteChild.getAttribute("lon").getDoubleValue(), ele, time);
                             newRoute.add(newWaypoint);
                             
                         } //end if waypoint
@@ -105,7 +107,7 @@ public class GPXImporter {
                     //Get track segments
                     while(trackChildIterator.hasNext()) {
                         Element currentTrackChild = (Element) trackChildIterator.next();
-                        if (currentElement.getName().equals("trkseg")) {
+                        if (currentTrackChild.getName().equals("trkseg")) {
                             List trackSegmentList = currentElement.getChildren();
                             Iterator trackSegmentIterator = trackSegmentList.iterator();
                             TrackSegment newTrackSegment = new TrackSegment();
@@ -113,7 +115,7 @@ public class GPXImporter {
                             //Get trackpoints
                             while (trackSegmentIterator.hasNext()){
                                 Element currentTrackSegment = (Element) trackSegmentIterator.next();
-                                if (currentElement.getName().equals("trkpt")) {
+                                if (currentTrackSegment.getName().equals("trkpt")) {
                                     List waypointChildList = currentElement.getChildren();
                                     Iterator waypointChildIterator = waypointChildList.iterator();
                                     String name = "";
@@ -130,16 +132,14 @@ public class GPXImporter {
                                             desc = currentWaypointChild.getText();
                                         else if (currentWaypointChild.getName().equals("ele"))
                                             ele = Double.parseDouble(currentWaypointChild.getText());
-                                        else if (currentWaypointChild.getName().equals("time"));
-                                        {
-                                            //GregorianCalendar(int year, int month, int dayOfMonth, int hourOfDay, int minute, int second) 
-                                            //time = Double.parseDouble(currentWaypointChild.getText());
-                                        } //end parse time
+                                        else if (currentWaypointChild.getName().equals("time"))
+                                            time = getTime(currentWaypointChild.getText());
+
+                                        //Add waypoints to track segments
+                                        Waypoint newWaypoint = new Waypoint(name, desc, currentWaypointChild.getAttribute("lat").getDoubleValue(), currentWaypointChild.getAttribute("lon").getDoubleValue(), ele, time);
+                                        newTrackSegment.add(newWaypoint);
+                                        
                                     } //end while
-                                    
-                                    //Add waypoints to track segments
-                                    Waypoint newWaypoint = new Waypoint(name, desc, currentElement.getAttribute("lat").getDoubleValue(), currentElement.getAttribute("lon").getDoubleValue(), ele, time);
-                                    newTrackSegment.add(newWaypoint);
                                     
                                 } //end if track point
                             } //end while get trackpoints
@@ -161,6 +161,25 @@ public class GPXImporter {
             throw new JDOMException();
         
         return returnValue;
+    }
+    
+    private static double getTime(String toParse) throws IOException {
+        
+        Integer year = 0;
+        Integer month = 0;
+        Integer day = 0;
+        Integer hour = 0;
+        Integer minute = 0;
+        Integer second = 0;
+        
+        //year = year.getInteger(toParse.substring(0, 3));
+        //month = month.getInteger(toParse.substring(0, 3));
+        //day = day.getInteger(toParse.substring(0, 3));
+        //hour = hour.getInteger(toParse.substring(0, 3));
+        //minute = year.getInteger(toParse.substring(0, 3));
+        //second = year.getInteger(toParse.substring(0, 3));
+        
+        return -2;
     }
     
 }
