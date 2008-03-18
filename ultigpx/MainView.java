@@ -28,7 +28,8 @@ public class MainView extends JFrame
         // initializes the constraints
         GridBagConstraints c = new GridBagConstraints();
         
-        // i don't quite know what this does
+        // makes the components in the layout stretch
+        // in both directions to fill the window
         c.fill = GridBagConstraints.BOTH;
         
         // sets vertical weight
@@ -43,13 +44,18 @@ public class MainView extends JFrame
         add(prop, c);
         
         // sets horiz weight of the map
-        c.weightx = 3.0;
+        c.weightx = 5.0;
+        // since this is the last element we want in the
+        // first row we set gridwidth to remainder
+        c.gridwidth = GridBagConstraints.REMAINDER;
         
         // creates a map view and adds it as a pane
         //map = new MapView(main);
-        map = new PlainMapView(main);
+        map = new BasicMapView(main);
         add(map, c);
         
+        // resets the gridwidth for next row
+        c.gridwidth = 1;
         
         setSize(600, 600);
         setVisible(true);

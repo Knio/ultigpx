@@ -19,14 +19,13 @@ public class PropertiesView extends JPanel {
 	// 0 = none, 1 = wp, 2 = trk, 3 = rt, else = crashed program
 	int selected;
 	// TextArea that holds the info
-	// It works a lot better than my code but doesn't
-	// necessarily stay resized. Anyone got an idea to fix it?
 	TextArea mllabel;
 	
 	// RGB sliders
 	JSlider sliderr;
 	JSlider sliderg;
 	JSlider sliderb;
+	// set color button
 	Button setcolor;
 	
 	// displays a waypoint
@@ -57,16 +56,19 @@ public class PropertiesView extends JPanel {
 	public PropertiesView() {
 		super();
 		setLayout(new GridBagLayout());
+		// creates a text box
     	mllabel = new TextArea("",5,5,TextArea.SCROLLBARS_VERTICAL_ONLY);
     	mllabel.setEditable(false);
+    	// sets up the gridbag for the text box
     	GridBagConstraints c = new GridBagConstraints();
-    	GridBagConstraints labels = new GridBagConstraints();
     	c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.weighty = 2.0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10,10,0,9);
+        // adds text box to panel
     	add(mllabel,c);
+    	// creates button, labels, sliders
     	setcolor = new Button("Set Color");
     	Label r = new Label("Red");
     	Label g = new Label("Green");
@@ -74,23 +76,23 @@ public class PropertiesView extends JPanel {
     	sliderr = new JSlider(0, 255, 0);
     	sliderg = new JSlider(0, 255, 0);
     	sliderb = new JSlider(0, 255, 0);
+    	// sets the gridbag up for the sliders and labels
     	c.insets = new Insets(0,10,0,9);
-    	labels.insets = new Insets(0,10,0,9);
-    	labels.fill = GridBagConstraints.BOTH;
-    	labels.weighty = 0.05;
-    	labels.weightx = 1;
-    	labels.gridwidth = GridBagConstraints.REMAINDER;
     	c.weighty = 0.05;
-    	add(r, labels);
+    	// add sliders/labels
+    	add(r, c);
     	add(sliderr, c);
-    	add(g, labels);
+    	add(g, c);
     	add(sliderg, c);
-    	add(b, labels);
+    	add(b, c);
     	add(sliderb, c);
+    	// add button
     	c.insets = new Insets(0,10,9,9);
     	add(setcolor, c);
+    	// set up button actions
     	setcolor.setActionCommand("SetColor");
     	setcolor.addActionListener(new submitactionlistener());
+    	// set selected element to nothing
 		selected = 0;
 		repaint();
 	}
@@ -137,14 +139,14 @@ public class PropertiesView extends JPanel {
     }
     
     protected void paintnull(Graphics2D g2d) {
-    	// enables sliders+button
+    	// disables sliders+button
     	sliderr.setEnabled(false);
     	sliderg.setEnabled(false);
     	sliderb.setEnabled(false);
     	setcolor.setEnabled(false);
     }
     
-    // writes a test string on the frame
+    // alternates writing a test string of each type in the text box
     protected void painttest(Graphics2D g2d) {
     	// prints a waypoint and then on repaint prints
     	// a track and then on repaint prints a route
@@ -204,7 +206,7 @@ public class PropertiesView extends JPanel {
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
-    	// enables sliders
+    	// enables sliders+button
     	sliderr.setEnabled(true);
     	sliderg.setEnabled(true);
     	sliderb.setEnabled(true);
@@ -228,7 +230,7 @@ public class PropertiesView extends JPanel {
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
-    	// enables sliders
+    	// enables sliders+button
     	sliderr.setEnabled(true);
     	sliderg.setEnabled(true);
     	sliderb.setEnabled(true);
