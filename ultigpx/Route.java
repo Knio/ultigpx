@@ -10,7 +10,7 @@ public class Route extends ArrayList<Waypoint>
     public boolean enabled;
     public Color color;
     public String name;
-    public String description;
+    public String desc;
     
     //Constructor for collection of waypoints, described as a route
     public Route()
@@ -44,11 +44,11 @@ public class Route extends ArrayList<Waypoint>
     	name = x;
     }
     
-    public String getDescription() {
-    	return description;
+    public String getDesc() {
+    	return desc;
     }
     
-    public void setDescription(String x) {
-    	description = x;
+    public void setDesc(String x) {
+    	desc = x;
     }
 }
