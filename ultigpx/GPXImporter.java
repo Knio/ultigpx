@@ -1,6 +1,7 @@
 package ultigpx;
 
 
+
 import java.util.*;
 import java.io.*;
 import org.jdom.*;
@@ -12,9 +13,6 @@ public class GPXImporter {
     public static UGPXFile importGPX(String filename) throws JDOMException, IOException {
         // Create a new UGPXFile to put data in
         UGPXFile returnValue = new UGPXFile();
-        
-        //Create a calender for converting times
-        Calendar timeConverter = new GregorianCalendar();
         
         // Create the document from the input stream using JAXPDOM adapter
         Document inputFile = new SAXBuilder().build(new File(filename));
@@ -134,7 +132,7 @@ public class GPXImporter {
                                             ele = Double.parseDouble(currentWaypointChild.getText());
                                         else if (currentWaypointChild.getName().equals("time"))
                                             time = getTime(currentWaypointChild.getText());
-
+                                        
                                         //Add waypoints to track segments
                                         Waypoint newWaypoint = new Waypoint(name, desc, currentWaypointChild.getAttribute("lat").getDoubleValue(), currentWaypointChild.getAttribute("lon").getDoubleValue(), ele, time);
                                         newTrackSegment.add(newWaypoint);
@@ -163,8 +161,12 @@ public class GPXImporter {
         return returnValue;
     }
     
-    private static double getTime(String toParse) throws IOException {
+    private static double getTime(String toParse) {
         
+        //Create a calender for converting times
+        Calendar timeConverter = new GregorianCalendar();
+        
+        //Other attributes
         Integer year = 0;
         Integer month = 0;
         Integer day = 0;
@@ -172,14 +174,22 @@ public class GPXImporter {
         Integer minute = 0;
         Integer second = 0;
         
-        //year = year.getInteger(toParse.substring(0, 3));
-        //month = month.getInteger(toParse.substring(0, 3));
-        //day = day.getInteger(toParse.substring(0, 3));
-        //hour = hour.getInteger(toParse.substring(0, 3));
-        //minute = year.getInteger(toParse.substring(0, 3));
-        //second = year.getInteger(toParse.substring(0, 3));
+        try {
+            year = year.parseInt(toParse.substring(0, 3));
+            month = month.parseInt(toParse.substring(5, 6));
+            day = day.parseInt(toParse.substring(8, 9));
+            hour = hour.parseInt(toParse.substring(11, 12));
+            minute = year.parseInt(toParse.substring(14, 15));
+            second = year.parseInt(toParse.substring(17, 18));
+        } //end try
         
-        return -2;
+        catch (NumberFormatException e) {
+            return -1;
+        } //end catch
+        
+        timeConverter.set(year, month, day, hour, minute, second);
+        
+        return timeConverter.getTimeInMillis();
     }
     
 }
