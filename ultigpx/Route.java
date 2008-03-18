@@ -49,6 +49,6 @@ public class Route extends ArrayList<Waypoint>
     }
     
     public void setDescription(String x) {
-    	description = x
+    	description = x;
     }
 }
