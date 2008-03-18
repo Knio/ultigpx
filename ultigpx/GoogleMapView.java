@@ -6,11 +6,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.net.*;
+import org.jdesktop.jdic.browser.*;
 
 
 public class GoogleMapView extends MapView {
 
 	UGPXFile	file;
+	WebBrowser	webBrowser;
 	
 	static final Boolean	DEBUG_MODE		= true;
 
@@ -18,19 +21,71 @@ public class GoogleMapView extends MapView {
 
 	public GoogleMapView (UltiGPX main) {
 		super(main);
+		
+		if (DEBUG_MODE) System.out.println("GoogleMapView initialization started.");
 		this.main = main;
 		//file = main.file;
 		file = conTestFile();
+		
+		webBrowser = new WebBrowser();
+		
+		webBrowser.addWebBrowserListener(
+            new WebBrowserListener() {
+				boolean isFirstPage = true;
+				public void downloadStarted(WebBrowserEvent event) {;}
+				public void downloadCompleted(WebBrowserEvent event) {;}
+				public void downloadProgress(WebBrowserEvent event) {;}
+				public void downloadError(WebBrowserEvent event) {;}
+				public void documentCompleted(WebBrowserEvent event) {;}
+				public void titleChange(WebBrowserEvent event) {;}
+				public void statusTextChange(WebBrowserEvent event) {;}
+				public void windowClose(WebBrowserEvent event) {
+					if(JOptionPane.YES_OPTION==JOptionPane.showConfirmDialog(
+						webBrowser,
+						"The webpage you are viewing is trying to close the window.\n Do you want to close this window?",
+						"Warning",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE))
+						{
+							System.exit(0);
+						}
+            }
+        });
+		
 		outputHTML();
 		
-		//while (true) {
-		repaint();
-		//}
+		try {
+				
+			webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
+				
+		} catch (MalformedURLException e) {
+			System.out.println(e.getMessage());
+			return;
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			return;
+		}
+		
+		
+        this.setLayout(new BorderLayout());
+        webBrowser.setPreferredSize(new Dimension(getWidth(), getHeight()));
+        add(webBrowser, BorderLayout.CENTER);
+		webBrowser.setVisible(true);
 		
 		return;
 	}
-    
-    public void fill() {}
+	
+	public void repaint() {
+		super.repaint();
+		if ((file == null) && (main != null) && (main.file != null)) {
+			file = main.file;
+			//outputHTML();
+			//webBrowser.setVisible(true);
+			
+			repaint();
+		}
+		
+	}
 
 	private UGPXFile conTestFile () {
 		// Construct a new UGPXFile with nothing in it
@@ -41,17 +96,21 @@ public class GoogleMapView extends MapView {
 		TrackSegment 	tempTS;
 		//Route	 		tempRT;
 		
+		// Temporart time, for easy switch to GregorianCalender
+		double tempTM = 0;		
+		//GregorianCalender tempTM = new GregorianCalender() 
+		
 		// Add a Waypoint to the UGPXFile
-		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),0);
+		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),tempTM);
 		file.addWaypoint(tempWP);
 		
 		// Create a new TrackSegment with 5 points
 		tempTS = new TrackSegment();
-		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),0));
-		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),0));
-		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),0));
-		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),0));
-		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),0));
+		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),tempTM));
 		
 		// Create a new Track and add the TrackSegment to it
 		tempTK = new Track();
@@ -62,6 +121,10 @@ public class GoogleMapView extends MapView {
 		
 		// Return the constructed UGPXFile
 		return file;
+	}
+
+	public void fill () {
+		return;
 	}
 
     
@@ -128,6 +191,8 @@ public class GoogleMapView extends MapView {
 
 	private void outputHTML () {
 		
+		if (file == null) return;
+		
 		// Construct a platform-independent file name
 		File infile = new File(HTML_OUT_FILE);			
 		
@@ -192,8 +257,8 @@ public class GoogleMapView extends MapView {
     		wtext = wtext + "//]]>\n";
   			wtext = wtext + "</script>\n";
 			wtext = wtext + "</head>\n";
-  			wtext = wtext + "<body onload=\"load()\" onunload=\"GUnload()\">\n";
-			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; width: 1000px; height: 500px\"></div>\n";
+  			wtext = wtext + "<body onload=\"load()\" onunload=\"GUnload()\" scroll=no style=\"width:100%\">\n";
+			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:-300px; bottom:0px; width: 100%; height: 800px\"></div>\n";
 			wtext = wtext + "</body>\n";
 			wtext = wtext + "</html>\n";
 			
@@ -209,36 +274,3 @@ public class GoogleMapView extends MapView {
 	}
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
