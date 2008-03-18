@@ -13,4 +13,19 @@ class GridMapView extends BasicMapView
         
     }
     
+    
+    protected void render()
+    {
+        renderGrid();
+        super.render();
+    }
+    
+    protected void renderGrid()
+    {
+        
+        
+        
+    }
+    
+    
 }

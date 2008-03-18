@@ -9,8 +9,8 @@ import org.jdom.*;
 public class UltiGPX
 {
     UGPXFile file;
-    MainView view;
-    //GuiGTXApp view;
+    //MainView view;
+    GuiGTXApp view;
     public static void main(String args[])
     {
         
@@ -26,9 +26,9 @@ public class UltiGPX
         file = sample(); // stub until importer works
         //importGPX("example1.gpx");
         
-        view = new MainView(this);
-        //view = GuiGTXApp.getApplication();
-        
+        //view = new MainView(this);
+        view = GuiGTXApp.getApplication();
+        view.startup();
     }
     
     public void importGPX(String filename)
