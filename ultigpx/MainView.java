@@ -10,6 +10,7 @@ public class MainView extends JFrame
     UltiGPX main;
     MapView map1;
     MapView map2;
+    MapView map3;
     PropertiesView prop;
     
     public MainView(UltiGPX _main)
@@ -58,7 +59,9 @@ public class MainView extends JFrame
         // creates a map view and adds it as a pane
         map2 = new GoogleMapView(main);
         map1 = new BasicMapView(main);
+        map3 = new GridMapView(main);
         x.add("Basic Map",map1);
+        x.add("Grid Map", map3);
         x.add("Google Map", map2);
         
         // resets the gridwidth for next row

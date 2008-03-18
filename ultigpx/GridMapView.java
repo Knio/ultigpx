@@ -3,7 +3,7 @@ package ultigpx;
 
 import javax.swing.*;
 
-class GridMapView extends MapView
+class GridMapView extends BasicMapView
 {
     UltiGPX main;
     
