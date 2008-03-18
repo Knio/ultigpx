@@ -327,12 +327,12 @@ public class BasicMapView extends MapView
         GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD, ts.size()+1);
         Point2D t = project(ts.get(0));
         
-        p.moveTo(t.getX(), t.getY());
+        p.moveTo((float)t.getX(), (float)t.getY());
         
         for (Waypoint i : ts)
         {
             t = project(i);
-            p.lineTo(t.getX(), t.getY());
+            p.lineTo((float)t.getX(), (float)t.getY());
         }
         
         g.draw(p);

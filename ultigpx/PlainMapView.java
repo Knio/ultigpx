@@ -3,14 +3,11 @@ package ultigpx;
 
 import javax.swing.*;
 
-class PlainMapView extends MapView
+class PlainMapView extends BasicMapView
 {
-    UltiGPX main;
-    
     public PlainMapView(UltiGPX main)
     {
         super(main);
-        
     }
     
 }

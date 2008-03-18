@@ -58,7 +58,7 @@ public class MainView extends JFrame
         
         // creates a map view and adds it as a pane
         map2 = new GoogleMapView(main);
-        map1 = new BasicMapView(main);
+        map1 = new PlainMapView(main);
         map3 = new GridMapView(main);
         x.add("Basic Map",map1);
         x.add("Grid Map", map3);

@@ -6,7 +6,7 @@ import java.awt.Color;
 
 public class Track extends ArrayList<TrackSegment>
 {
-	static final long serialVersionUID = 0;
+	//static final long serialVersionUID = 0;
     String name;
     public boolean enabled;
     public Color color;
