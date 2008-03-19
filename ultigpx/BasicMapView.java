@@ -14,6 +14,7 @@ public abstract class BasicMapView extends MapView
     Graphics2D      g;
     
     ArrayList<Rectangle2D> labelhints;
+    RectQuadTree labelhints2;
     
     public BasicMapView(UltiGPX main)
     {
@@ -27,6 +28,7 @@ public abstract class BasicMapView extends MapView
         
         entities = new ArrayList<Waypoint>();
         labelhints = new ArrayList<Rectangle2D>();
+        
         
         load();
         fill();
@@ -85,7 +87,7 @@ public abstract class BasicMapView extends MapView
     protected void render()
     {
         labelhints.clear();
-        
+        labelhints2 = new RectQuadTree(getVisibleRect());
         
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                            RenderingHints.VALUE_ANTIALIAS_ON);
@@ -206,6 +208,7 @@ public abstract class BasicMapView extends MapView
         double y = p.getY() + WAYPOINT_SIZE;
         
         Rectangle2D r = new Rectangle2D.Double(x, y, name.length()*FONT_SIZE*4/3, FONT_SIZE);
+        //*
         for (Rectangle2D t : labelhints)
         {
             if (r.intersects(t))
@@ -213,6 +216,11 @@ public abstract class BasicMapView extends MapView
                 return;
             }
         }
+        //*/
+        
+        //if (labelhints2.intersects(r)) return;
+        //labelhints2.add(r);
+        
         labelhints.add(r);
         g.drawString(name, (float)x, (float)y);
     }

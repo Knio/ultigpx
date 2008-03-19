@@ -16,12 +16,13 @@ public class GuiGTXApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        show(new GuiGTXView(this));
+        //show(new GuiGTXView(this));
     }
-
-    public void startup(UltiGPX main) {
+        
+    public void startup(ultigpx.UltiGPX main) {
         show(new GuiGTXView(this,  main));
     }
+    
     
     /**
      * This method is to initialize the specified window by injecting resources.

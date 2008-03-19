@@ -1,5 +1,5 @@
-xcopy resources bin\ultigpx\resources\ /EXCLUDE:ignore
-xcopy resources\busyicons bin\ultigpx\resources\busyicons\ /EXCLUDE:ignore
+xcopy resources           bin\guigpx\resources\ /EXCLUDE:ignore
+xcopy resources\busyicons bin\guigpx\resources\busyicons\ /EXCLUDE:ignore
 jar xf jdom.jar org
 jar xf jdic.jar org
 rem jar xf AbsoluteLayout.jar org
