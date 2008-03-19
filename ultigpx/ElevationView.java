@@ -134,6 +134,10 @@ public class ElevationView extends JPanel
 		
 		Graphics2D g2d = (Graphics2D)g;
 		
+		//Antialias all nice like Tom does.
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		//TODO set this to use default colours
 		g2d.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
 		g2d.setPaint(Color.WHITE);
