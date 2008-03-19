@@ -8,6 +8,7 @@ public class Track extends ArrayList<TrackSegment>
 {
 	//static final long serialVersionUID = 0;
     String name;
+	String desc;
     public boolean enabled;
     public Color color;
     
@@ -38,18 +39,23 @@ public class Track extends ArrayList<TrackSegment>
         color = null;
     }
     
-    String getName() {
+    public String getName() {
         return name;
-    }
-    
+    }  
     public void setName(String x) {
     	name = x;
+    }
+	
+	public String getDesc() {
+        return desc;
+    }  
+    public void setDesc(String x) {
+    	desc = x;
     }
     
     public boolean getEnabled() {
         return enabled;
     }
-    
     public void setEnabled(boolean x) {
     	enabled = x;
     }
