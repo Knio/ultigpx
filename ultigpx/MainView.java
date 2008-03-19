@@ -75,12 +75,8 @@ public class MainView extends JFrame
         c.weighty = 1.0;
         setLayout(gridbag);
         
-        // sets horiz weight of PropertiesView
-        c.weightx = 1.0;
         
         // creates a properties view and adds it as a pane
-        prop = new PropertiesView(this);
-        add(prop, c);
         
         // sets horiz weight of the map
         c.weightx = 5.0;
@@ -100,6 +96,17 @@ public class MainView extends JFrame
         x.add("Basic Map",map1);
         x.add("Grid Map", map3);
         x.add("Google Map", map2);
+        
+        
+        c.gridwidth = 1;
+        
+        // sets horiz weight of PropertiesView
+        c.weightx = 1.0;
+        
+        prop = new PropertiesView(this);
+        add(prop, c);
+        
+        
         
         c.weighty = .5;
         ele = new ElevationView(this.main);
