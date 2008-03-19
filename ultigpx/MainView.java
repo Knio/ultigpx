@@ -83,14 +83,17 @@ public class MainView extends JFrame
     
     public void select(Waypoint x) {
     	prop.select(x);
+    	ele.select(x);
     }
     
     public void select(Track x) {
     	prop.select(x);
+    	ele.select(x);
     }
     
     public void select(Route x) {
     	prop.select(x);
+    	ele.select(x);
     }
     
     public void refreshmap() {
