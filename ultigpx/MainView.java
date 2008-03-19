@@ -97,9 +97,9 @@ public class MainView extends JFrame
     }
     
     public void refreshmap() {
-    	map1.fill();
-    	map2.fill();
-    	map3.fill();
+    	map1.repaint();
+    	map2.repaint();
+    	map3.repaint();
     }
     
 }
