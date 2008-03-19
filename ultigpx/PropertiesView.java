@@ -34,18 +34,54 @@ public class PropertiesView extends JPanel {
 	public void select(Waypoint wp) {
 		selwp = wp;
 		selected = 1;
+		if (selwp.getColor() != null)
+		{
+			sliderr.setValue(selwp.getColor().getRed());
+			sliderg.setValue(selwp.getColor().getGreen());
+			sliderb.setValue(selwp.getColor().getBlue());
+		}
+		else
+		{
+			sliderr.setValue(0);
+			sliderg.setValue(0);
+			sliderb.setValue(0);
+		}
 		repaint();
 	}
 	// displays a track
 	public void select(Track trk) {
 		seltrk = trk;
 		selected = 2;
+		if (seltrk.getColor() != null)
+		{
+			sliderr.setValue(seltrk.getColor().getRed());
+			sliderg.setValue(seltrk.getColor().getGreen());
+			sliderb.setValue(seltrk.getColor().getBlue());
+		}
+		else
+		{
+			sliderr.setValue(0);
+			sliderg.setValue(0);
+			sliderb.setValue(0);
+		}
 		repaint();
 	}
 	// displays a route 
 	public void select(Route rt) {
 		selrt = rt;
 		selected = 3;
+		if (selrt.getColor() != null)
+		{
+			sliderr.setValue(selrt.getColor().getRed());
+			sliderg.setValue(selrt.getColor().getGreen());
+			sliderb.setValue(selrt.getColor().getBlue());
+		}
+		else
+		{
+			sliderr.setValue(0);
+			sliderg.setValue(0);
+			sliderb.setValue(0);
+		}
 		repaint();
 	}
 	// displays nothing
