@@ -388,6 +388,7 @@ public class BasicMapView extends MapView
             Point2D click = new Point2D.Double(e.getX(), e.getY());
             
             Route       min_r  = null;
+            Object      min_o  = null;
             Track       min_t  = null;
             Waypoint    min_w  = null;
             
@@ -399,6 +400,8 @@ public class BasicMapView extends MapView
             {
                 if (!tk.enabled) continue;
                 for (TrackSegment ts : tk)
+                {
+                    first = true;
                     for (Waypoint i : ts)
                     {
                         line.setLine(line.getP2(), project(i));
@@ -407,21 +410,22 @@ public class BasicMapView extends MapView
                             first = false;
                             continue;
                         }
-                        double t = line.ptLineDistSq(click);
+                        double t = line.ptSegDistSq(click);
                         if (t < min_d)
                         {
                             min_d = t;
-                            min_t = tk;
-                            
-                            break tk;
+                            min_o = tk;
+                            //break tk;
                         }
                     }
+                }
             }
             
-            min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+            //min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
             rt: for (Route rt : file.routes())
             {
                 if (!rt.enabled) continue;
+                first = true;
                 for (Waypoint i : rt)
                 {
                     line.setLine(line.getP2(), project(i));
@@ -430,20 +434,19 @@ public class BasicMapView extends MapView
                         first = false;
                         continue;
                     }
-                    double t = line.ptLineDistSq(click);
+                    double t = line.ptSegDistSq(click);
                     if (t < min_d)
                     {
                         min_d = t;
-                        min_r = rt;
-                        
-                        break rt;
+                        min_o = rt;
+                        //break rt;
                     }
                 }
             }
             
             min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
             
-            for (Waypoint i : entities)
+            for (Waypoint i : file.waypoints())
             {
                 if (!i.enabled) continue;
                 double t = click.distanceSq(project(i));
@@ -454,8 +457,14 @@ public class BasicMapView extends MapView
                 }
             }
             
-            if (min_t != null) select(min_t);
-            if (min_r != null) select(min_r);
+            //if (min_t != null) select(min_t);
+            //if (min_r != null) select(min_r);
+            
+            if (min_o != null)
+            {
+                if (min_o instanceof Route) select((Route)min_o);
+                if (min_o instanceof Track) select((Track)min_o);
+            }
             if (min_w != null) select(min_w);
             
         }

@@ -75,7 +75,9 @@ public class MainView extends JFrame
         setSize(600, 600);
         setVisible(true);
         
+        // zoom maps to fill screen
         map1.fill();
+        map2.fill();
         map3.fill();
     }
     

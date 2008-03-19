@@ -30,6 +30,8 @@ public class UltiGPX
         //view = GuiGTXApp.getApplication();
         //view.startup(this);
         
+        /* Debugging
+        
         System.out.println("ROUTES\n\n");
         for (Route rt : file.routes())
         {
@@ -47,7 +49,7 @@ public class UltiGPX
         {
             System.out.println(wp);
         }
-        
+        //*/
         
         
         
