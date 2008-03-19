@@ -9,8 +9,8 @@ import java.awt.geom.*;		// For calculating distance between points
 public class UltiGPX
 {
     UGPXFile file;
-    //MainView view;
-    guigtx.GuiGTXApp view;
+    MainView view;
+    //guigtx.GuiGTXApp view;
     public static void main(String args[])
     {
         
@@ -28,9 +28,9 @@ public class UltiGPX
         
         reduceFile(file);
         
-        //view = new MainView(this);
-        view = guigtx.GuiGTXApp.getApplication();
-        view.startup(this);
+        view = new MainView(this);
+        //view = guigtx.GuiGTXApp.getApplication();
+        //view.startup(this);
         
         
         
