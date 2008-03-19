@@ -10,16 +10,10 @@ import java.util.*;
 
 public abstract class BasicMapView extends MapView
 {
-    UGPXFile        file;
     EventHandler    evt;
-    Object          selected;
     Graphics2D      g;
     
     ArrayList<Rectangle2D> labelhints;
-    
-    java.util.List<Waypoint> entities;
-    
-    
     
     public BasicMapView(UltiGPX main)
     {
@@ -35,66 +29,8 @@ public abstract class BasicMapView extends MapView
         labelhints = new ArrayList<Rectangle2D>();
         
         load();
-        repaint();
-    }
-    
-    protected void load()
-    {
-        if (file == main.file)
-            return;
-        
-        file = main.file;
-        
-        entities.clear();
-        
-        if (file == null)
-            return;
-        
-        for (Waypoint i:file.waypoints())
-            entities.add(i);
-            
-        for (Route r:file.routes())
-            for (Waypoint i:r)
-                entities.add(i);
-            
-        for (Track r:file.tracks())
-            for (TrackSegment s:r)
-                for (Waypoint i:s)
-                    entities.add(i);
-        
         fill();
-        
-    }
-    
-    public void fill()
-    {
-        if (entities.size()==0)
-        {
-            lon     = 0;
-            lat     = 0;
-            scale   = 1;
-            return;
-        }
-        
-        double max_lon = entities.get(0).lon;
-        double max_lat = entities.get(0).lat;
-        double min_lon = max_lon;
-        double min_lat = max_lat;
-        
-        for (Waypoint i:entities)
-        {
-            max_lon = Math.max(max_lon, i.lon);
-            max_lat = Math.max(max_lat, i.lat);
-            min_lon = Math.min(min_lon, i.lon);
-            min_lat = Math.min(min_lat, i.lat);
-        }
-        
-        double lon = (max_lon + min_lon) / 2;
-        double lat = (max_lat + min_lat) / 2;
-        
-        scroll(lon, lat);
-        
-        scale(0.9 * getWidth() / Math.abs((max_lon - min_lon)));
+        repaint();
     }
     
     protected void select(Waypoint wp)
@@ -241,10 +177,8 @@ public abstract class BasicMapView extends MapView
         
         for (Waypoint i : ts)
         {
-	    if (i.enabled) {
-            	t = project(i);
-            	p.lineTo((float)t.getX(), (float)t.getY());
-	    }
+            t = project(i);
+            p.lineTo((float)t.getX(), (float)t.getY());
         }
         
         g.draw(p);

@@ -58,8 +58,8 @@ public class MainView extends JFrame
         x.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         
         // creates a map view and adds it as a pane
-        map2 = new GoogleMapView(main);
         map1 = new PlainMapView(main);
+        map2 = new GoogleMapView(main);
         map3 = new GridMapView(main);
         x.add("Basic Map",map1);
         x.add("Grid Map", map3);
@@ -77,8 +77,8 @@ public class MainView extends JFrame
         
         // zoom maps to fill screen
         map1.fill();
-        map2.fill();
-        map3.fill();
+        //map2.fill();
+        //map3.fill();
     }
     
     public void select(Waypoint x) {

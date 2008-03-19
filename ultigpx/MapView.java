@@ -10,8 +10,11 @@ import java.util.*;
 
 abstract public class MapView extends JPanel
 {
-    UltiGPX         main;
-    Object          selected;
+    UltiGPX  main;
+    UGPXFile file;
+    static Object   selected;
+    
+    static java.util.List<Waypoint> entities;
     
     static public double lon;
     static public double lat;
@@ -32,37 +35,91 @@ abstract public class MapView extends JPanel
     public static final double     ZOOM_OUT        = 0.90909090909;
 
 
-	public double[] zoomLevels = new double[18];
-    
+	public double[] zoomLevels = new double[]{
+         0.711111,
+         1.422222,
+         2.844444,
+         5.688888,
+         11.377777,
+         22.755555,
+         45.511111,
+         91.022222,
+         182.044444,
+         364.088888,
+         728.177777,
+         1456.355555,
+         2912.711111,
+         5825.422222,
+         11650.844444,
+         23301.688888,
+         46603.377777,
+         93206.755555};
     
     public MapView(UltiGPX main)
     {
         super();
         this.main = main;
-		zoomLevels[0] = 0.711111;
-		zoomLevels[1] = 1.422222;
-		zoomLevels[2] = 2.844444;
-		zoomLevels[3] = 5.688888;
-		zoomLevels[4] = 11.377777;
-		zoomLevels[5] = 22.755555;
-		zoomLevels[6] = 45.511111;
-		zoomLevels[7] = 91.022222;
-		zoomLevels[8] = 182.044444;
-		zoomLevels[9] = 364.088888;
-		zoomLevels[10] = 728.177777;
-		zoomLevels[11] = 1456.355555;
-		zoomLevels[12] = 2912.711111;
-		zoomLevels[13] = 5825.422222;
-		zoomLevels[14] = 11650.844444;
-		zoomLevels[15] = 23301.688888;
-		zoomLevels[16] = 46603.377777;
-		zoomLevels[17] = 93206.755555;
-    }
-
-    
-    abstract public void fill();
-    
         
+    }
+    
+    protected void load()
+    {
+        if (file == main.file)
+            return;
+        
+        file = main.file;
+        
+        entities.clear();
+        
+        if (file == null)
+            return;
+        
+        for (Waypoint i:file.waypoints())
+            entities.add(i);
+            
+        for (Route r:file.routes())
+            for (Waypoint i:r)
+                entities.add(i);
+            
+        for (Track r:file.tracks())
+            for (TrackSegment s:r)
+                for (Waypoint i:s)
+                    entities.add(i);
+        
+    }
+    
+    public void fill()
+    {
+        if (entities.size()==0)
+        {
+            lon     = 0;
+            lat     = 0;
+            scale   = 1;
+            return;
+        }
+        
+        double max_lon = entities.get(0).lon;
+        double max_lat = entities.get(0).lat;
+        double min_lon = max_lon;
+        double min_lat = max_lat;
+        
+        for (Waypoint i:entities)
+        {
+            max_lon = Math.max(max_lon, i.lon);
+            max_lat = Math.max(max_lat, i.lat);
+            min_lon = Math.min(min_lon, i.lon);
+            min_lat = Math.min(min_lat, i.lat);
+        }
+        
+        double lon = (max_lon + min_lon) / 2;
+        double lat = (max_lat + min_lat) / 2;
+        
+        scroll(lon, lat);
+        
+        scale(0.9 * getWidth() / Math.abs((max_lon - min_lon)));
+    }
+    
+    
     protected void scroll(double lon, double lat)
     {
         lon = Math.max(-180, lon);
@@ -114,7 +171,7 @@ abstract public class MapView extends JPanel
     {
         // http://en.wikipedia.org/wiki/Mercator_projection
         double x = lon - this.lon;
-        double y = Math.log(Math.tan(Math.PI*(0.25 +    lat/360))) -
+        double y = Math.log(Math.tan(Math.PI*(0.25 +     lat/360))) -
                    Math.log(Math.tan(Math.PI*(0.25 +this.lat/360)));
         
         y  = Math.toDegrees(y);

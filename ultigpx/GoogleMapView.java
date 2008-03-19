@@ -97,10 +97,6 @@ public class GoogleMapView extends MapView {
 		}
 		
 	}
-
-	public void fill () {
-		return;
-	}
 	
 	// Take a java Color and convert it to a hex string prefixed with #
 	public String getHex (Color color) {
@@ -215,23 +211,23 @@ public class GoogleMapView extends MapView {
 			// Open the file
 			FileWriter writer = new FileWriter(infile);	
 			String wtext;
-			String drawcode = "";
+			StringBuilder drawcode = new StringBuilder();
 			
 			// For each TrackSegment in each Track, append the string to draw it
 			for (Track tk : file.tracks())
 				if (tk.enabled)
 					for (TrackSegment ts : tk)
-                		drawcode = drawcode + getPolyString(tk.color, ts);
+                		drawcode.append(getPolyString(tk.color, ts));
 			
 			// For each Route, append the string to draw it
 			for (Route rt : file.routes())
 				if (rt.enabled)
-					drawcode = drawcode + getPolyString(rt.color, rt);
+					drawcode.append(getPolyString(rt.color, rt));
 			
 			// For each Waypoint, append the string to draw it
 			for (Waypoint wp : file.waypoints())
 				if (wp.enabled)
-					drawcode = drawcode + getPointString(wp.color, wp);
+					drawcode.append(getPointString(wp.color, wp));
 				
 				
 				
@@ -261,7 +257,7 @@ public class GoogleMapView extends MapView {
     		wtext = wtext + "		icon1.iconAnchor = new GPoint(3,3);\n";
 			wtext = wtext + "		var points;\n\n";
 			
-			wtext = wtext + drawcode;
+			wtext = wtext + drawcode.toString();
 			
 			wtext = wtext + "	}\n";
 			wtext = wtext + "}\n";
