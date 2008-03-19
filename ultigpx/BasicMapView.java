@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.*;
 
 
-public class BasicMapView extends MapView
+public abstract class BasicMapView extends MapView
 {
     UGPXFile        file;
     EventHandler    evt;
@@ -97,50 +97,6 @@ public class BasicMapView extends MapView
         scale(0.9 * getWidth() / Math.abs((max_lon - min_lon)));
     }
     
-    protected void scroll(double lon, double lat)
-    {
-        lon = Math.max(-180, lon);
-        lon = Math.min( 180, lon);
-        
-        lat = Math.max(-80, lat);
-        lat = Math.min( 80, lat);
-        
-        this.lon = lon;
-        this.lat = lat;
-        
-        repaint();
-    }
-    
-    protected void scrollBy(double lon, double lat)
-    {
-        scroll(lon+this.lon, lat+this.lat);
-    }
-    
-    protected void scrollByScreen(double x, double y)
-    {
-        x = getWidth()  / 2.0 - x;
-        y = getHeight() / 2.0 - y;
-        
-        Point2D p = new Point2D.Double(x, y);
-        p = inverseproject(p);
-        scroll(p.getX(), p.getY());
-        
-    }
-    
-    protected void scale(double s)
-    {
-        s = Math.min(s, MAX_SCALE);
-        s = Math.max(s, MIN_SCALE);
-        scale = s;
-        repaint();
-        
-    }
-    
-    protected void scaleBy(double s)
-    {
-        scale(scale*s);
-    }
-    
     protected void select(Waypoint wp)
     {
         selected = wp;
@@ -160,63 +116,6 @@ public class BasicMapView extends MapView
         selected = rt;
         main.view.select(rt);
         repaint();
-    }
-    
-    // returns a screen coordinate from a world coordinate,
-    // by applying the Mercator map projection, scale, and scroll
-    protected Point2D project(double lon, double lat)
-    {
-        // http://en.wikipedia.org/wiki/Mercator_projection
-        double x = lon - this.lon;
-        double y = Math.log(Math.tan(Math.PI*(0.25 +    lat/360))) -
-                   Math.log(Math.tan(Math.PI*(0.25 +this.lat/360)));
-        
-        y  = Math.toDegrees(y);
-        
-        x *= scale;
-        y *= scale; 
-        
-        x += getWidth() /2.0;
-        y -= getHeight()/2.0;
-        
-        return new Point2D.Double(x, -y);
-    }
-    protected Point2D project(Waypoint wp)
-    {
-        return project(wp.lon, wp.lat);
-    }
-    protected Point2D project(Point2D p)
-    {
-        return project(p.getX(), p.getY());
-    }
-    
-    
-    
-    // returns a world coordinate from a screen coordinate
-    protected Point2D inverseproject(double x, double y)
-    {
-        double lon = x;
-        double lat =-y;
-        
-        lon -= getWidth() /2.0;
-        lat += getHeight()/2.0;
-        
-        lon /= scale;
-        lat /= scale;
-        
-        lon = lon + this.lon;
-        
-        lat = Math.toRadians(lat);
-        lat+= Math.log(Math.tan(Math.PI*(0.25 + this.lat/360)));
-        lat = Math.atan(Math.sinh(lat));
-        
-        lat = Math.toDegrees(lat);
-        
-        return new Point2D.Double(lon, lat);
-    }
-    protected Point2D inverseproject(Point2D p)
-    {
-        return inverseproject(p.getX(), p.getY());
     }
     
     protected void setColor(Color c1, Color c2)
