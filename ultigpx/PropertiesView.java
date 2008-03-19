@@ -28,6 +28,7 @@ public class PropertiesView extends JPanel {
 	JSlider sliderb;
 	// set color button
 	Button setcolor;
+	MainView parent;
 	
 	// displays a waypoint
 	public void select(Waypoint wp) {
@@ -54,8 +55,9 @@ public class PropertiesView extends JPanel {
 	}
 	
 	// constructor that will initially display nothing
-	public PropertiesView() {
+	public PropertiesView(MainView view) {
 		super();
+		parent = view;
 		setLayout(new GridBagLayout());
 		// creates a text box
     	mllabel = new TextArea("",5,5,TextArea.SCROLLBARS_VERTICAL_ONLY);
@@ -205,9 +207,9 @@ public class PropertiesView extends JPanel {
     	mllabel.append("Elevation: " + selwp.getEle() + "\n\n");
     	// displays color
     	if (selwp.getColor() != null)
-    		mllabel.append("Color: " + selwp.getColor() + "\n\n");
+    		mllabel.append("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue() + "\n\n");
     	else
-    		mllabel.append("Color: Default\n\n");
+    		mllabel.append("Color:\n  Default\n\n");
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
@@ -229,9 +231,9 @@ public class PropertiesView extends JPanel {
     	mllabel.append("Number of Segments: " + seltrk.size() + "\n\n");
     	// displays color
     	if (seltrk.color != null)
-    		mllabel.append("Color: " + seltrk.color + "\n\n");
+    		mllabel.append("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue() + "\n\n");
     	else
-    		mllabel.append("Color: Default\n\n");
+    		mllabel.append("Color:\n  Default\n\n");
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
@@ -255,9 +257,9 @@ public class PropertiesView extends JPanel {
     	mllabel.append("Number of Waypoints: " + selrt.size() + "\n\n");
     	// displays color
     	if (selrt.color != null)
-    		mllabel.append("Color: " + selrt.color + "\n\n");
+    		mllabel.append("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue() + "\n\n");
     	else
-    		mllabel.append("Color: Default\n\n");
+    		mllabel.append("Color:\n  Default\n\n");
     }
     
     // action listener for the set color button
@@ -270,16 +272,19 @@ public class PropertiesView extends JPanel {
     		{
     			selwp.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
     			//System.out.println("wpcolor: " + selwp.color);
+    			parent.refreshmap();
     		}
     		else if (e.getActionCommand().equals("SetColor") && (selected == 2))
     		{
     			seltrk.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
     			//System.out.println("trkcolor: " + seltrk.color);
+    			parent.refreshmap();
     		}
     		else if (e.getActionCommand().equals("SetColor") && (selected == 3))
     		{
     			selrt.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
     			//System.out.println("rtcolor: " + selrt.color);
+    			parent.refreshmap();
     		}
     	}
     }

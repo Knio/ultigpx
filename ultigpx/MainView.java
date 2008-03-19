@@ -43,7 +43,7 @@ public class MainView extends JFrame
         c.weightx = 1.0;
         
         // creates a properties view and adds it as a pane
-        prop = new PropertiesView();
+        prop = new PropertiesView(this);
         add(prop, c);
         
         // sets horiz weight of the map
@@ -79,6 +79,24 @@ public class MainView extends JFrame
         map1.fill();
         map2.fill();
         map3.fill();
+    }
+    
+    public void select(Waypoint x) {
+    	prop.select(x);
+    }
+    
+    public void select(Track x) {
+    	prop.select(x);
+    }
+    
+    public void select(Route x) {
+    	prop.select(x);
+    }
+    
+    public void refreshmap() {
+    	map1.fill();
+    	map2.fill();
+    	map3.fill();
     }
     
 }

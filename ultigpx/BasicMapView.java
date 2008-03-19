@@ -144,18 +144,21 @@ public class BasicMapView extends MapView
     protected void select(Waypoint wp)
     {
         selected = wp;
+        main.view.select(wp);
         repaint();
     }
     
     protected void select(Track tk)
     {
         selected = tk;
+        main.view.select(tk);
         repaint();
     }
     
     protected void select(Route rt)
     {
         selected = rt;
+        main.view.select(rt);
         repaint();
     }
     
