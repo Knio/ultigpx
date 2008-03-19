@@ -24,10 +24,10 @@ public class GuiGTXView extends FrameView {
     ultigpx.UltiGPX main;
     public GuiGTXView(SingleFrameApplication app, ultigpx.UltiGPX main) {
         super(app);
-        
+
+        this.main = main;
         initComponents();
         
-        this.main = main;
         
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -83,9 +83,11 @@ public class GuiGTXView extends FrameView {
             }
         });
     }
+    
 
-   
-
+    
+    
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -97,7 +99,7 @@ public class GuiGTXView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         mapView = new javax.swing.JTabbedPane();
         plainCanvas = new java.awt.Canvas();
-        gridPanel = new javax.swing.JPanel();
+        gridPanel = new ultigpx.GridMapView(main);
         googleCanvas = new java.awt.Canvas();
         jSeparator1 = new javax.swing.JSeparator();
         trackViewPanel = new javax.swing.JPanel();

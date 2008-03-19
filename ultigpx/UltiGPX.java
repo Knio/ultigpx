@@ -32,7 +32,7 @@ public class UltiGPX
         view = guigtx.GuiGTXApp.getApplication();
         view.startup(this);
         
-    
+        
         
         
         

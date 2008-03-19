@@ -20,9 +20,25 @@ public class GuiGTXApp extends SingleFrameApplication {
     }
         
     public void startup(ultigpx.UltiGPX main) {
+        
         show(new GuiGTXView(this,  main));
     }
     
+    
+    public void select(ultigpx.Waypoint wp)
+    {
+        
+    }
+    
+    public void select(ultigpx.Track wp)
+    {
+        
+    }
+    
+    public void select(ultigpx.Route wp)
+    {
+        
+    }
     
     /**
      * This method is to initialize the specified window by injecting resources.

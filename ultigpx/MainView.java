@@ -5,7 +5,7 @@ package ultigpx;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainView extends JFrame
+public class MainView extends JFrame 
 {
     UltiGPX main;
     MapView map1;
@@ -18,6 +18,42 @@ public class MainView extends JFrame
     {
         super("UltiGPX");
         main = _main;
+        
+        
+        
+        
+        
+        
+        
+        JMenuBar menuBar;
+        menuBar = new javax.swing.JMenuBar();
+        
+        
+        JMenu fileMenu = new javax.swing.JMenu();
+        fileMenu.setText("File");
+        
+        JMenuItem exitMenuItem = new javax.swing.JMenuItem();
+        //exitMenuItem.setAction();
+        exitMenuItem.setName("exitMenuItem");
+        
+        fileMenu.add(exitMenuItem);
+        
+        
+        menuBar.add(fileMenu);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        setJMenuBar(menuBar);
+        
+        
+        
+        
         
         // so that the program doesn't get too small
         // PropertiesView needs at least 55 pixels width

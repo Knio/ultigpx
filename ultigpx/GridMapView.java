@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.geom.*; 
 import java.awt.*; 
 
-class GridMapView extends BasicMapView
+public class GridMapView extends BasicMapView
 {
     UltiGPX main;
     
