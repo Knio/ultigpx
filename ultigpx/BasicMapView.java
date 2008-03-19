@@ -164,12 +164,12 @@ public class BasicMapView extends MapView
     
     // returns a screen coordinate from a world coordinate,
     // by applying the Mercator map projection, scale, and scroll
-    protected Point2D project(Waypoint wp)
+    protected Point2D project(double lon, double lat)
     {
         // http://en.wikipedia.org/wiki/Mercator_projection
-        double x = wp.lon - lon;
-        double y = Math.log(Math.tan(Math.PI*(0.25 + wp.lat/360))) -
-                   Math.log(Math.tan(Math.PI*(0.25 +    lat/360)));
+        double x = lon - this.lon;
+        double y = Math.log(Math.tan(Math.PI*(0.25 +    lat/360))) -
+                   Math.log(Math.tan(Math.PI*(0.25 +this.lat/360)));
         
         y  = Math.toDegrees(y);
         
@@ -181,12 +181,22 @@ public class BasicMapView extends MapView
         
         return new Point2D.Double(x, -y);
     }
+    protected Point2D project(Waypoint wp)
+    {
+        return project(wp.lon, wp.lat);
+    }
+    protected Point2D project(Point2D p)
+    {
+        return project(p.getX(), p.getY());
+    }
+    
+    
     
     // returns a world coordinate from a screen coordinate
-    protected Point2D inverseproject(Point2D p)
+    protected Point2D inverseproject(double x, double y)
     {
-        double lon = p.getX();
-        double lat =-p.getY();
+        double lon = x;
+        double lat =-y;
         
         lon -= getWidth() /2.0;
         lat += getHeight()/2.0;
@@ -204,7 +214,10 @@ public class BasicMapView extends MapView
         
         return new Point2D.Double(lon, lat);
     }
-    
+    protected Point2D inverseproject(Point2D p)
+    {
+        return inverseproject(p.getX(), p.getY());
+    }
     
     protected void setColor(Color c1, Color c2)
     {
