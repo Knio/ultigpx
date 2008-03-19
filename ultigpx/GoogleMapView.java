@@ -111,9 +111,9 @@ public class GoogleMapView extends MapView {
 		String hexGreen = Integer.toHexString(color.getGreen());
 		String hexBlue = Integer.toHexString(color.getBlue());
 		
-		if (hexRed.equals("0")) hexRed = "00";
-		if (hexGreen.equals("0")) hexRed = "00";
-		if (hexBlue.equals("0")) hexRed = "00";
+		if (hexRed.length() == 1) hexRed = "0" + hexRed;
+		if (hexGreen.length() == 1) hexGreen = "0" + hexGreen;
+		if (hexBlue.length() == 1) hexBlue = "0" + hexBlue;
 		
 		return "#" + hexRed + hexGreen + hexBlue;
 	}
