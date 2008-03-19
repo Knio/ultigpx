@@ -1,6 +1,5 @@
 package ultigpx;
 
-import java.awt.*;
 import java.awt.geom.*; 
 import java.awt.event.*; 
 import javax.swing.*;
@@ -8,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import org.jdesktop.jdic.browser.*;
+import java.awt.*;
 
 
 public class GoogleMapView extends MapView {
@@ -98,64 +98,69 @@ public class GoogleMapView extends MapView {
 		
 	}
 
-	private UGPXFile conTestFile () {
-		// Construct a new UGPXFile with nothing in it
-		file = new UGPXFile();
-		
-		Waypoint		tempWP;
-		Track	 		tempTK;
-		TrackSegment 	tempTS;
-		//Route	 		tempRT;
-		
-		// Temporart time, for easy switch to GregorianCalender
-		double tempTM = 0;		
-		//GregorianCalender tempTM = new GregorianCalender() 
-		
-		// Add a Waypoint to the UGPXFile
-		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),tempTM);
-		file.addWaypoint(tempWP);
-		
-		// Create a new TrackSegment with 5 points
-		tempTS = new TrackSegment();
-		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),tempTM));
-		
-		// Create a new Track and add the TrackSegment to it
-		tempTK = new Track();
-		tempTK.add(tempTS);
-		
-		// Add the Track to the UGPXFile
-		file.addTrack(tempTK);
-		
-		// Return the constructed UGPXFile
-		return file;
-	}
-
 	public void fill () {
 		return;
+	}
+	
+	// Take a java Color and convert it to a hex string prefixed with #
+	public String getHex (Color color) {
+		// Didn't pass a Color, don't get one back!
+		if (color == null) return null;
+		
+		String retString = "#";
+		
+		retString = retString + Integer.toHexString(color.getRed());
+		retString = retString + Integer.toHexString(color.getGreen());
+		retString = retString + Integer.toHexString(color.getBlue());
+		
+		return retString;
 	}
 
 	
 	private String getPolyString (Color color, ArrayList<Waypoint> elements) {
+	
+		String retString = "";
 		
-		String retString = "		points = [";		// The string we will return
-		Waypoint tempWP;								// Store the waypoint while we are working with it
+		String drawcolor = getHex(color);
+		String tmpName;
+		String tmpDesc;
+		
+		if (elements instanceof Route) {
+			tmpName = ((Route)elements).getName();
+			tmpDesc = ((Route)elements).getDesc();
+			retString = retString + "		//Route: ";
+			if (tmpName != null) retString = retString + tmpName;
+			else retString = retString + "Null";
+			retString = retString + " - ";
+			if (tmpDesc != null) retString = retString + tmpDesc;
+			else retString = retString + "Null";
+			
+			if (drawcolor == null) drawcolor = getHex(ROUTE_COLOR);
+		}
+		else if (elements instanceof TrackSegment) {
+			if (((TrackSegment)elements).parent != null) {
+				tmpName = ((TrackSegment)elements).parent.getName();
+				tmpDesc = ((TrackSegment)elements).parent.getDesc();
+			}
+			else {
+				tmpName = null;
+				tmpDesc = null;
+			}
+			retString = retString + "		//TrackSegment: ";
+			if (tmpName != null) retString = retString + tmpName;
+			else retString = retString + "Null";
+			retString = retString + " - ";
+			if (tmpDesc != null) retString = retString + tmpDesc;
+			else retString = retString + "Null";
+			
+			if (drawcolor == null) drawcolor = getHex(TRACK_COLOR);
+		}
+		retString = retString + "\n";
+		
+		retString = retString + "		points = [";		// The string we will return
+		Waypoint tempWP;									// Store the waypoint while we are working with it
 		
 		// Add a comment with the Route/Track info
-		// The Route and Track types currently do not have the name and desc set up, uncomment when they do
-		/*
-		String retString = ""
-		if (elements instanceof Route) retString = retString + "		//Route: ";
-        if (elements instanceof TrackSegment) retString = retString + "		//Track: ";
-		if (elements.getName() != null) retString = retString + elements.getName();
-		else retString = retString + "Null";
-		retString = " - ";
-		if (elements.getDesc() != null) retString = retString + elements.getDesc();
-		retString = retString + "\n";
-		*/
 		
 		// Create an Iterator to loop over the elements
 		Iterator iter = elements.iterator();
@@ -173,7 +178,7 @@ public class GoogleMapView extends MapView {
 		// Remove the last comma we wrote, it isn't needed
 		retString = retString.substring(0, retString.length() - 1);
 		retString = retString + "];\n";
-		retString = retString + "		map.addOverlay(new GPolyline(points,'#000000',1,1));\n\n";
+		retString = retString + "		map.addOverlay(new GPolyline(points,'" + drawcolor + "',1,1));\n\n";
 		
 		return retString;
 		
@@ -276,6 +281,42 @@ public class GoogleMapView extends MapView {
 		}
 		
 		return;
+	}
+	
+		private UGPXFile conTestFile () {
+		// Construct a new UGPXFile with nothing in it
+		file = new UGPXFile();
+		
+		Waypoint		tempWP;
+		Track	 		tempTK;
+		TrackSegment 	tempTS;
+		//Route	 		tempRT;
+		
+		// Temporart time, for easy switch to GregorianCalender
+		double tempTM = 0;		
+		//GregorianCalender tempTM = new GregorianCalender() 
+		
+		// Add a Waypoint to the UGPXFile
+		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),tempTM);
+		file.addWaypoint(tempWP);
+		
+		// Create a new TrackSegment with 5 points
+		tempTS = new TrackSegment();
+		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),tempTM));
+		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),tempTM));
+		
+		// Create a new Track and add the TrackSegment to it
+		tempTK = new Track();
+		tempTK.add(tempTS);
+		
+		// Add the Track to the UGPXFile
+		file.addTrack(tempTK);
+		
+		// Return the constructed UGPXFile
+		return file;
 	}
     
 }
