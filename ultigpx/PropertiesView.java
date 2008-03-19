@@ -7,6 +7,7 @@ import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.JColorChooser;
 
 public class PropertiesView extends JPanel {
 	static final long serialVersionUID = 0;
@@ -21,67 +22,31 @@ public class PropertiesView extends JPanel {
 	int selected;
 	// TextArea that holds the info
 	TextArea mllabel;
-	
-	// RGB sliders
-	JSlider sliderr;
-	JSlider sliderg;
-	JSlider sliderb;
+
 	// set color button
 	Button setcolor;
 	MainView parent;
+	
+	JColorChooser colordialog;
+	
+	PropertiesView me = this;
 	
 	// displays a waypoint
 	public void select(Waypoint wp) {
 		selwp = wp;
 		selected = 1;
-		if (selwp.getColor() != null)
-		{
-			sliderr.setValue(selwp.getColor().getRed());
-			sliderg.setValue(selwp.getColor().getGreen());
-			sliderb.setValue(selwp.getColor().getBlue());
-		}
-		else
-		{
-			sliderr.setValue(0);
-			sliderg.setValue(0);
-			sliderb.setValue(0);
-		}
 		repaint();
 	}
 	// displays a track
 	public void select(Track trk) {
 		seltrk = trk;
 		selected = 2;
-		if (seltrk.getColor() != null)
-		{
-			sliderr.setValue(seltrk.getColor().getRed());
-			sliderg.setValue(seltrk.getColor().getGreen());
-			sliderb.setValue(seltrk.getColor().getBlue());
-		}
-		else
-		{
-			sliderr.setValue(0);
-			sliderg.setValue(0);
-			sliderb.setValue(0);
-		}
 		repaint();
 	}
 	// displays a route 
 	public void select(Route rt) {
 		selrt = rt;
 		selected = 3;
-		if (selrt.getColor() != null)
-		{
-			sliderr.setValue(selrt.getColor().getRed());
-			sliderg.setValue(selrt.getColor().getGreen());
-			sliderb.setValue(selrt.getColor().getBlue());
-		}
-		else
-		{
-			sliderr.setValue(0);
-			sliderg.setValue(0);
-			sliderb.setValue(0);
-		}
 		repaint();
 	}
 	// displays nothing
@@ -102,29 +67,14 @@ public class PropertiesView extends JPanel {
     	GridBagConstraints c = new GridBagConstraints();
     	c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
-        c.weighty = 2.0;
+        c.weighty = 20.0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10,10,0,9);
         // adds text box to panel
     	add(mllabel,c);
-    	// creates button, labels, sliders
-    	setcolor = new Button("Set Color");
-    	Label r = new Label("Red");
-    	Label g = new Label("Green");
-    	Label b = new Label("Blue");
-    	sliderr = new JSlider(0, 255, 0);
-    	sliderg = new JSlider(0, 255, 0);
-    	sliderb = new JSlider(0, 255, 0);
-    	// sets the gridbag up for the sliders and labels
-    	c.insets = new Insets(0,10,0,9);
-    	c.weighty = 0.05;
-    	// add sliders/labels
-    	add(r, c);
-    	add(sliderr, c);
-    	add(g, c);
-    	add(sliderg, c);
-    	add(b, c);
-    	add(sliderb, c);
+    	// creates button
+    	setcolor = new Button("Choose Color");
+    	c.weighty = 0.5;
     	// add button
     	c.insets = new Insets(0,10,9,9);
     	add(setcolor, c);
@@ -179,10 +129,7 @@ public class PropertiesView extends JPanel {
     }
     
     protected void paintnull(Graphics2D g2d) {
-    	// disables sliders+button
-    	sliderr.setEnabled(false);
-    	sliderg.setEnabled(false);
-    	sliderb.setEnabled(false);
+    	// disables button
     	setcolor.setEnabled(false);
     }
     
@@ -216,10 +163,7 @@ public class PropertiesView extends JPanel {
     
     // writes a waypoint on the frame
     protected void paintwp(Graphics2D g2d){
-    	// enables sliders+button
-    	sliderr.setEnabled(true);
-    	sliderg.setEnabled(true);
-    	sliderb.setEnabled(true);
+    	// enables button
     	setcolor.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
@@ -249,10 +193,7 @@ public class PropertiesView extends JPanel {
     }
     // writes a track on the screen
     protected void painttrk(Graphics2D g2d){
-    	// enables sliders+button
-    	sliderr.setEnabled(true);
-    	sliderg.setEnabled(true);
-    	sliderb.setEnabled(true);
+    	// enables button
     	setcolor.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
@@ -273,10 +214,7 @@ public class PropertiesView extends JPanel {
     }
     // writes a route on the screen
     protected void paintrt(Graphics2D g2d){
-    	// enables sliders+button
-    	sliderr.setEnabled(true);
-    	sliderg.setEnabled(true);
-    	sliderb.setEnabled(true);
+    	// enables button
     	setcolor.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
@@ -304,23 +242,23 @@ public class PropertiesView extends JPanel {
     		super();
     	}
     	public void actionPerformed(ActionEvent e) {
-    		if (e.getActionCommand().equals("SetColor") && (selected == 1))
+    		if (selected == 1)
     		{
-    			selwp.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
-    			//System.out.println("wpcolor: " + selwp.color);
-    			parent.refreshmap();
+    			colordialog = new JColorChooser();
+    			Color clr = colordialog.showDialog(me, "Color Chooser", selwp.getColor());
+    			selwp.setColor(clr);
     		}
-    		else if (e.getActionCommand().equals("SetColor") && (selected == 2))
+    		if (selected == 2)
     		{
-    			seltrk.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
-    			//System.out.println("trkcolor: " + seltrk.color);
-    			parent.refreshmap();
+    			colordialog = new JColorChooser();
+    			Color clr = colordialog.showDialog(me, "Color Chooser", seltrk.getColor());
+    			seltrk.setColor(clr);
     		}
-    		else if (e.getActionCommand().equals("SetColor") && (selected == 3))
+    		if (selected == 3)
     		{
-    			selrt.color = (new Color(sliderr.getValue(),sliderg.getValue(),sliderb.getValue()));
-    			//System.out.println("rtcolor: " + selrt.color);
-    			parent.refreshmap();
+    			colordialog = new JColorChooser();
+    			Color clr = colordialog.showDialog(me, "Color Chooser", selrt.getColor());
+    			selrt.setColor(clr);
     		}
     	}
     }
