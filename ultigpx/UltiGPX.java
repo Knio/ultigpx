@@ -142,7 +142,7 @@ public class UltiGPX
 		
 		oldPT = null;
 		for (Waypoint wp : file.waypoints()) {
-			if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
+			if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff) && (wp.getName() == null)) wp.enabled = false;
 			else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
 		}
 		
