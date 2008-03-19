@@ -106,14 +106,16 @@ public class GoogleMapView extends MapView {
 	public String getHex (Color color) {
 		// Didn't pass a Color, don't get one back!
 		if (color == null) return null;
+			
+		String hexRed = Integer.toHexString(color.getRed());
+		String hexGreen = Integer.toHexString(color.getGreen());
+		String hexBlue = Integer.toHexString(color.getBlue());
 		
-		String retString = "#";
+		if (hexRed.equals("0")) hexRed = "00";
+		if (hexGreen.equals("0")) hexRed = "00";
+		if (hexBlue.equals("0")) hexRed = "00";
 		
-		retString = retString + Integer.toHexString(color.getRed());
-		retString = retString + Integer.toHexString(color.getGreen());
-		retString = retString + Integer.toHexString(color.getBlue());
-		
-		return retString;
+		return "#" + hexRed + hexGreen + hexBlue;
 	}
 
 	
@@ -251,7 +253,7 @@ public class GoogleMapView extends MapView {
 			wtext = wtext + "		var map = new GMap2(document.getElementById(\"map\"));\n";
 			wtext = wtext + "		map.addControl(new GLargeMapControl());\n";
 			wtext = wtext + "		map.addControl(new GMapTypeControl());\n";
-			wtext = wtext + "		map.setCenter(new GLatLng(43.51,-79.95), 8);\n\n";
+			wtext = wtext + "		map.setCenter(new GLatLng(52.670589762,-118.535822811), 8);\n\n";
 			
 			wtext = wtext + "		var icon1 = new GIcon();\n";
    			wtext = wtext + "		icon1.image = \"point_b.png\";\n";
@@ -268,7 +270,7 @@ public class GoogleMapView extends MapView {
   			wtext = wtext + "</script>\n";
 			wtext = wtext + "</head>\n";
   			wtext = wtext + "<body onload=\"load()\" onunload=\"GUnload()\" scroll=no style=\"width:100%\">\n";
-			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:-300px; bottom:0px; width: 100%; height: 800px\"></div>\n";
+			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:0px; bottom:0px; width: 100%; height: 600px\"></div>\n";
 			wtext = wtext + "</body>\n";
 			wtext = wtext + "</html>\n";
 			

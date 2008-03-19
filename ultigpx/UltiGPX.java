@@ -123,20 +123,24 @@ public class UltiGPX
 		
 		for (Track tk : file.tracks()) {
 			for (TrackSegment ts : tk) {
+				if (ts.size() >= 10) {
 					oldPT = null;
-				for (Waypoint wp : ts) {
-					if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
-					else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+					for (Waypoint wp : ts) {
+						if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
+						else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+					}
 				}
 			}
 			
 		}
 		
 		for (Route rt : file.routes()) {
-			oldPT = null;
-			for (Waypoint wp : rt) {
-				if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
-				else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+			if (rt.size() >= 10) {
+				oldPT = null;
+				for (Waypoint wp : rt) {
+					if ((oldPT != null) && (oldPT.distance(new Point2D.Double(wp.lat,wp.lon)) < cutoff)) wp.enabled = false;
+					else { oldPT = new Point2D.Double(wp.lat,wp.lon); }
+				}
 			}
 		}
 		
