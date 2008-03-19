@@ -235,10 +235,10 @@ public class BasicMapView extends MapView
         
         g = (Graphics2D)gfx;
         
-        g.setPaint(Color.BLACK);
+        //g.setPaint(Color.BLACK);
         
-        g.draw(new Rectangle2D.Double(5, 5,   getWidth()-10, getHeight()-10));
-        g.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
+        //g.draw(new Rectangle2D.Double(5, 5,   getWidth()-10, getHeight()-10));
+        //g.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
         
         if (file == null)
             return;
@@ -520,6 +520,7 @@ public class BasicMapView extends MapView
         public void mouseMoved(MouseEvent e)
         {
             //System.out.println(e);
+            
         }
         
         public void mouseWheelMoved(MouseWheelEvent e)

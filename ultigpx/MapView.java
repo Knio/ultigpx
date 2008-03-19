@@ -26,7 +26,7 @@ abstract public class MapView extends JPanel
     public static final int        FONT_SIZE       = 9;
     
     public static final double     MAX_SCALE       = 100000.0;
-    public static final double     MIN_SCALE       = 2.0;
+    public static final double     MIN_SCALE       = 20.0;
     
     public static final double     ZOOM_IN         = 1.1;
     public static final double     ZOOM_OUT        = 0.9;

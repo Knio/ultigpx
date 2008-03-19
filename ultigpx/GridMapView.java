@@ -3,6 +3,7 @@ package ultigpx;
 
 import javax.swing.*;
 import java.awt.geom.*; 
+import java.awt.*; 
 
 class GridMapView extends BasicMapView
 {
@@ -30,24 +31,34 @@ class GridMapView extends BasicMapView
         int bot  = getHeight();
         int right= getWidth();
         
-        Point2D topleft     = inverseproject(top, left);
-        Point2D botright    = inverseproject(bot, right);
+        Point2D topleft     = inverseproject(left,  top);
+        Point2D botright    = inverseproject(right, bot);
         
-        double west = topleft .getX();
         double east = botright.getX();
+        double west = topleft .getX();
         double north= topleft .getY();
         double south= botright.getY();
         
         double g1 = east - west;
+        double g2 = g1;
+        
+        double w1 = g1;
+        double w2 = g2;
         
         g1 /= 10;
+        g2 /= 100;
+        
         g1 = Math.pow(10, (int)Math.log10(g1));
-        
-        
+        g2 = Math.pow(10, (int)Math.log10(g2));
         
         double x,y;
         
-        for (x=((int)(west/g1))*g1; x<east; x+=g1)
+        // minor gridlines
+        //*
+        float c = (float)(1-10*g2/w2);
+        g.setPaint(new Color(c,c,c));
+        
+        for (x=((int)(west/g2))*g2; x<east+g2; x+=g2)
         {
             int sx = (int)project(x, 0).getX();
             
@@ -55,13 +66,29 @@ class GridMapView extends BasicMapView
         }
         
         
-        for (y=((int)(south/g1))*g1; y<north; y+=g1)
+        for (y=((int)(south/g2))*g2; y<north; y+=g2)
         {
             int sy = (int)project(0, y).getY();
             
             g.drawLine(left, sy, right, sy); 
         }
-        //*/
+        
+        
+        // major gridlines
+        g.setPaint(Color.BLACK);
+        
+        for (x=((int)(west/g1))*g1; x<east+g1; x+=g1)
+        {
+            int sx = (int)project(x, 0).getX();
+            g.drawLine(sx, top, sx, bot); 
+        }
+        
+        
+        for (y=((int)(south/g1))*g1; y<north; y+=g1)
+        {
+            int sy = (int)project(0, y).getY();
+            g.drawLine(left, sy, right, sy); 
+        }
         
         
         
