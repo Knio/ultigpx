@@ -38,10 +38,12 @@ public class GuiGTXApp extends SingleFrameApplication {
     /**
      * Main method launching the application.
      */
+    /*
     public static void main(String[] args) {
         launch(GuiGTXApp.class, args);
-    } //*/
+    } //
     public static void guiLaunch(String[] args){
     	launch(GuiGTXApp.class, args);
-    }
+    }*/
+    
 }
