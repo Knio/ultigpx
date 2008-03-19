@@ -13,9 +13,9 @@ abstract public class MapView extends JPanel
     UltiGPX         main;
     Object          selected;
     
-    public double lon;
-    public double lat;
-    public double scale;
+    static public double lon;
+    static public double lat;
+    static public double scale;
     
     public static Color            WAYPOINT_COLOR  = Color.BLACK;
     public static Color            TRACK_COLOR     = Color.BLUE;
@@ -26,10 +26,10 @@ abstract public class MapView extends JPanel
     public static final int        FONT_SIZE       = 9;
     
     public static final double     MAX_SCALE       = 100000.0;
-    public static final double     MIN_SCALE       = 0.2;
+    public static final double     MIN_SCALE       = 20.0;
     
-    public static final double     ZOOM_IN         = 1.11;
-    public static final double     ZOOM_OUT        = 0.99;
+    public static final double     ZOOM_IN         = 1.10;
+    public static final double     ZOOM_OUT        = 0.90909090909;
 
 
 	public double[] zoomLevels = new double[18];
