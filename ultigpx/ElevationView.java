@@ -16,7 +16,9 @@ public class ElevationView extends JPanel
 {
 	UltiGPX         main;
 	UGPXFile        file;
-	Waypoint        selected;   
+	Waypoint        selected_wp;
+	Track        	selected_tr;
+	Route       	 selected_rt;
 
 	java.util.List<Waypoint> entities;
 
@@ -42,7 +44,31 @@ public class ElevationView extends JPanel
 	 */
 	public void select(Waypoint wp)
 	{
-		selected = wp;
+		selected_wp = wp;
+		selected_tr = null;
+		selected_rt = null;
+		repaint();
+	}
+	/**
+	 * identifies a track to be displayed as the "Selected" track
+	 * @param tr the track that is selected
+	 */
+	public void select(Track tr)
+	{
+		selected_tr = tr;
+		selected_wp = null;
+		selected_rt = null;
+		repaint();
+	}
+	/**
+	 * identifies a route to be displayed as the "Selected" route
+	 * @param rt the route that is selected
+	 */
+	public void select(Route rt)
+	{
+		selected_rt = rt;
+		selected_tr = null;
+		selected_wp = null;
 		repaint();
 	}
 
@@ -51,16 +77,16 @@ public class ElevationView extends JPanel
 	 * @param wpt
 	 */
 	private void updateBounds(Waypoint wpt) {
-		if(wpt.getTime() > 0) {
+		//if(wpt.getLon() > 0) {
 			if(wpt.getEle() > elev_high)
 				elev_high = wpt.getEle();
 			if(wpt.getEle() < elev_low)
 				elev_low = wpt.getEle();
-			if(wpt.getTime() > time_high)
-				time_high = wpt.getTime();
-			if(wpt.getTime() < time_low)
-				time_low = wpt.getTime();
-		}
+			if(wpt.getLon() > time_high)
+				time_high = wpt.getLon();
+			if(wpt.getLon() < time_low)
+				time_low = wpt.getLon();
+		//}
 	}
 	/**
 	 * Draw a line b'twixt these two waypoints.
@@ -71,33 +97,32 @@ public class ElevationView extends JPanel
 	{
 		if(wp1 == null || wp2 == null)
 			return;
-		if(wp1.getTime() < 0 || wp2.getTime() < 0)
-			return;
-
-		System.out.println();
+		//if(wp1.getLon() < 0 || wp2.getLon() < 0)
+		//	return;
 		
-		int x1 = (int)((wp1.getTime() - time_low)*ls) + MARGIN;
+		double x1 = ((wp1.getLon() - time_low)*ls) + (double)MARGIN;
 		int y1 = (int)(getHeight() - ((wp1.getEle() - elev_low)*le)) + MARGIN;
-		int x2 = (int)((wp2.getTime() - time_low)*ls) + MARGIN;
-		int y2 = (int)(getHeight() - ((wp2.getEle()- - elev_low)*le)) + MARGIN;
+		double x2 = ((wp2.getLon() - time_low)*ls) + (double)MARGIN;
+		int y2 = (int)(getHeight() - ((wp2.getEle() - elev_low)*le)) + MARGIN;
 		
-		System.out.println("x2:" + x2 + ", y2:" + y2);
-		g2d.drawLine(x1,y1,x2,y2);
+		//System.out.println("x2:" + x2 + ", y2:" + y2);
+		g2d.drawLine((int)x1,y1,(int)x2,y2);		
 	}
 	/**
 	 * Draws a little circle on a single waypoint
 	 * @param wp1
 	 */
-	private void draw(Graphics2D g2d, Waypoint wpt)
+	private void draw(Graphics2D g2d, Waypoint wpt, int size)
 	{
 		if(wpt == null)
 			return;
-		if(wpt.getTime() < 0)
-			return;
+		//if(wpt.getLon() < 0)
+		//	return;
+				
 		
-		int x1 = (int)((wpt.getTime() - time_low)*ls) + MARGIN;
+		int x1 = (int)((wpt.getLon() - time_low)*ls) + MARGIN;
 		int y1 = (int)(getHeight() - ((wpt.getEle() - elev_low)*le)) + MARGIN;
-		g2d.drawOval(	x1, y1, WAYPOINT_SIZE, WAYPOINT_SIZE); 
+		g2d.drawOval(	x1, y1, size, size);		
 	}
 	
 	/**
@@ -121,10 +146,10 @@ public class ElevationView extends JPanel
 
 		// We'll iterate over the waypoints looking for the highest and lowest
 		// to properly scale the graph.        
-		elev_low = 999999999;
-		time_low = 999999999;
-		elev_high = -999999999;
-		time_high = -999999999;
+		elev_low = Double.POSITIVE_INFINITY;
+		time_low = Double.POSITIVE_INFINITY;
+		elev_high = Double.NEGATIVE_INFINITY;
+		time_high = Double.NEGATIVE_INFINITY;
 		for(Route rt : main.file.routes()) {
 			for(Waypoint wpt : rt) {
 				updateBounds(wpt);
@@ -141,6 +166,15 @@ public class ElevationView extends JPanel
 			updateBounds(wpt);
 		}
 		
+		//FIXME: UGLY HACK JUST TO SEE IF THIS WORKS
+		// The problem is there seems to be some points with
+		// the time set WAY earlier than the time of the points
+		// during the trip, so all the later ones get compressed to
+		// a single pixel.
+		// there is also some ugly stepping which might be the limit
+		// of the resolution of the double as well? Not sure...
+		//time_low = 1.149758305136E12;
+		
 		// This is another "out." Basically we have no points
 		// that have a time value, (we haven't changed the time bounds)
 		// or else all points have the same time.
@@ -153,6 +187,7 @@ public class ElevationView extends JPanel
 		// points near the edges get drawn.
 		ls = (getWidth() - 2*MARGIN) / (time_high-time_low);
 		le = (getHeight() - 2*MARGIN) / (elev_high - elev_low);
+		
 		Waypoint last = null;
 		
 		//This part is for drawing the grid
@@ -188,17 +223,32 @@ public class ElevationView extends JPanel
 		}
 
 		//Now we can draw the waypoints
-		System.out.println("W:" + getWidth() + "H:" + getHeight());
+		//System.out.println("W:" + getWidth() + "H:" + getHeight());
 		g2d.setPaint(Color.BLACK);
-		for(Route rt : main.file.routes()) {       
+		for(Route rt : main.file.routes()) {
+			if(rt == selected_rt) {
+				g2d.setPaint(Color.RED);
+				g2d.setStroke(new BasicStroke(3.0f));
+			} else {
+				g2d.setPaint(Color.BLUE);
+				g2d.setStroke(new BasicStroke(1.0f));
+			}
 			for(Waypoint wpt : rt) {
 				//draw(g2d, last, wpt);						
 				last = wpt;
 			}
 			last = null;
 		}
-		g2d.setPaint(Color.RED);
-		for(Track trk : main.file.tracks()) {       
+
+		for(Track trk : main.file.tracks()) {
+			if(trk == selected_tr) {
+				g2d.setPaint(Color.RED);
+				g2d.setStroke(new BasicStroke(3.0f));
+			} else {
+				g2d.setPaint(Color.BLUE);
+				g2d.setStroke(new BasicStroke(1.0f));
+			}
+			
 			for(TrackSegment ts : trk) {
 				for(Waypoint wpt : ts ) {
 					draw(g2d,last,wpt);					
@@ -207,9 +257,17 @@ public class ElevationView extends JPanel
 				last = null;
 			}
 		}
-
+		
 		for(Waypoint wpt : main.file.waypoints() ) {
-			draw(g2d, wpt);
+			// the selected point should be big and fat.
+			if(wpt == selected_wp) {
+				g2d.setPaint(Color.RED);
+				g2d.setStroke(new BasicStroke(3.0f));
+			} else {
+				g2d.setPaint(Color.BLACK);
+				g2d.setStroke(new BasicStroke(1.0f));
+			}
+			draw(g2d, wpt, WAYPOINT_SIZE);
 		}		
 	}
 }
