@@ -17,20 +17,19 @@ public class GoogleMapView extends MapView {
 	
 	static final Boolean	DEBUG_MODE		= true;
 
-	static final String 	HTML_OUT_FILE 	= "maps.html";	// File to output the HTML to
+	// HTML file to output
+	static final String 	HTML_OUT_FILE 	= "maps.html";	
 
 	public GoogleMapView (UltiGPX main) {
 		super(main);
 		
 		if (DEBUG_MODE) System.out.println("GoogleMapView initialization started.");
 		this.main = main;
-		file = main.file;
-		
 		
 		webBrowser = new WebBrowser();
 		
 		webBrowser.addWebBrowserListener(
-            new WebBrowserListener() {
+			new WebBrowserListener() {
 				boolean isFirstPage = true;
 				public void downloadStarted(WebBrowserEvent event) {;}
 				public void downloadCompleted(WebBrowserEvent event) {;}
@@ -49,80 +48,78 @@ public class GoogleMapView extends MapView {
 						{
 							System.exit(0);
 						}
-            }
-        });
-		
-		outputHTML();
-		
-		webBrowser.setVisible(false);
-		try {
-			webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
-			webBrowser.setVisible(true);
-		} catch (MalformedURLException e) {
-			System.out.println(e.getMessage());
-			return;
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			return;
-		}
+			}
+		});
 		
 		
-        this.setLayout(new BorderLayout());
-        webBrowser.setPreferredSize(new Dimension(getWidth(), getHeight()));
-        add(webBrowser, BorderLayout.CENTER);
+		webBrowser.setVisible(true);
+		this.setLayout(new BorderLayout());
+		webBrowser.setPreferredSize(new Dimension(getWidth(), getHeight()));
+		add(webBrowser, BorderLayout.CENTER);
 		
+		//repaint();
+		
+		load();
 		
 		return;
 	}
 	
-	public void repaint() {
-		super.repaint();
-		if ((file == null) && (main != null) && (main.file != null)) {
-			file = main.file;
-			
-			outputHTML();
-			
-			try {
-				webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
-				webBrowser.setVisible(true);
-			} catch (MalformedURLException e) {
-				System.out.println(e.getMessage());
-				return;
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-				return;
-			}
-			
-			repaint();
-		}
-		
-	}
+	protected void load() {
+        if (file == main.file)
+            return;
+        
+        file = main.file;
+        
+        entities.clear();
+        
+        if (file == null)
+            return;
+        
+        for (Waypoint i:file.waypoints())
+            entities.add(i);
+            
+        for (Route r:file.routes())
+            for (Waypoint i:r)
+                entities.add(i);
+            
+        for (Track r:file.tracks())
+            for (TrackSegment s:r)
+                for (Waypoint i:s)
+                    entities.add(i);
+        
+    }
+
 	
 	// Take a java Color and convert it to a hex string prefixed with #
 	public String getHex (Color color) {
 		// Didn't pass a Color, don't get one back!
 		if (color == null) return null;
-			
+		
+		// Het the hex values
 		String hexRed = Integer.toHexString(color.getRed());
 		String hexGreen = Integer.toHexString(color.getGreen());
 		String hexBlue = Integer.toHexString(color.getBlue());
 		
+		// If they are only 1 character, we need to add a leading zero
 		if (hexRed.length() == 1) hexRed = "0" + hexRed;
 		if (hexGreen.length() == 1) hexGreen = "0" + hexGreen;
 		if (hexBlue.length() == 1) hexBlue = "0" + hexBlue;
 		
-		return "#" + hexRed + hexGreen + hexBlue;
+		return hexRed + hexGreen + hexBlue;
 	}
 
 	
 	private String getPolyString (Color color, ArrayList<Waypoint> elements) {
-	
+		
+		// The string we will return
 		String retString = "";
 		
+		// Get the color of the Route or the Track
 		String drawcolor = getHex(color);
 		String tmpName;
 		String tmpDesc;
 		
+		// Add a comment with the Route/Track info
 		if (elements instanceof Route) {
 			tmpName = ((Route)elements).getName();
 			tmpDesc = ((Route)elements).getDesc();
@@ -155,10 +152,11 @@ public class GoogleMapView extends MapView {
 		}
 		retString = retString + "\n";
 		
-		retString = retString + "		points = [";		// The string we will return
-		Waypoint tempWP;									// Store the waypoint while we are working with it
+		// Start a javascrript array of Waypoints
+		retString = retString + "		points = [";
 		
-		// Add a comment with the Route/Track info
+		
+		Waypoint tempWP;
 		
 		// Create an Iterator to loop over the elements
 		Iterator iter = elements.iterator();
@@ -176,7 +174,7 @@ public class GoogleMapView extends MapView {
 		// Remove the last comma we wrote, it isn't needed
 		retString = retString.substring(0, retString.length() - 1);
 		retString = retString + "];\n";
-		retString = retString + "		map.addOverlay(new GPolyline(points,'" + drawcolor + "',1,1));\n\n";
+		retString = retString + "		map.addOverlay(new GPolyline(points,'#" + drawcolor + "',2,1));\n\n";
 		
 		return retString;
 		
@@ -197,19 +195,19 @@ public class GoogleMapView extends MapView {
 		return retString;
 	}
 
-	private void outputHTML () {
+	public void outputHTML () {
 		
 		if (file == null) return;
 		
+		if (DEBUG_MODE) System.out.println("GoogleMapView: outputting HTML.");
+		
 		// Construct a platform-independent file name
-		File infile = new File(HTML_OUT_FILE);			
+		File infile = new File(HTML_OUT_FILE);	
 		
 		try {
 			// If the file does not exist, create it
 			if (!infile.exists()) infile.createNewFile();
 			
-			// Open the file
-			FileWriter writer = new FileWriter(infile);	
 			String wtext;
 			StringBuilder drawcode = new StringBuilder();
 			
@@ -217,7 +215,7 @@ public class GoogleMapView extends MapView {
 			for (Track tk : file.tracks())
 				if (tk.enabled)
 					for (TrackSegment ts : tk)
-                		drawcode.append(getPolyString(tk.color, ts));
+						drawcode.append(getPolyString(tk.color, ts));
 			
 			// For each Route, append the string to draw it
 			for (Route rt : file.routes())
@@ -239,22 +237,22 @@ public class GoogleMapView extends MapView {
 			wtext = wtext + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
 			wtext = wtext + "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n";
   			wtext = wtext + "<head>\n";
-    		wtext = wtext + "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n";
-    		wtext = wtext + "<title>Google Maps JavaScript API Example</title>\n";
-    		wtext = wtext + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAv8I7SSVba2lHsj8Pc-r5SBTTdj5zBXD9jRFEjQGoMBeg8N65dBQ1Q8m1Xi4E-Q4o6l_EaKjx6--APw\" type=\"text/javascript\"></script>\n";
-    		wtext = wtext + "<script type=\"text/javascript\">\n";
+			wtext = wtext + "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n";
+			wtext = wtext + "<title>Google Maps JavaScript API Example</title>\n";
+			wtext = wtext + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAv8I7SSVba2lHsj8Pc-r5SBTTdj5zBXD9jRFEjQGoMBeg8N65dBQ1Q8m1Xi4E-Q4o6l_EaKjx6--APw\" type=\"text/javascript\"></script>\n";
+			wtext = wtext + "<script type=\"text/javascript\">\n";
 			wtext = wtext + "//<![CDATA[\n";
 			wtext = wtext + "function load() {\n";
 			wtext = wtext + "	if (GBrowserIsCompatible()) {\n";
 			wtext = wtext + "		var map = new GMap2(document.getElementById(\"map\"));\n";
 			wtext = wtext + "		map.addControl(new GLargeMapControl());\n";
 			wtext = wtext + "		map.addControl(new GMapTypeControl());\n";
-			wtext = wtext + "		map.setCenter(new GLatLng(52.670589762,-118.535822811), 8);\n\n";
+			wtext = wtext + "		map.setCenter(new GLatLng(" + lat + "," + lon + ")," + calcZoom() + ");\n\n";
 			
 			wtext = wtext + "		var icon1 = new GIcon();\n";
-   			wtext = wtext + "		icon1.image = \"point_b.png\";\n";
-			wtext = wtext + "		icon1.iconSize = new GSize(6, 6);\n";
-    		wtext = wtext + "		icon1.iconAnchor = new GPoint(3,3);\n";
+   			wtext = wtext + "		icon1.image = 'point_b.png';\n";
+			wtext = wtext + "		icon1.iconSize = new GSize(8, 8);\n";
+			wtext = wtext + "		icon1.iconAnchor = new GPoint(4,4);\n";
 			wtext = wtext + "		var points;\n\n";
 			
 			wtext = wtext + drawcode.toString();
@@ -262,59 +260,55 @@ public class GoogleMapView extends MapView {
 			wtext = wtext + "	}\n";
 			wtext = wtext + "}\n";
 			
-    		wtext = wtext + "//]]>\n";
+			wtext = wtext + "//]]>\n";
   			wtext = wtext + "</script>\n";
 			wtext = wtext + "</head>\n";
-  			wtext = wtext + "<body onload=\"load()\" onunload=\"GUnload()\" scroll=no style=\"width:100%\">\n";
-			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:0px; bottom:0px; width: 100%; height: 600px\"></div>\n";
+  			wtext = wtext + "<body onload=\"load()\" onunload=\"GUnload()\" scroll=no style='width: 100%; height: 100%'>\n";
+			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:0px; bottom:0px; width: 100%; height: 100%\"></div>\n";
 			wtext = wtext + "</body>\n";
 			wtext = wtext + "</html>\n";
 			
-			
+			//Open the file, write the text, close the file
+			FileWriter writer = new FileWriter(infile);	
 			writer.write(wtext);
 			writer.close();
 			
 		} catch (IOException e) {
-			System.out.println("Error creating FileWriter.");
+			System.out.println("Error writing file.");
+		}
+		
+		try {
+			webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
+			webBrowser.setVisible(true);
+		} catch (MalformedURLException e) {
+			System.out.println(e.getMessage());
+			return;
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			return;
 		}
 		
 		return;
 	}
 	
-		private UGPXFile conTestFile () {
-		// Construct a new UGPXFile with nothing in it
-		file = new UGPXFile();
+	public int calcZoom () {
 		
-		Waypoint		tempWP;
-		Track	 		tempTK;
-		TrackSegment 	tempTS;
-		//Route	 		tempRT;
+		double prevDiff = 100000;
+		double curDiff;
 		
-		// Temporart time, for easy switch to GregorianCalender
-		double tempTM = 0;		
-		//GregorianCalender tempTM = new GregorianCalender() 
+		int i;
+		for (i = 0; i <= 17; i++) {
+			curDiff = scale - zoomLevels[i];
+			if (curDiff < 0) {
+				if (curDiff > prevDiff * -0.5) i++;
+				break;
+			}
+			if (curDiff < prevDiff) prevDiff = curDiff;
+			
+			else break;
+		}
 		
-		// Add a Waypoint to the UGPXFile
-		tempWP = new Waypoint("name","desc",(double)(43.90),(double)(-80.07),(double)(0),tempTM);
-		file.addWaypoint(tempWP);
-		
-		// Create a new TrackSegment with 5 points
-		tempTS = new TrackSegment();
-		tempTS.add(new Waypoint("name","desc",(double)(43.28),(double)(-80.07),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.51),(double)(-79.95),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.69),(double)(-79.80),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.76),(double)(-79.59),(double)(0),tempTM));
-		tempTS.add(new Waypoint("name","desc",(double)(43.83),(double)(-79.17),(double)(0),tempTM));
-		
-		// Create a new Track and add the TrackSegment to it
-		tempTK = new Track();
-		tempTK.add(tempTS);
-		
-		// Add the Track to the UGPXFile
-		file.addTrack(tempTK);
-		
-		// Return the constructed UGPXFile
-		return file;
+		return i - 1;
 	}
-    
+	
 }

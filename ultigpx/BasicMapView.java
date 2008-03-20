@@ -12,6 +12,9 @@ public abstract class BasicMapView extends MapView
 {
     EventHandler    evt;
     Graphics2D      g;
+	
+	int mouseX;
+	int mouseY;
     
     ArrayList<Rectangle2D> labelhints;
     RectQuadTree labelhints2;
@@ -68,7 +71,6 @@ public abstract class BasicMapView extends MapView
     {
         super.paintComponent(gfx);
         load();
-        
         
         g = (Graphics2D)gfx;
         
@@ -179,8 +181,10 @@ public abstract class BasicMapView extends MapView
         
         for (Waypoint i : ts)
         {
-            t = project(i);
-            p.lineTo((float)t.getX(), (float)t.getY());
+	    if (i.enabled) {
+            	t = project(i);
+            	p.lineTo((float)t.getX(), (float)t.getY());
+	    }
         }
         
         g.draw(p);
@@ -360,14 +364,14 @@ public abstract class BasicMapView extends MapView
         
         public void mouseMoved(MouseEvent e)
         {
-            //System.out.println(e);
+            mouseX = e.getX();
+			mouseY = e.getY();
             
         }
         
         public void mouseWheelMoved(MouseWheelEvent e)
         {
             //System.out.println(e);
-            
             int x = getWidth() /2 - e.getX();
             int y = getHeight()/2 - e.getY();
             
@@ -381,11 +385,6 @@ public abstract class BasicMapView extends MapView
         public void keyPressed(KeyEvent e) 
         {
             //System.out.println(e);
-            switch (e.getKeyCode())
-            {
-                case (KeyEvent.VK_ESCAPE):
-                    System.exit(0);
-            }
         }
         
         public void keyReleased(KeyEvent e) 
@@ -397,6 +396,7 @@ public abstract class BasicMapView extends MapView
         {
             //System.out.println(e);
         }
+		
         
     }
     

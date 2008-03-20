@@ -96,6 +96,7 @@ public class MainView extends JFrame
         x.add("Basic Map",map1);
         x.add("Grid Map", map3);
         x.add("Google Map", map2);
+		x.setSelectedComponent(map3); 
         
         
         c.gridwidth = 1;
@@ -119,6 +120,7 @@ public class MainView extends JFrame
         map1.fill();
         //map2.fill();
         //map3.fill();
+	((GoogleMapView)map2).outputHTML();
     }
     
     public void select(Waypoint x) {
