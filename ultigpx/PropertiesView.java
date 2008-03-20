@@ -9,6 +9,12 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.JColorChooser;
 
+/**
+ * Displays the properties of a selected point. This class also allows you to change
+ * the color of the selected point.
+ * 
+ * @author Steven
+ */
 public class PropertiesView extends JPanel {
 	static final long serialVersionUID = 0;
 	// selected waypoint
@@ -31,31 +37,58 @@ public class PropertiesView extends JPanel {
 	
 	PropertiesView me = this;
 	
-	// displays a waypoint
+	/**
+	 * Displays the properties of a Waypoint.
+	 * 
+	 * @param wp	a {@link Waypoint}
+	 * @see		Waypoint
+	 */
 	public void select(Waypoint wp) {
 		selwp = wp;
 		selected = 1;
 		repaint();
 	}
-	// displays a track
+	
+	/**
+	 * Displays the properties of a Track.
+	 * 
+	 * @param trk	a {@link Track}
+	 * @see		Track
+	 */
 	public void select(Track trk) {
 		seltrk = trk;
 		selected = 2;
 		repaint();
 	}
-	// displays a route 
+	
+	/**
+	 * Displays the properties of a Route
+	 * 
+	 * @param rt	a {@link Route}
+	 * @see		Route
+	 */
 	public void select(Route rt) {
 		selrt = rt;
 		selected = 3;
 		repaint();
 	}
-	// displays nothing
+	
+	/**
+	 * Displays nothing. Currently unused since you can not unselect a point
+	 * once you have selected it as the program is now.
+	 */
 	public void select() {
 		selected = 0;
 		repaint();
 	}
 	
-	// constructor that will initially display nothing
+	/**
+	 * The constructor for the PropertiesView class. Initially sets up the panel
+	 * to display nothing in the TextArea and disable the Button.
+	 * 
+	 * @param view	the MainView that PropertiesView is contained within.
+	 * @see		MainView
+	 */
 	public PropertiesView(MainView view) {
 		super();
 		parent = view;
@@ -87,7 +120,11 @@ public class PropertiesView extends JPanel {
 		repaint();
 	}
 	
-	// draws the panel/frame/pane on the screen
+	/**
+	 * Repaints the panel. Draws the components of the panel on the screen.
+	 * 
+	 * @param g	A Graphics to render the panel with.
+	 */
     public void paintComponent(Graphics g) {
     	// paints the background
         super.paintComponent(g);
@@ -97,13 +134,17 @@ public class PropertiesView extends JPanel {
         
         // draws the outer frame
         g2d.draw(new Rectangle2D.Double(5, 5, getWidth()-10, getHeight()-10));
-        // draws the inner frame
-        g2d.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
         
         // writes the info on the screen
         paintinfo(g2d);
     }
     
+    /**
+     * Changes the information to be displayed on the panel depending on the
+     * type of the selected point.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     */
     protected void paintinfo(Graphics2D g2d) {
     	// prints a changing test string to the frame
     	/*painttest(g2d);
@@ -128,40 +169,59 @@ public class PropertiesView extends JPanel {
         }//*/
     }
     
+    /**
+     * Disables the color change Button and displays nothing in the TextArea.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     */
     protected void paintnull(Graphics2D g2d) {
     	// disables button
     	setcolor.setEnabled(false);
+    	// sets the text to ""
+    	mllabel.setText("");
     }
     
-    // alternates writing a test string of each type in the text box
+    /**
+     * A testing method that displays a Waypoint, a Track, and a Route. These three
+     * are displayed in a predefined order such that on every repaint what is displayed
+     * will change.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     */
     protected void painttest(Graphics2D g2d) {
     	// prints a waypoint and then on repaint prints
     	// a track and then on repaint prints a route
     	// and then repeats cycle.
-    	if (selected == 0)
+    	if (selected == 1)
     	{
     	selwp = new Waypoint("Name", "This is a super long description used to test how well my line splitter works. I really have nothing to say in the description so I'm just typing a lot of words because it will help me test.", 10.0, 5.21483726152, 72.7162535412365213, 11.2);
     	paintwp(g2d);
-    	selected = 1;
+    	selected = 2;
     	}
-    	else if (selected == 1)
+    	else if (selected == 2)
     	{
     	seltrk = new Track("Name");
     	painttrk(g2d);
-    	selected = 2;
+    	selected = 3;
     	}
     	else
     	{
     	selrt = new Route();
     	paintrt(g2d);
-    	selected = 0;
+    	selected = 1;
     	}
     	// disclaimer cause people might think my part works without
     	// all of the other parts done. It does not!
     	mllabel.append("\n\nThis data is for testing only!");
     }
     
-    // writes a waypoint on the frame
+    /**
+     * Displays the information contained within a Waypoint in an easy to
+     * understand manner.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     * @see		Waypoint
+     */
     protected void paintwp(Graphics2D g2d){
     	// enables button
     	setcolor.setEnabled(true);
@@ -191,7 +251,14 @@ public class PropertiesView extends JPanel {
     	else
     		mllabel.append("Color:\n  Default\n\n");
     }
-    // writes a track on the screen
+    
+    /**
+     * Displays the information contained within a Track in an easy to
+     * understand manner.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     * @see		Track
+     */
     protected void painttrk(Graphics2D g2d){
     	// enables button
     	setcolor.setEnabled(true);
@@ -204,7 +271,7 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Status: Enabled\n\n");
     	else
     		mllabel.append("Status: Disabled\n\n");
-    	// displays description
+    	// displays number of track segments in the Track
     	mllabel.append("Number of Segments: " + seltrk.size() + "\n\n");
     	// displays color
     	if (seltrk.color != null)
@@ -212,7 +279,14 @@ public class PropertiesView extends JPanel {
     	else
     		mllabel.append("Color:\n  Default\n\n");
     }
-    // writes a route on the screen
+    
+    /**
+     * Displays the information contained within a Route in an easy to
+     * understand manner.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     * @see		Route
+     */
     protected void paintrt(Graphics2D g2d){
     	// enables button
     	setcolor.setEnabled(true);
@@ -236,11 +310,24 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Color:\n  Default\n\n");
     }
     
-    // action listener for the set color button
+    /**
+     * A simple ActionListener that detects if the button is pressed and shows
+     * a color selection dialog to the user.
+     * 
+     * @author Steven
+     * @see	ActionListener
+     */
     class submitactionlistener implements ActionListener {
+    	/**
+    	 * Creates the ActionListener
+    	 */
     	public submitactionlistener() {
     		super();
     	}
+    	
+    	/**
+    	 * Changes the color of a point based on what type of point is selected.
+    	 */
     	public void actionPerformed(ActionEvent e) {
     		if (selected == 1)
     		{
