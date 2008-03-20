@@ -106,14 +106,11 @@ public class MainView extends JFrame
         prop = new PropertiesView(this);
         add(prop, c);
         
-        
+        c.weightx = 5.0;
         
         c.weighty = .5;
         ele = new ElevationView(this.main);
         add(ele, c);
-        
-        // resets the gridwidth for next row
-        c.gridwidth = 1;
         
         setSize(600, 600);
         setVisible(true);
