@@ -47,44 +47,56 @@ public class WayptView extends JPanel {
         c.weighty = 20.0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10,10,0,9);
-        
-        
         DefaultMutableTreeNode top =
             new DefaultMutableTreeNode("GPX FILE");
+               
         createNodes(top);
         tree = new JTree(top);
         
         wtrPanel = new JScrollPane(tree);
         
         add(wtrPanel,c);
-        		
-		if (main.file == null)
-			return;
-	    
-		waypoint = main.file.waypoints();
-		
-
-    	
-		this.setPreferredSize(new Dimension(100, 100));
+        
+        this.setPreferredSize(new Dimension(100, 100));
 		repaint();
 	}
 
+
+
 	private void createNodes(DefaultMutableTreeNode top) {
-		    DefaultMutableTreeNode category1 = null;
-		    DefaultMutableTreeNode category2 = null;
-		    DefaultMutableTreeNode category3 = null;
+		    DefaultMutableTreeNode category = null;
+		    DefaultMutableTreeNode info = null;
 		    
-		    category1 = new DefaultMutableTreeNode("Waypoints");
-		    top.add(category1);
-		    category2 = new DefaultMutableTreeNode("Tracks");
-		    top.add(category2);
-		    category3 = new DefaultMutableTreeNode("Routes");
-		    top.add(category3);
-		
+		   
+		    if(main.file == null){
+		    category= new DefaultMutableTreeNode("Waypoints");
+		    top.add(category);
+		    category = new DefaultMutableTreeNode("Tracks");
+		    top.add(category);
+		    category = new DefaultMutableTreeNode("Routes");
+		    top.add(category);
+		    
+		    }else{
+				System.out.println("creating Treenodes");
+				waypoint = main.file.waypoints();
+				int count = waypoint.size();
+				category= new DefaultMutableTreeNode("Waypoints");
+			    top.add(category);
+				for(int i = 0;i<count;i++){
+					System.out.println(" waypt = " + waypoint.get(i).getName()+ "count " + i);
+					 info = new DefaultMutableTreeNode(waypoint.get(i).getName());
+				        category.add(info);
+
+				       
+				}
+				
+			}
+		    
+		    
 		
 	}
 
-
 }
+
 
 
