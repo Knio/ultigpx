@@ -24,7 +24,7 @@ public class UltiGPX
         System.out.println("Hello, World!");
         
         importGPX("example2.gpx");
-        //export
+        exportGPX("example2.kml");
         
         
         view = new MainView(this);
@@ -39,7 +39,7 @@ public class UltiGPX
     {
         try
         {
-            file = new GPXImporter().importGPX(filename);
+            file = GPXImporter.importGPX(filename);
             reduceFile(file);
         }
         catch (JDOMException e)
@@ -54,10 +54,23 @@ public class UltiGPX
         }
     }
     
-    /*public void exportKML(String filename)
+    public void exportGPX(String filename)
     {
-        KMLEx
-    }*/
+        try
+        {
+            GPXExporter.exportGPX(file, filename);
+        }
+        catch (JDOMException e)
+        {
+            System.out.println("Error parsing file:");
+            System.out.println(e);
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error reading file:");
+            System.out.println(e);
+        }
+    }
     
 	
 	// Reduce the number of waypoints in a file
