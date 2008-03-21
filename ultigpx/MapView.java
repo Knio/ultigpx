@@ -62,6 +62,12 @@ abstract public class MapView extends JPanel
         
     }
     
+    public void refresh()
+    {
+        load();
+        repaint();
+    }
+    
     protected void load()
     {
         if (file == main.file)
@@ -86,6 +92,7 @@ abstract public class MapView extends JPanel
                 for (Waypoint i:s)
                     entities.add(i);
         
+        fill();
     }
     
     public void fill()

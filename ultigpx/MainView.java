@@ -96,16 +96,15 @@ public class MainView extends JFrame
         
         // creates a map view and adds it as a pane
         map1 = new PlainMapView(main);
-        map2 = new GoogleMapView(main);
-        map3 = new GridMapView(main);
-        pane.add("Basic Map",map1);
-        pane.add("Grid Map", map3);
-        pane.add("Google Map", map2);
-		pane.setSelectedComponent(map3); 
+        map2 = new GridMapView(main);
+        map3 = new GoogleMapView(main);
+        pane.add("Basic Map",   map1);
+        pane.add("Grid Map",    map2);
+        pane.add("Google Map",  map3);
+        pane.setSelectedComponent(map2); 
         
         
         c.gridwidth = 1;
-
         
         c.weighty = .5;
         // sets horiz weight of PropertiesView
@@ -123,9 +122,10 @@ public class MainView extends JFrame
         
         // zoom maps to fill screen
         map1.fill();
+        map3.load();
         //map2.fill();
         //map3.fill();
-	((GoogleMapView)map2).outputHTML();
+	//((GoogleMapView)map2).outputHTML();
     }
     
     public void select(Waypoint x) {
@@ -144,9 +144,9 @@ public class MainView extends JFrame
     }
     
     public void refreshmap() {
-    	map1.repaint();
-    	map2.repaint();
-    	map3.repaint();
+    	map1.refresh();
+    	map2.refresh();
+    	map3.refresh();
     	ele.repaint();
     }
     
@@ -168,13 +168,14 @@ public class MainView extends JFrame
     		else
     		{
     			main.importGPX(GPXfile);
-    			map2 = new GoogleMapView(main);
-    			((GoogleMapView)map2).outputHTML();
-    			map1 = new PlainMapView(main);
-    			map1.fill();
-    			System.out.println("GoogleMap is broken.");
+    			//map2 = new GoogleMapView(main);
+    			//((GoogleMapView)map2).outputHTML();
+    			//map1 = new PlainMapView(main);
+    			//map1.fill();
+    			//System.out.println("GoogleMap is broken.");
     			prop.select();
     			refreshmap();
+                map1.fill();
     		}
     	}
     	else if (e.getActionCommand().equals("Exit"))

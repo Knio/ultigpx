@@ -59,7 +59,7 @@ public class GoogleMapView extends MapView {
 		
 		//repaint();
 		
-		load();
+		//load();
 		
 		return;
 	}
@@ -87,6 +87,7 @@ public class GoogleMapView extends MapView {
                 for (Waypoint i:s)
                     entities.add(i);
         
+        outputHTML();
     }
 
 	
@@ -197,8 +198,9 @@ public class GoogleMapView extends MapView {
 
 	public void outputHTML () {
 		
+		file = main.file;
 		if (file == null) return;
-		
+        
 		if (DEBUG_MODE) System.out.println("GoogleMapView: outputting HTML.");
 		
 		// Construct a platform-independent file name
