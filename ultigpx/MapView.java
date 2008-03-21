@@ -29,7 +29,7 @@ abstract public class MapView extends JPanel
     public static final int        FONT_SIZE       = 9;
     
     public static final double     MAX_SCALE       = 100000.0;
-    public static final double     MIN_SCALE       = 20.0;
+    public static final double     MIN_SCALE       = 5.0;
     
     public static final double     ZOOM_IN         = 1.10;
     public static final double     ZOOM_OUT        = 0.90909090909;
@@ -122,8 +122,11 @@ abstract public class MapView extends JPanel
         double lat = (max_lat + min_lat) / 2;
         
         scroll(lon, lat);
-        
-        scale(0.9 * getWidth() / Math.abs((max_lon - min_lon)));
+
+	double s1 = 0.6 * getHeight() / Math.abs(max_lat - min_lat);        
+        double s2 = 0.6 * getWidth() / Math.abs(max_lon - min_lon);
+
+	scale(Math.min(s1, s2));
     }
     
     

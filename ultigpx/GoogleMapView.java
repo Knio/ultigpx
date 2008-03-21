@@ -57,10 +57,6 @@ public class GoogleMapView extends MapView {
 		webBrowser.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		add(webBrowser, BorderLayout.CENTER);
 		
-		//repaint();
-		
-		//load();
-		
 		return;
 	}
 	

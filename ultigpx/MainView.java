@@ -168,7 +168,7 @@ public class MainView extends JFrame
     			main.importGPX(GPXfile);
     			prop.select();
     			refreshmap();
-                map1.fill();
+                	map1.fill();
     		}
     	}
     	else if (e.getActionCommand().equals("Exit"))
