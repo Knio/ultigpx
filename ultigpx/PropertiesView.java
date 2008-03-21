@@ -332,19 +332,19 @@ public class PropertiesView extends JPanel {
     		if (selected == 1)
     		{
     			colordialog = new JColorChooser();
-    			Color clr = colordialog.showDialog(me, "Color Chooser", selwp.getColor());
+    			Color clr = colordialog.showDialog(parent, "Color Chooser", selwp.getColor());
     			selwp.setColor(clr);
     		}
     		if (selected == 2)
     		{
     			colordialog = new JColorChooser();
-    			Color clr = colordialog.showDialog(me, "Color Chooser", seltrk.getColor());
+    			Color clr = colordialog.showDialog(parent, "Color Chooser", seltrk.getColor());
     			seltrk.setColor(clr);
     		}
     		if (selected == 3)
     		{
     			colordialog = new JColorChooser();
-    			Color clr = colordialog.showDialog(me, "Color Chooser", selrt.getColor());
+    			Color clr = colordialog.showDialog(parent, "Color Chooser", selrt.getColor());
     			selrt.setColor(clr);
     		}
     	}

@@ -26,11 +26,8 @@ public class UltiGPX
         importGPX("example2.gpx");
         //export
         
-        reduceFile(file);
         
         view = new MainView(this);
-        //view = guigtx.GuiGTXApp.getApplication();
-        //view.startup(this);
         
         
         
@@ -43,6 +40,7 @@ public class UltiGPX
         try
         {
             file = new GPXImporter().importGPX(filename);
+            reduceFile(file);
         }
         catch (JDOMException e)
         {

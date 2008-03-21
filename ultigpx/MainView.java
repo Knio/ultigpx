@@ -4,6 +4,9 @@ package ultigpx;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 
 public class MainView extends JFrame 
 {
@@ -13,6 +16,7 @@ public class MainView extends JFrame
     MapView map3;
     PropertiesView prop;
     ElevationView ele;
+    JTabbedPane pane;
     
     public MainView(UltiGPX _main)
     {
@@ -33,20 +37,21 @@ public class MainView extends JFrame
         fileMenu.setText("File");
         
         JMenuItem exitMenuItem = new javax.swing.JMenuItem();
-        //exitMenuItem.setAction();
-        exitMenuItem.setName("exitMenuItem");
-        
-        fileMenu.add(exitMenuItem);
-        
+        exitMenuItem.setActionCommand("Exit");
+        exitMenuItem.setText("Exit");
         
         menuBar.add(fileMenu);
         
+        JMenuItem importMenuItem = new JMenuItem();
+        importMenuItem.setText("Import GPX");
+        importMenuItem.setVisible(true);
+        fileMenu.add(importMenuItem);
+        importMenuItem.setActionCommand("Import");
+        importal fml = new importal();
+        importMenuItem.addActionListener(fml);
         
-        
-        
-        
-        
-        
+        fileMenu.add(exitMenuItem);
+        exitMenuItem.addActionListener(fml);
         
         
         setJMenuBar(menuBar);
@@ -85,18 +90,18 @@ public class MainView extends JFrame
         c.gridwidth = GridBagConstraints.REMAINDER;
         
         // creates a tabbed pane to switch between the maps
-        JTabbedPane x = new JTabbedPane();
-        add(x,c);
-        x.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        pane = new JTabbedPane();
+        add(pane,c);
+        pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         
         // creates a map view and adds it as a pane
         map1 = new PlainMapView(main);
         map2 = new GoogleMapView(main);
         map3 = new GridMapView(main);
-        x.add("Basic Map",map1);
-        x.add("Grid Map", map3);
-        x.add("Google Map", map2);
-		x.setSelectedComponent(map3); 
+        pane.add("Basic Map",map1);
+        pane.add("Grid Map", map3);
+        pane.add("Google Map", map2);
+		pane.setSelectedComponent(map3); 
         
         
         c.gridwidth = 1;
@@ -142,6 +147,43 @@ public class MainView extends JFrame
     	map1.repaint();
     	map2.repaint();
     	map3.repaint();
+    	ele.repaint();
     }
     
+    class importal implements ActionListener {
+    	public importal() {
+    		super();
+    	}
+    	public void actionPerformed(ActionEvent e) {
+    	if (e.getActionCommand().equals("Import"))
+    	{
+    		Frame parent = new Frame();
+    		FileDialog fd = new FileDialog(parent, "Choose a GPX file:",
+    		           FileDialog.LOAD);
+    		fd.setVisible(true);
+    		fd.setFilenameFilter(new GPXFilter());
+    		String GPXfile = fd.getFile();
+    		if (GPXfile == null)
+    		{}
+    		else
+    		{
+    			main.importGPX(GPXfile);
+    			map2 = new GoogleMapView(main);
+    			((GoogleMapView)map2).outputHTML();
+    			map1 = new PlainMapView(main);
+    			map1.fill();
+    			System.out.println("GoogleMap is broken.");
+    			prop.select();
+    			refreshmap();
+    		}
+    	}
+    	else if (e.getActionCommand().equals("Exit"))
+    		System.exit(1);
+    	}
+    }
+    class GPXFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            return (name.endsWith(".gpx"));
+        }
+    }
 }
