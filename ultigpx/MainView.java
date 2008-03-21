@@ -72,7 +72,7 @@ public class MainView extends JFrame
         c.fill = GridBagConstraints.BOTH;
         
         // sets vertical weight
-        c.weighty = 1.0;
+        c.weighty = 1.5;
         setLayout(gridbag);
         
         
@@ -100,7 +100,9 @@ public class MainView extends JFrame
         
         
         c.gridwidth = 1;
+
         
+        c.weighty = .5;
         // sets horiz weight of PropertiesView
         c.weightx = 1.0;
         
@@ -108,8 +110,6 @@ public class MainView extends JFrame
         add(prop, c);
         
         c.weightx = 5.0;
-        
-        c.weighty = .5;
         ele = new ElevationView(this.main);
         add(ele, c);
         

@@ -32,6 +32,10 @@ public abstract class BasicMapView extends MapView
         entities = new ArrayList<Waypoint>();
         labelhints = new ArrayList<Rectangle2D>();
         
+        // North arrow
+        JLabel north = new JLabel("\u2191 North \u2191");
+        north.setHorizontalAlignment(JLabel.RIGHT);
+        add(north);
         
         load();
         fill();
