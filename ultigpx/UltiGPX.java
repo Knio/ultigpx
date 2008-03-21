@@ -23,8 +23,8 @@ public class UltiGPX
         
         System.out.println("Hello, World!");
         
-        importGPX("example2.gpx");
-        exportGPX("example2.kml");
+        //importGPX("example2.gpx");
+        //exportGPX("example2.kml");
         
         
         view = new MainView(this);

@@ -17,17 +17,12 @@ public class MainView extends JFrame
     PropertiesView prop;
     ElevationView ele;
     JTabbedPane pane;
+    String filenam;
     
     public MainView(UltiGPX _main)
     {
         super("UltiGPX");
         main = _main;
-        
-        
-        
-        
-        
-        
         
         JMenuBar menuBar;
         menuBar = new javax.swing.JMenuBar();
@@ -47,18 +42,23 @@ public class MainView extends JFrame
         importMenuItem.setVisible(true);
         fileMenu.add(importMenuItem);
         importMenuItem.setActionCommand("Import");
+        
+        JMenuItem exportMenuItem = new JMenuItem();
+        exportMenuItem.setText("Export KML");
+        exportMenuItem.setVisible(true);
+        fileMenu.add(exportMenuItem);
+        exportMenuItem.setActionCommand("Export");
+        
+        
         importal fml = new importal();
         importMenuItem.addActionListener(fml);
+        exportMenuItem.addActionListener(fml);
         
         fileMenu.add(exitMenuItem);
         exitMenuItem.addActionListener(fml);
         
         
         setJMenuBar(menuBar);
-        
-        
-        
-        
         
         // so that the program doesn't get too small
         // PropertiesView needs at least 55 pixels width
@@ -123,9 +123,6 @@ public class MainView extends JFrame
         // zoom maps to fill screen
         map1.fill();
         map3.load();
-        //map2.fill();
-        //map3.fill();
-	//((GoogleMapView)map2).outputHTML();
     }
     
     public void select(Waypoint x) {
@@ -167,12 +164,8 @@ public class MainView extends JFrame
     		{}
     		else
     		{
+    			filenam = fd.getFile();
     			main.importGPX(GPXfile);
-    			//map2 = new GoogleMapView(main);
-    			//((GoogleMapView)map2).outputHTML();
-    			//map1 = new PlainMapView(main);
-    			//map1.fill();
-    			//System.out.println("GoogleMap is broken.");
     			prop.select();
     			refreshmap();
                 map1.fill();
@@ -180,11 +173,32 @@ public class MainView extends JFrame
     	}
     	else if (e.getActionCommand().equals("Exit"))
     		System.exit(1);
+    	else if (e.getActionCommand().equals("Export"))
+    	{
+    		Frame parent = new Frame();
+    		FileDialog fd = new FileDialog(parent, "Choose a KML file:",
+    		           FileDialog.SAVE);
+    		fd.setFile(filenam.replaceFirst(".gpx", ".kml"));
+    		fd.setVisible(true);
+    		fd.setFilenameFilter(new KMLFilter());
+    		String GPXfile = fd.getFile();
+    		if (GPXfile == null)
+    		{}
+    		else
+    		{
+    			main.exportGPX(GPXfile);
+    		}
+    	}
     	}
     }
     class GPXFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
             return (name.endsWith(".gpx"));
         }
+    }
+    class KMLFilter implements FilenameFilter {
+    	public boolean accept(File dir, String name) {
+    		return (name.endsWith(".kml"));
+    	}
     }
 }
