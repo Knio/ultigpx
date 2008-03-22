@@ -69,15 +69,15 @@ public class WayptView extends JPanel {
 		    
 		   
 		    if(main.file == null){
-		    category= new DefaultMutableTreeNode("Waypoints");
-		    top.add(category);
-		    category = new DefaultMutableTreeNode("Tracks");
-		    top.add(category);
-		    category = new DefaultMutableTreeNode("Routes");
-		    top.add(category);
+			    category= new DefaultMutableTreeNode("Waypoints");
+			    top.add(category);
+			    category = new DefaultMutableTreeNode("Tracks");
+			    top.add(category);
+			    category = new DefaultMutableTreeNode("Routes");
+			    top.add(category);
 		    
 		    }else{
-				System.out.println("creating Treenodes");
+				
 				waypoint = main.file.waypoints();
 				int count = waypoint.size();
 				category= new DefaultMutableTreeNode("Waypoints");
@@ -85,6 +85,37 @@ public class WayptView extends JPanel {
 				for(int i = 0;i<count;i++){
 					System.out.println(" waypt = " + waypoint.get(i).getName()+ "count " + i);
 					 info = new DefaultMutableTreeNode(waypoint.get(i).getName());
+				        category.add(info);
+
+				       
+				}
+				category= new DefaultMutableTreeNode("Tracks");
+				DefaultMutableTreeNode seg = null;
+				track = main.file.tracks();
+				count = track.size();
+				for(int i = 0;i<count;i++){
+					System.out.println(" track = " + track.get(i)+ " count " + i);
+					 info = new DefaultMutableTreeNode("track"+i+1);
+					/* if(track.get(i) ){
+						 seg = new DefaultMutableTreeNode();
+					 }*/
+				
+				        category.add(info);
+
+				       
+				}
+				category= new DefaultMutableTreeNode("Routes");
+				
+				route = main.file.routes();
+				System.out.println("route info " + route.size());
+				count = route.size();
+				for(int i = 0;i<count;i++){
+					System.out.println(" route = " + route.get(i)+ " count " + i);
+					 info = new DefaultMutableTreeNode("route"+i+1);
+					/* if(track.get(i) ){
+						 seg = new DefaultMutableTreeNode();
+					 }*/
+				
 				        category.add(info);
 
 				       
