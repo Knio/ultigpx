@@ -18,6 +18,7 @@ public class MainView extends JFrame
     ElevationView ele;
     JTabbedPane pane;
     String filenam;
+    WayptView wpview;
     
     public MainView(UltiGPX _main)
     {
@@ -80,6 +81,9 @@ public class MainView extends JFrame
         c.weighty = 1.5;
         setLayout(gridbag);
         
+        c.weightx = 1;
+        wpview = new WayptView(main);
+        add(wpview, c);
         
         // creates a properties view and adds it as a pane
         
@@ -168,7 +172,8 @@ public class MainView extends JFrame
     			main.importGPX(GPXfile);
     			prop.select();
     			refreshmap();
-                	map1.fill();
+                map1.fill();
+                wpview.fill();
     		}
     	}
     	else if (e.getActionCommand().equals("Exit"))

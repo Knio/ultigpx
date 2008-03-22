@@ -23,7 +23,7 @@ public class WayptView extends JPanel {
 	UGPXFile        file;
 	Color white;
 
-    private List<InfoView>  waypoint;
+    private List<Waypoint>  waypoint;
     private List<Track>     track;
     private List<Route>     route;
     protected JList  waypt_list;
@@ -38,27 +38,21 @@ public class WayptView extends JPanel {
 	public WayptView(UltiGPX main) {
 		super();
 		this.main = main;
-		setLayout(new GridBagLayout());
+        this.setPreferredSize(new Dimension(100, 100));
+		repaint();
+	}
+	
+	void fill() {
 		
-    	// sets up the gridbag for the text box
-    	GridBagConstraints c = new GridBagConstraints();
-    	c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1.0;
-        c.weighty = 20.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10,10,0,9);
-        DefaultMutableTreeNode top =
+		DefaultMutableTreeNode top =
             new DefaultMutableTreeNode("GPX FILE");
                
         createNodes(top);
         tree = new JTree(top);
         
         wtrPanel = new JScrollPane(tree);
-        
-        add(wtrPanel,c);
-        
-        this.setPreferredSize(new Dimension(100, 100));
-		repaint();
+
+        add(wtrPanel);
 	}
 
 
