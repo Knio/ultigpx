@@ -38,21 +38,23 @@ public class WayptView extends JPanel {
 	public WayptView(UltiGPX main) {
 		super();
 		this.main = main;
-        this.setPreferredSize(new Dimension(100, 100));
+        this.setPreferredSize(new Dimension(100, 300));
 		repaint();
 	}
 	
 	void fill() {
-		
+		removeAll();
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.weighty = 1;
 		DefaultMutableTreeNode top =
             new DefaultMutableTreeNode("GPX FILE");
-               
         createNodes(top);
         tree = new JTree(top);
-        
         wtrPanel = new JScrollPane(tree);
-
-        add(wtrPanel);
+        add(wtrPanel,c);
 	}
 
 
@@ -63,7 +65,7 @@ public class WayptView extends JPanel {
 		    
 		   
 		    if(main.file == null){
-			    category= new DefaultMutableTreeNode("Waypoints");
+			    category = new DefaultMutableTreeNode("Waypoints");
 			    top.add(category);
 			    category = new DefaultMutableTreeNode("Tracks");
 			    top.add(category);
@@ -74,7 +76,7 @@ public class WayptView extends JPanel {
 				
 				waypoint = main.file.waypoints();
 				int count = waypoint.size();
-				category= new DefaultMutableTreeNode("Waypoints");
+				category = new DefaultMutableTreeNode("Waypoints");
 			    top.add(category);
 				for(int i = 0;i<count;i++){
 					System.out.println(" waypt = " + waypoint.get(i).getName()+ "count " + i);
@@ -83,7 +85,7 @@ public class WayptView extends JPanel {
 
 				       
 				}
-				category= new DefaultMutableTreeNode("Tracks");
+				category = new DefaultMutableTreeNode("Tracks");
 				DefaultMutableTreeNode seg = null;
 				track = main.file.tracks();
 				count = track.size();
@@ -98,7 +100,7 @@ public class WayptView extends JPanel {
 
 				       
 				}
-				category= new DefaultMutableTreeNode("Routes");
+				category = new DefaultMutableTreeNode("Routes");
 				
 				route = main.file.routes();
 				System.out.println("route info " + route.size());
