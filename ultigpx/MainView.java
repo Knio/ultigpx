@@ -23,6 +23,18 @@ public class MainView extends JFrame
     public MainView(UltiGPX _main)
     {
         super("UltiGPX");
+        
+        
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e)
+        {
+            
+        }
+        
+        
         main = _main;
         
         JMenuBar menuBar;
@@ -66,7 +78,7 @@ public class MainView extends JFrame
         this.setMinimumSize(new Dimension(250, 250));
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        
         // makes a gridbag
         GridBagLayout gridbag = new GridBagLayout();
         
@@ -84,6 +96,7 @@ public class MainView extends JFrame
         c.weightx = 1;
         wpview = new WayptView(main);
         add(wpview, c);
+        wpview.fill();
         
         // creates a properties view and adds it as a pane
         
@@ -99,9 +112,10 @@ public class MainView extends JFrame
         pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         
         // creates a map view and adds it as a pane
-        map1 = new PlainMapView(main);
-        map2 = new GridMapView(main);
+        map1 = new PlainMapView (main);
+        map2 = new GridMapView  (main);
         map3 = new GoogleMapView(main);
+        
         pane.add("Basic Map",   map1);
         pane.add("Grid Map",    map2);
         pane.add("Google Map",  map3);
@@ -122,11 +136,12 @@ public class MainView extends JFrame
         add(ele, c);
         
         setSize(600, 600);
-        setVisible(true);
         
         // zoom maps to fill screen
         map1.fill();
         map3.load();
+        
+        setVisible(true);
     }
     
     public void select(Waypoint x) {
@@ -174,6 +189,7 @@ public class MainView extends JFrame
     			refreshmap();
                 map1.fill();
                 wpview.fill();
+                setVisible(true); // this fixes the wayptlist bug
     		}
     	}
     	else if (e.getActionCommand().equals("Exit"))

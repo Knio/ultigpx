@@ -78,13 +78,11 @@ public abstract class BasicMapView extends MapView
         
         g = (Graphics2D)gfx;
         
-        //g.setPaint(Color.BLACK);
-        
-        //g.draw(new Rectangle2D.Double(5, 5,   getWidth()-10, getHeight()-10));
-        //g.draw(new Rectangle2D.Double(10, 10, getWidth()-20, getHeight()-20));
-        
         if (file == null)
             return;
+        
+        g.setColor(Color.WHITE);
+        g.fill(getVisibleRect());
         
         render();
         
@@ -92,6 +90,8 @@ public abstract class BasicMapView extends MapView
     
     protected void render()
     {
+        
+        
         labelhints.clear();
         labelhints2 = new RectQuadTree(getVisibleRect());
         
