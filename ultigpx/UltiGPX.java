@@ -13,8 +13,16 @@ public class UltiGPX
     //guigtx.GuiGTXApp view;
     public static void main(String args[])
     {
-        
-        new UltiGPX();
+        try
+        {
+            Installer.install();
+            new UltiGPX();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Failed to install UltiGPX");
+            System.out.println(e);
+        }
         //System.out.println(args[0]);
     }
     
