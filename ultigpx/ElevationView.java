@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * No point selection yet, but we have a self-adjusting grid now.
+ * ElevationView, displays the vertical profile of the selected
+ * track.
+ * 
  * @author Nathan
  *
  */
@@ -185,7 +187,7 @@ public class ElevationView extends JPanel
 
 				g2d.drawLine((int)x1,y1,(int)x2,y2);
 				
-				System.out.println(x1 + "," + y1 + "elev: " + last.getEle());
+				//System.out.println(x1 + "," + y1 + "elev: " + last.getEle());
 			}
 			last = wp;
 		}		
@@ -240,7 +242,7 @@ public class ElevationView extends JPanel
 
 					g2d.drawLine((int)x1,y1,(int)x2,y2);
 
-					System.out.println(x1 + "," + y1 + "elev: " + last.getEle());
+					//System.out.println(x1 + "," + y1 + "elev: " + last.getEle());
 				}
 				last = wp;
 			}
