@@ -139,7 +139,7 @@ public class GPXExporterTester extends TestCase {
             ExceptionHasBeenThrown = true;
             System.out.println(e);
         } //end catch
-        //assertEquals(ExceptionHasBeenThrown, false);
+        assertEquals(ExceptionHasBeenThrown, false);
     } //end testExport6
     
 } //end GPXExporterTester
