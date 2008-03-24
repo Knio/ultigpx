@@ -42,26 +42,25 @@ public abstract class BasicMapView extends MapView
         repaint();
     }
     
-    protected void select(Waypoint wp)
+    protected void selectEvent(Waypoint wp)
     {
         selected = wp;
-        main.view.select(wp);
-        repaint();
+        //repaint();
     }
     
-    protected void select(Track tk)
+    protected void selectEvent(Track tk)
     {
         selected = tk;
-        main.view.select(tk);
-        repaint();
+        //repaint();
     }
     
-    protected void select(Route rt)
+    protected void selectEvent(Route rt)
     {
         selected = rt;
-        main.view.select(rt);
-        repaint();
+        //repaint();
     }
+    
+    
     
     protected void setColor(Color c1, Color c2)
     {
@@ -326,10 +325,12 @@ public abstract class BasicMapView extends MapView
             
             if (min_o != null)
             {
-                if (min_o instanceof Route) select((Route)min_o);
-                if (min_o instanceof Track) select((Track)min_o);
+                if (min_o instanceof Route) selectEvent((Route)min_o);
+                if (min_o instanceof Track) selectEvent((Track)min_o);
             }
-            if (min_w != null) select(min_w);
+            if (min_w != null) selectEvent(min_w);
+            
+            main.view.select(selected);
             
         }
         

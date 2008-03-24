@@ -62,6 +62,27 @@ abstract public class MapView extends JPanel
         
     }
     
+    
+    public void select(Waypoint wp)
+    {
+        selected = wp;
+        repaint();
+    }
+    
+    public void select(Track tk)
+    {
+        selected = tk;
+        repaint();
+    }
+    
+    public void select(Route rt)
+    {
+        selected = rt;
+        repaint();
+    }
+    
+    
+    
     public void refresh()
     {
         load();

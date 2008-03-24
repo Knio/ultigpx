@@ -46,6 +46,8 @@ public class PropertiesView extends JPanel {
 	public void select(Waypoint wp) {
 		selwp = wp;
 		selected = 1;
+        if (wp == null)
+            selected = 0;
 		repaint();
 	}
 	

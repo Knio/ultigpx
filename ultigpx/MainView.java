@@ -144,17 +144,33 @@ public class MainView extends JFrame
         setVisible(true);
     }
     
+    public void select(Object x) {
+        
+        select((Waypoint)null);
+        if (x instanceof Waypoint) select((Waypoint)x);
+        if (x instanceof Track) select((Track)x);
+        if (x instanceof Route) select((Route)x);
+    }
     public void select(Waypoint x) {
+        map1.select(x);
+        map2.select(x);
+        map3.select(x);
     	prop.select(x);
     	ele.select(x);
     }
     
     public void select(Track x) {
+        map1.select(x);
+        map2.select(x);
+        map3.select(x);
     	prop.select(x);
     	ele.select(x);
     }
     
     public void select(Route x) {
+        map1.select(x);
+        map2.select(x);
+        map3.select(x);
     	prop.select(x);
     	ele.select(x);
     }
@@ -164,6 +180,7 @@ public class MainView extends JFrame
     	map2.refresh();
     	map3.refresh();
     	ele.repaint();
+        setVisible(true);
     }
     
     class importal implements ActionListener {

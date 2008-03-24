@@ -2,6 +2,7 @@ package ultigpx;
 
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.List;
 
 import javax.swing.*;
@@ -10,16 +11,14 @@ import javax.swing.tree.*;
 import javax.swing.event.*;
 
 
-public class WayptView extends JComponent implements TreeSelectionListener
+public class WayptView extends JComponent
 {
     
     UltiGPX         main;
     //UGPXFile        file;
     Color white;
 
-    private List<Waypoint>  waypoint;
-    private List<Track>     track;
-    private List<Route>     route;
+    
     protected JList  waypt_list;
     private JScrollPane wtrPanel;
     private JTree tree;
@@ -49,19 +48,61 @@ public class WayptView extends JComponent implements TreeSelectionListener
         
         DefaultTreeModel treeModel = new DefaultTreeModel(top);
         
-        tree = new JTree(treeModel);
-        tree.setEditable(true);
+        tree = new JTree(treeModel)
+        {
+            public String convertValueToText(Object value,
+                                 boolean selected,
+                                 boolean expanded,
+                                 boolean leaf,
+                                 int row,
+                                 boolean hasFocus)
+            {
+                Object o  = ((DefaultMutableTreeNode)value).getUserObject();
+                //System.out.println(o);
+                //System.out.println(o.getClass().getCanonicalName());
+                if (o instanceof Track)
+                    return ((Track)o).getName();
+                if (o instanceof Route)
+                    return ((Route)o).getName();
+                if (o instanceof Waypoint)
+                    return ((Waypoint)o).getName();
+                if (o instanceof String)
+                    return (String)o;
+                return "XX"+o.toString();
+            }
+        };
         
         tree.getSelectionModel().setSelectionMode
             (TreeSelectionModel.SINGLE_TREE_SELECTION);
         
-        tree.addTreeSelectionListener(this);
+        
+        TreeSelectionListener sl = new TreeSelectionListener()
+        {
+            public void valueChanged(TreeSelectionEvent e)
+            {
+                selectEvent(e.getPath());
+            }
+        };
+        
+        tree.addTreeSelectionListener(sl);
         
         
         wtrPanel = new JScrollPane(tree);
         
         add(wtrPanel,c);
         
+        
+        
+        MouseListener ml = new MouseAdapter()
+        {
+            public void mousePressed(MouseEvent e)
+            {
+                if(e.getClickCount() == 2)
+                    clickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+            }
+        };
+        
+        tree.addMouseListener(ml);
         
     }
     /*
@@ -74,10 +115,39 @@ public class WayptView extends JComponent implements TreeSelectionListener
     }
     //*/
     
-    public void valueChanged(TreeSelectionEvent e)
+    
+    public void clickEvent(TreePath e)
     {
-        System.out.println(e.getPath());
-        // select code here
+        System.out.println("CLICK: "+ e);
+        if (e==null) return;
+        
+        Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
+        
+        
+        if (o instanceof Track)
+            ((Track)o).enabled = !((Track)o).enabled;
+        if (o instanceof Route)
+            ((Route)o).enabled = !((Route)o).enabled;
+        if (o instanceof Waypoint)
+            ((Waypoint)o).enabled = !((Waypoint)o).enabled;
+        
+        main.view.refreshmap();
+    }
+    
+    
+    public void selectEvent(TreePath e)
+    {
+        System.out.println("SELECT: "+ e);
+        
+        if (e==null)
+        {
+            main.view.select((Object)null);
+            return;
+        }
+        
+        Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
+        
+        main.view.select(o);
         
     }
     
@@ -86,6 +156,10 @@ public class WayptView extends JComponent implements TreeSelectionListener
             DefaultMutableTreeNode category = null;
             DefaultMutableTreeNode info = null;
             
+            
+            List<Waypoint>  waypoint;
+            List<Track>     track;
+            List<Route>     route;
            
             if(main.file == null){
                 category = new DefaultMutableTreeNode("Waypoints");
@@ -109,27 +183,27 @@ public class WayptView extends JComponent implements TreeSelectionListener
                     category.add(info);
                 }
                 
+                track = main.file.tracks();
                 category = new DefaultMutableTreeNode("Tracks");
                 top.add(category);
-                track = main.file.tracks();
                 count = track.size();
                 
                 for(int i = 0;i<count;i++)
                 {
                     //System.out.println(" track = " + track.get(i)+ " count " + i);
-                    info = new DefaultMutableTreeNode("track"+i+1);
+                    info = new DefaultMutableTreeNode(track.get(i));
                     category.add(info);
                 }
                 
+                route = main.file.routes();
                 category = new DefaultMutableTreeNode("Routes");
                 top.add(category);
-                route = main.file.routes();
                 count = route.size();
                 
                 for(int i = 0;i<count;i++)
                 {
                     //System.out.println(" route = " + route.get(i)+ " count " + i);
-                    info = new DefaultMutableTreeNode("route"+i+1);
+                    info = new DefaultMutableTreeNode(route.get(i));
                     category.add(info);
                     
                 }
