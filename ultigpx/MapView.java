@@ -62,19 +62,30 @@ abstract public class MapView extends JPanel
         
     }
     
-    
+    /**
+    * selects a waypoint and re-renders the map
+    * @param Waypoint wp
+    */
     public void select(Waypoint wp)
     {
         selected = wp;
         repaint();
     }
     
+    /**
+    * selects a track and re-renders the map
+    * @param Track tk
+    */
     public void select(Track tk)
     {
         selected = tk;
         repaint();
     }
     
+    /**
+    * selects a route and re-renders the map
+    * @param Route rt
+    */
     public void select(Route rt)
     {
         selected = rt;
@@ -82,7 +93,9 @@ abstract public class MapView extends JPanel
     }
     
     
-    
+    /**
+    * refreshes the mapview if a new file is loaded
+    */
     public void refresh()
     {
         load();
@@ -116,6 +129,10 @@ abstract public class MapView extends JPanel
         fill();
     }
     
+    /**
+    * zooms the map so that all of the loaded objects
+    * fit in the screen.
+    */
     public void fill()
     {
         if (entities.size()==0)

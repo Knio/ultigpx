@@ -18,7 +18,11 @@ public abstract class BasicMapView extends MapView
     
     ArrayList<Rectangle2D> labelhints;
     RectQuadTree labelhints2;
-    
+
+    /**
+    * Creates a new BasicMapView
+    * @param UltiGPX main
+    */
     public BasicMapView(UltiGPX main)
     {
         super(main);
@@ -70,6 +74,10 @@ public abstract class BasicMapView extends MapView
             g.setPaint(c2);
     }
     
+    /**
+    * Renders this map
+    * @param Graphics gfx
+    */
     public void paintComponent(Graphics gfx)
     {
         super.paintComponent(gfx);
