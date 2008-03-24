@@ -99,6 +99,8 @@ public class UGPXFile
      */
     public void addTrack(Track t) {
     	track.add(t);
+        if (t.getName() == null)
+            t.name = "Track " + track.size();
     }
     
     /**
@@ -107,7 +109,8 @@ public class UGPXFile
      */
     public void addRoute(Route r) {
     	route.add(r);
-        
+        if (r.getName() == null)
+            r.name = "Route " + route.size();
     }
     
     /**

@@ -123,7 +123,7 @@ public class WayptView extends JComponent
         
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-        
+        // these things should be refactored
         if (o instanceof Track)
             ((Track)o).enabled = !((Track)o).enabled;
         if (o instanceof Route)

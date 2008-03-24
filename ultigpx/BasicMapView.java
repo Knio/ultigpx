@@ -213,7 +213,7 @@ public abstract class BasicMapView extends MapView
         double x = p.getX() + WAYPOINT_SIZE;
         double y = p.getY() + WAYPOINT_SIZE;
         
-        Rectangle2D r = new Rectangle2D.Double(x, y, name.length()*FONT_SIZE*4/3, FONT_SIZE);
+        Rectangle2D r = new Rectangle2D.Double(x, y, name.length()*FONT_SIZE*2/3, FONT_SIZE);
         //*
         for (Rectangle2D t : labelhints)
         {
