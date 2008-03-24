@@ -82,7 +82,7 @@ public class GridMapView extends BasicMapView
         {
             int sx = (int)project(x, 0).getX();
             g.drawLine(sx, top, sx, bot); 
-            g.drawString(String.format("%.3f",x), sx, bot);
+            g.drawString(String.format("%.3f%c",Math.abs(x), x>0?'E':'W'), sx, bot);
         }
         
         
@@ -90,7 +90,7 @@ public class GridMapView extends BasicMapView
         {
             int sy = (int)project(0, y).getY();
             g.drawLine(left, sy, right, sy); 
-            g.drawString(String.format("%.3f",y), left, sy);
+            g.drawString(String.format("%.3f%c",Math.abs(y), y>0?'N':'S'), left, sy);
         }
         
         

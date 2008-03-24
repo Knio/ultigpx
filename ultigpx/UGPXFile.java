@@ -22,6 +22,7 @@ public class UGPXFile
         waypoint = new ArrayList<Waypoint>(wp);
         track    = new ArrayList<Track>(tk);
         route    = new ArrayList<Route>(rt);
+        name = "";
     }
     
     /**
@@ -31,6 +32,7 @@ public class UGPXFile
     	waypoint = new ArrayList<Waypoint>();
     	track = new ArrayList<Track>();
     	route = new ArrayList<Route>();
+        name = "";
     }
     
     /**

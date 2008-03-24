@@ -17,6 +17,8 @@ public class GPXExporter {
         outputFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         outputFile.write("<kml xmlns=\"http://earth.google.com/kml/2.2\">\n");
         
+        outputFile.write("<Document>\n");
+        
         //Waypoints
         List<Waypoint> waypointsToExport = outputData.waypoints();
         if (waypointsToExport != null) {
@@ -26,20 +28,21 @@ public class GPXExporter {
                 //Export each enabled track
                 Waypoint currentWaypoint = waypointIterator.next();
                 
-                if (currentWaypoint.getEnabled()) {
+                //if (currentWaypoint.getEnabled()) {
                     
                     //Print out header stuff
+                    //outputFile.write("<Document>\n");
                     outputFile.write("\t<Placemark>\n");
                     outputFile.write("\t\t<name>" + currentWaypoint.getName() + "</name>\n");
                     outputFile.write("\t\t<description></description>");
-                    outputFile.write("\t\t<Point>");
+                    outputFile.write("\t\t<Point>\n");
                     outputFile.write("\t\t\t<coordinates>");
                     outputFile.write(currentWaypoint.getLon() + "," + currentWaypoint.getLat() + "," + currentWaypoint.getEle());
-                    outputFile.write("</coordinates>\n");
+                    outputFile.write("\t\t\t</coordinates>\n");
                     outputFile.write("\t\t</Point>\n");
-                    outputFile.write("\t\t</Placemark>\n");
-                    outputFile.write("\t</Document>\n");
-                } //end if getEnabled
+                    outputFile.write("\t</Placemark>\n");
+                    //outputFile.write("</Document>\n");
+                //} //end if getEnabled
             } //end while
         } //end if
         
@@ -52,7 +55,7 @@ public class GPXExporter {
                 //Export each enabled track
                 Track currentTrack = tracksIterator.next();
                 
-                if (currentTrack.getEnabled()){
+                //if (currentTrack.getEnabled()){
                     
                     //Print out header stuff
                     outputFile.write("\t<Document>\n");
@@ -94,7 +97,7 @@ public class GPXExporter {
                     outputFile.write("\t\t</Placemark>\n");
                     outputFile.write("\t</Document>\n");
                     
-                } //end if getEnabled
+                //} //end if getEnabled
                 
             } //end while
             
@@ -110,7 +113,7 @@ public class GPXExporter {
                 //Export each enabled track
                 Route currentRoute = routesIterator.next();
                 
-                if (currentRoute.getEnabled()) {
+                //if (currentRoute.getEnabled()) {
                     
                     //Print out header stuff
                     outputFile.write("\t<Document>\n");
@@ -148,13 +151,14 @@ public class GPXExporter {
                     outputFile.write("\t\t</Placemark>\n");
                     outputFile.write("\t</Document>\n");
                     
-                } //end if getEnabled
+                //} //end if getEnabled
                 
             } //end while
             
         } //end if
         
         //Write footer
+        outputFile.write("</Document>\n");
         outputFile.write("</kml>");
         
         outputFile.close();

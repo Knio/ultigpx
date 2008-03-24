@@ -16,7 +16,7 @@ public class WayptView extends JComponent
     
     UltiGPX         main;
     //UGPXFile        file;
-    Color white;
+    //Color white;
 
     
     protected JList  waypt_list;
@@ -43,7 +43,8 @@ public class WayptView extends JComponent
         c.weightx = 1;
         c.weighty = 1;
         
-        top = new DefaultMutableTreeNode("GPX FILE");
+        
+        top = new DefaultMutableTreeNode(main.file == null ? "GPX File" : main.file.name);
         createNodes();
         
         DefaultTreeModel treeModel = new DefaultTreeModel(top);
@@ -162,31 +163,19 @@ public class WayptView extends JComponent
             List<Route>     route;
            
             if(main.file == null){
-                category = new DefaultMutableTreeNode("Waypoints");
-                top.add(category);
                 category = new DefaultMutableTreeNode("Tracks");
                 top.add(category);
                 category = new DefaultMutableTreeNode("Routes");
                 top.add(category);
-            
-            }else{
-                
-                waypoint = main.file.waypoints();
-                int count = waypoint.size();
                 category = new DefaultMutableTreeNode("Waypoints");
                 top.add(category);
-                
-                for(int i = 0;i<count;i++)
-                {
-                    //System.out.println(" waypt = " + waypoint.get(i).getName()+ "count " + i);
-                    info = new DefaultMutableTreeNode(waypoint.get(i));
-                    category.add(info);
-                }
+            
+            }else{
                 
                 track = main.file.tracks();
                 category = new DefaultMutableTreeNode("Tracks");
                 top.add(category);
-                count = track.size();
+                int count = track.size();
                 
                 for(int i = 0;i<count;i++)
                 {
@@ -206,6 +195,18 @@ public class WayptView extends JComponent
                     info = new DefaultMutableTreeNode(route.get(i));
                     category.add(info);
                     
+                }
+                
+                waypoint = main.file.waypoints();
+                count = waypoint.size();
+                category = new DefaultMutableTreeNode("Waypoints");
+                top.add(category);
+                
+                for(int i = 0;i<count;i++)
+                {
+                    //System.out.println(" waypt = " + waypoint.get(i).getName()+ "count " + i);
+                    info = new DefaultMutableTreeNode(waypoint.get(i));
+                    category.add(info);
                 }
                 
             }
