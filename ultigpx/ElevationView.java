@@ -126,6 +126,243 @@ public class ElevationView extends JPanel
 	}
 	
 	/**
+	 * Calculates the distance between two points.
+	 * @param wp1
+	 * @param wp2
+	 * @return the distance
+	 */
+	private double dist(Waypoint wp1, Waypoint wp2)
+	{
+		double dx = wp2.getLon() - wp1.getLon();
+		double dy = wp2.getLat() - wp1.getLat();
+		return Math.sqrt((dx*dx) + (dy*dy));
+	}
+	
+	/**
+	 * Draws a route, "unwrapped" based on distance, scaled
+	 * to fit the window.
+	 * @param g2d Graphics Context
+	 * @param rt route
+	 */
+	private void draw(Graphics2D g2d, Route rt)
+	{
+		elev_low = Double.POSITIVE_INFINITY;
+		elev_high = Double.NEGATIVE_INFINITY;
+		double total_x = 0;
+		Waypoint last = null;
+		//need to find total distance first, so scaling can happen
+		for(Waypoint wp : rt)
+		{
+			updateBounds(wp);
+			if(last != null) {
+				total_x += dist(wp, last);
+			}
+			last = wp;
+		}
+		le = (getHeight() - 2*MARGIN) / (elev_high - elev_low);
+		draw_grid(g2d);
+		
+		
+		//no distance between points on this route for some reason
+		// simply return.
+		if(total_x <= 0)
+			return;
+		
+		//Now we can draw the route
+		double old_x = 0.0;
+		double cur_x = 0.0;
+		last = null;
+
+		for(Waypoint wp : rt) {
+			if(last != null) {
+				old_x = cur_x;
+				cur_x += (dist(wp, last) * getWidth()) / total_x; 
+
+				double x1 = old_x;
+				int y1 = (int)(getHeight() - ((last.getEle() - elev_low)*le)) + MARGIN;
+				double x2 = cur_x;
+				int y2 = (int)(getHeight() - ((wp.getEle() - elev_low)*le)) + MARGIN;
+
+				g2d.drawLine((int)x1,y1,(int)x2,y2);
+				
+				System.out.println(x1 + "," + y1 + "elev: " + last.getEle());
+			}
+			last = wp;
+		}		
+	}	
+	
+	/**
+	 * Draws a selected Track
+	 * @param g2d
+	 * @param rt
+	 */
+	private void draw(Graphics2D g2d, Track tr)
+	{
+		elev_low = Double.POSITIVE_INFINITY;
+		elev_high = Double.NEGATIVE_INFINITY;
+		double total_x = 0;
+		Waypoint last = null;
+		//need to find total distance first, so scaling can happen
+		for(TrackSegment trs : tr) {
+			for(Waypoint wp : trs)
+			{
+				updateBounds(wp);
+				if(last != null) {
+					total_x += dist(wp, last);
+				}
+				last = wp;
+			}
+		}
+		
+		le = (getHeight() - 2*MARGIN) / (elev_high - elev_low);
+		draw_grid(g2d);
+		
+		//no distance between points on this route for some reason
+		// simply return.
+		if(total_x <= 0)
+			return;
+		
+		//Now we can draw the route
+		double old_x = 0.0;
+		double cur_x = 0.0;
+		last = null;
+
+		for(TrackSegment trs : tr) {
+			for(Waypoint wp : trs) {
+				if(last != null) {
+					old_x = cur_x;
+					cur_x += (dist(wp, last) * getWidth()) / total_x; 
+
+					double x1 = old_x;
+					int y1 = (int)(getHeight() - ((last.getEle() - elev_low)*le)) + MARGIN;
+					double x2 = cur_x;
+					int y2 = (int)(getHeight() - ((wp.getEle() - elev_low)*le)) + MARGIN;
+
+					g2d.drawLine((int)x1,y1,(int)x2,y2);
+
+					System.out.println(x1 + "," + y1 + "elev: " + last.getEle());
+				}
+				last = wp;
+			}
+		}
+	}
+	
+	/**
+	 * Draws the whole scene (and highlights any selected waypoints)
+	 * @param g2d
+	 */
+	private void draw(Graphics2D g2d)
+	{
+		// We'll iterate over the waypoints looking for the highest and lowest
+		// to properly scale the graph.        
+		elev_low = Double.POSITIVE_INFINITY;
+		time_low = Double.POSITIVE_INFINITY;
+		elev_high = Double.NEGATIVE_INFINITY;
+		time_high = Double.NEGATIVE_INFINITY;
+		for(Route rt : main.file.routes()) {
+			for(Waypoint wpt : rt) {
+				updateBounds(wpt);
+			}
+		}
+		for(Track trk : main.file.tracks()) {       
+			for(TrackSegment ts : trk) {
+				for(Waypoint wpt : ts ) {
+					updateBounds(wpt);
+				}
+			}
+		}
+		for(Waypoint wpt : main.file.waypoints() ) {
+			updateBounds(wpt);
+		}
+
+		//The scaling factors for longitude and elevation
+		// The fudge-factor is so I "zoom out" just a little bit so
+		// points near the edges get drawn.
+		ls = (getWidth() - 2*MARGIN) / (time_high-time_low);
+		le = (getHeight() - 2*MARGIN) / (elev_high - elev_low);
+		
+		draw_grid(g2d);
+
+		Waypoint last = null;
+		for(Route rt : main.file.routes()) {
+			g2d.setPaint(Color.BLUE);
+			g2d.setStroke(new BasicStroke(1.0f));
+			for(Waypoint wpt : rt) {
+				//draw(g2d, last, wpt);						
+				last = wpt;
+			}
+			last = null;
+		}
+
+		for(Track trk : main.file.tracks()) {
+			g2d.setPaint(Color.BLUE);
+			g2d.setStroke(new BasicStroke(1.0f));
+
+			for(TrackSegment ts : trk) {
+				for(Waypoint wpt : ts ) {
+					draw(g2d,last,wpt);					
+					last = wpt;
+				}
+				last = null;
+			}
+		}
+
+		for(Waypoint wpt : main.file.waypoints() ) {
+			// the selected point should be big and fat.
+			if(wpt == selected_wp) {
+				g2d.setPaint(Color.RED);
+				g2d.setStroke(new BasicStroke(3.0f));
+			} else {
+				g2d.setPaint(Color.BLACK);
+				g2d.setStroke(new BasicStroke(1.0f));
+			}
+			draw(g2d, wpt, WAYPOINT_SIZE);
+		}
+		
+	}
+	
+	/**
+	 * Draws the scaled grid for height
+	 * @param g2d
+	 */
+	private void draw_grid(Graphics2D g2d)
+	{
+		
+		
+		//This part is for drawing the grid
+		// This all might be put into private functions later to
+		// keep things nice and clean.
+		//scale is the "distance" between elevation grid lines.
+		// we want to shoot for about 10 lines in the view, any more is too cluttery.
+		double gscale = 1;
+		while((elev_high-elev_low)/gscale > 10) {
+			gscale *= 10;
+		}
+		// double the density of lines if we can "afford" it, eg: from 100m lines to 50m lines.
+		if(((elev_high-elev_low)/gscale < 5) && (gscale > 1)) {
+			gscale /= 2;
+		}
+		//actually draw the lines
+		//ppl = pixels per line (integer distance between two lines)
+		int ppl = (int)(gscale*le);
+
+		//startline = altitude of the first line 
+		// starts at the nearest appropriate elevation (aligned to 10's, 50's or what have you)
+		double startline = gscale*Math.round(elev_low/gscale);
+		//now convert this to a pixel coordinates of our current line-to-draw
+		int cur = getHeight() - (int)((startline - elev_low)*le);
+
+		//draw the lines from bottom to the top
+		g2d.setPaint(Color.GRAY);
+		while(cur > 0) {
+			g2d.drawLine(0, cur, getWidth(), cur);
+			g2d.drawString((int)startline + "m", 0, cur - 5);
+			startline += gscale;
+			cur -= ppl;
+		}
+	}
+	
+	/**
 	 * Refreshes the elevation view
 	 */
 	public void paintComponent(Graphics g)
@@ -148,130 +385,23 @@ public class ElevationView extends JPanel
 		if (main.file == null)
 			return;
 
-		// We'll iterate over the waypoints looking for the highest and lowest
-		// to properly scale the graph.        
-		elev_low = Double.POSITIVE_INFINITY;
-		time_low = Double.POSITIVE_INFINITY;
-		elev_high = Double.NEGATIVE_INFINITY;
-		time_high = Double.NEGATIVE_INFINITY;
-		for(Route rt : main.file.routes()) {
-			for(Waypoint wpt : rt) {
-				updateBounds(wpt);
-			}
-		}
-		for(Track trk : main.file.tracks()) {       
-			for(TrackSegment ts : trk) {
-				for(Waypoint wpt : ts ) {
-					updateBounds(wpt);
-				}
-			}
-		}
-		for(Waypoint wpt : main.file.waypoints() ) {
-			updateBounds(wpt);
-		}
 		
-		//FIXME: UGLY HACK JUST TO SEE IF THIS WORKS
-		// The problem is there seems to be some points with
-		// the time set WAY earlier than the time of the points
-		// during the trip, so all the later ones get compressed to
-		// a single pixel.
-		// there is also some ugly stepping which might be the limit
-		// of the resolution of the double as well? Not sure...
-		//time_low = 1.149758305136E12;
-		
-		// This is another "out." Basically we have no points
-		// that have a time value, (we haven't changed the time bounds)
-		// or else all points have the same time.
-		// so we shouldn't display anything
-		if(time_high <= time_low)
-			return;
-
-		//The scaling factors for longitude and elevation
-		// The fudge-factor is so I "zoom out" just a little bit so
-		// points near the edges get drawn.
-		ls = (getWidth() - 2*MARGIN) / (time_high-time_low);
-		le = (getHeight() - 2*MARGIN) / (elev_high - elev_low);
-		
-		Waypoint last = null;
-		
-		//This part is for drawing the grid
-		// This all might be put into private functions later to
-		// keep things nice and clean.
-		//scale is the "distance" between elevation grid lines.
-		// we want to shoot for about 10 lines in the view, any more is too cluttery.
-		double gscale = 1;
-		while((elev_high-elev_low)/gscale > 10) {
-			gscale *= 10;
-		}
-		// double the density of lines if we can "afford" it, eg: from 100m lines to 50m lines.
-		if(((elev_high-elev_low)/gscale < 5) && (gscale > 1)) {
-			gscale /= 2;
-		}
-		//actually draw the lines
-		//ppl = pixels per line (integer distance between two lines)
-		int ppl = (int)(gscale*le);
-		
-		//startline = altitude of the first line 
-		// starts at the nearest appropriate elevation (aligned to 10's, 50's or what have you)
-		double startline = gscale*Math.round(elev_low/gscale);
-		//now convert this to a pixel coordinates of our current line-to-draw
-		int cur = getHeight() - (int)((startline - elev_low)*le);
-		
-		//draw the lines from bottom to the top
-		g2d.setPaint(Color.GRAY);
-		while(cur > 0) {
-			g2d.drawLine(0, cur, getWidth(), cur);
-			g2d.drawString((int)startline + "m", 0, cur - 5);
-			startline += gscale;
-			cur -= ppl;
-		}
 
 		//Now we can draw the waypoints
 		//System.out.println("W:" + getWidth() + "H:" + getHeight());
 		g2d.setPaint(Color.BLACK);
-		for(Route rt : main.file.routes()) {
-			if(rt == selected_rt) {
-				g2d.setPaint(Color.RED);
-				g2d.setStroke(new BasicStroke(3.0f));
-			} else {
-				g2d.setPaint(Color.BLUE);
-				g2d.setStroke(new BasicStroke(1.0f));
-			}
-			for(Waypoint wpt : rt) {
-				//draw(g2d, last, wpt);						
-				last = wpt;
-			}
-			last = null;
-		}
-
-		for(Track trk : main.file.tracks()) {
-			if(trk == selected_tr) {
-				g2d.setPaint(Color.RED);
-				g2d.setStroke(new BasicStroke(3.0f));
-			} else {
-				g2d.setPaint(Color.BLUE);
-				g2d.setStroke(new BasicStroke(1.0f));
-			}
-			
-			for(TrackSegment ts : trk) {
-				for(Waypoint wpt : ts ) {
-					draw(g2d,last,wpt);					
-					last = wpt;
-				}
-				last = null;
-			}
-		}
 		
-		for(Waypoint wpt : main.file.waypoints() ) {
-			// the selected point should be big and fat.
-			if(wpt == selected_wp) {
-				g2d.setPaint(Color.RED);
-				g2d.setStroke(new BasicStroke(3.0f));
-			} else {
-				g2d.setPaint(Color.BLACK);
-				g2d.setStroke(new BasicStroke(1.0f));
-			}
-			draw(g2d, wpt, WAYPOINT_SIZE);
+		//draw the selected route, if you can.
+		if(selected_rt != null) {
+			draw(g2d, selected_rt);
 		}		
+		//otherwise draw the selected track
+		else if(selected_tr != null) {
+			draw(g2d, selected_tr);
+		}
+		//otherwise just draw the whole mess
+		else {
+			draw(g2d);
+		}
 	}
 }
