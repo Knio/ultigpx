@@ -20,38 +20,74 @@ public class Route extends ArrayList<Waypoint>
         color = null;
     }
     
+    /**
+	 * Returns enabled status
+	 * @return enabled
+	 */
     public boolean getEnabled() {
         return enabled;
     }
     
+    /**
+	 * Sets enabled status
+	 * @param boolean x value
+	 */
     public void setEnabled(boolean x) {
     	enabled = x;
     }
     
+    /**
+     * Returns color parameter
+     * @return color
+     */
     public Color getColor() {
         return color;
     }
     
+    /**
+     * Sets color parameter
+     * @param Color x
+     */
     public void setColor(Color x) {
     	color = x;
     }
     
+    /**
+     * Get name parameter
+     * @return
+     */
     public String getName() {
     	return name;
     }
     
+    /**
+     * Sets name parameter
+     * @param String x
+     */
     public void setName(String x) {
     	name = x;
     }
     
+    /**
+     * Get description parameter
+     * @return desc
+     */
     public String getDesc() {
     	return desc;
     }
     
+    /**
+     * Set description parameter
+     * @param String x
+     */
     public void setDesc(String x) {
     	desc = x;
     }
     
+    /**
+     * Turn Route to string
+     * @return String representation of Route
+     */
     public String toString()
     {
         return String.format("<ROUTE name=%s n=%d>", name, size());

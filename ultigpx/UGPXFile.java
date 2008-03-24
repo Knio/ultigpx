@@ -11,7 +11,12 @@ public class UGPXFile
     private List<Route>     route;
     
     public String name;
-    // Constructor to send in list with list of data
+    /**
+     * Constructor to send in list with list of data
+     * @param List<Waypoint> wp
+     * @param List<Track> tk
+     * @param List<Route> rt
+     */ 
     public UGPXFile(List<Waypoint> wp, List<Track> tk, List<Route> rt)
     {
         waypoint = new ArrayList<Waypoint>(wp);
@@ -19,52 +24,96 @@ public class UGPXFile
         route    = new ArrayList<Route>(rt);
     }
     
-    //Constructor to create null UGPXFile, to be populated by add methods
+    /**
+     *Constructor to create null UGPXFile, to be populated by add methods
+     */
     public UGPXFile() {
     	waypoint = new ArrayList<Waypoint>();
     	track = new ArrayList<Track>();
     	route = new ArrayList<Route>();
     }
     
+    /**
+     * Get tracks
+     * @return List<Track>
+     */
     public List<Track> tracks()
     {
         return track;
     }
     
+    /**
+     * Get routes
+     * @return List<Route>
+     */
     public List<Route> routes()
     {
         return route;
     }
     
+    /**
+     * Get waypoints
+     * @return List<Waypoint>
+     */
     public List<Waypoint> waypoints()
     {
         return waypoint;
     }
     
+    /**
+     * Get track
+     * @param integer n
+     * @return Track
+     * @throws IndexOutOfBoundsException
+     */
     public Track getTrack(int n) throws IndexOutOfBoundsException
     {
         return track.get(n);
     }
     
+    /**
+     * Get route
+     * @param integer n
+     * @return Route
+     * @throws IndexOutOfBoundsException
+     */
     public Route getRoute(int n) throws IndexOutOfBoundsException
     {
         return route.get(n);
     }
     
+    /**
+     * Get waypoint
+     * @param integer n
+     * @return Waypoint
+     * @throws IndexOutOfBoundsException
+     */
     public Waypoint getWaypoint(int n) throws IndexOutOfBoundsException
     {
         return waypoint.get(n);
     }
     
+    /**
+     * Add track to file
+     * @param Track t
+     */
     public void addTrack(Track t) {
     	track.add(t);
     }
     
+    /**
+     * Add route to file
+     * @param Route r
+     */
     public void addRoute(Route r) {
     	route.add(r);
         
     }
     
+    /**
+     * Add waypoint to file
+     * @param Waypoint w
+     */
     public void addWaypoint(Waypoint w) {
     	waypoint.add(w);
     }
