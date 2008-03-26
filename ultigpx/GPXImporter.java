@@ -24,6 +24,7 @@ public class GPXImporter {
     public static UGPXFile importGPX(String filename) throws JDOMException, IOException {
         // Create a new UGPXFile to put data in
         UGPXFile returnValue = new UGPXFile();
+        returnValue.name  = filename;
         
         // Create the document from the input stream using JAXPDOM adapter
         Document inputFile = new SAXBuilder().build(new File(filename));

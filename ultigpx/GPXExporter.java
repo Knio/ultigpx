@@ -1,3 +1,4 @@
+package ultigpx;
 /**
  * Class GPX Exporter is used for Exporting the UltiGPXFile to a KML file
  * The KML file can then be view using Google Earth
@@ -30,6 +31,7 @@ public class GPXExporter {
         //Output KML header
         outputFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         outputFile.write("<kml xmlns=\"http://earth.google.com/kml/2.2\">\n");
+        outputFile.write("\t<Document>\n");
         
         //Put waypoints in the file
         List<Waypoint> waypointsToExport = outputData.waypoints();
@@ -165,6 +167,7 @@ public class GPXExporter {
         } //end if
         
         //Write footer
+        outputFile.write("\t</Document>\n");
         outputFile.write("</kml>");
         
         //Close input file
