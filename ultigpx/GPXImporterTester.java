@@ -1,3 +1,5 @@
+package ultigpx;
+
 import junit.framework.*;
 import junit.extensions.*;
 

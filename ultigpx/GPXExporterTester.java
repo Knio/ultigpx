@@ -1,5 +1,8 @@
+package ultigpx;
+
 import junit.framework.*;
 import junit.extensions.*;
+
 
 /**
  * Test Class for GPXExporterTester for Project of CPSC 301 <br>
