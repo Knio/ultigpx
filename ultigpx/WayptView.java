@@ -143,10 +143,26 @@ public class WayptView extends JComponent
         
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
+		selectEvent(e);
+        
         if (o instanceof Track)
         {
         	if (((Track)o).enabled)
         		main.view.map1.fill((Track)o);
+        	else
+        		main.view.map1.fill();
+        }
+        else if (o instanceof Waypoint)
+        {
+        	if (((Waypoint)o).enabled)
+        		main.view.map1.fill((Waypoint)o);
+        	else
+        		main.view.map1.fill();
+        }
+        else if (o instanceof Route)
+        {
+        	if (((Route)o).enabled)
+        		main.view.map1.fill((Route)o);
         	else
         		main.view.map1.fill();
         }
