@@ -143,11 +143,10 @@ public class WayptView extends JComponent
         
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-        // these things should be refactored
         if (o instanceof Track)
         {
         	if (((Track)o).enabled)
-        		; // zoom in on track
+        		main.view.map1.fill((Track)o);
         }
 
         main.view.refreshmap();

@@ -167,6 +167,46 @@ abstract public class MapView extends JPanel
 	scale(Math.min(s1, s2));
     }
     
+    /**
+     * zooms the map so that all of the loaded objects
+     * fit in the screen.
+     */
+     public void fill(Track ent)
+     {
+         if (ent.size()==0)
+         {
+             lon     = 0;
+             lat     = 0;
+             scale   = 1;
+             return;
+         }
+         
+         double max_lon = ent.get(0).get(0).lon;
+         double max_lat = ent.get(0).get(0).lat;
+         double min_lon = max_lon;
+         double min_lat = max_lat;
+         
+         for (TrackSegment j:ent)
+         {
+        	 for (Waypoint i:j)
+        	 {
+             max_lon = Math.max(max_lon, i.lon);
+             max_lat = Math.max(max_lat, i.lat);
+             min_lon = Math.min(min_lon, i.lon);
+             min_lat = Math.min(min_lat, i.lat);
+        	 }
+         }
+         
+         double lon = (max_lon + min_lon) / 2;
+         double lat = (max_lat + min_lat) / 2;
+         
+         scroll(lon, lat);
+
+         double s1 = 0.6 * getHeight() / Math.abs(max_lat - min_lat);        
+         double s2 = 0.6 * getWidth() / Math.abs(max_lon - min_lon);
+
+ 	scale(Math.min(s1, s2));
+     }
     
     protected void scroll(double lon, double lat)
     {
