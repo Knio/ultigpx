@@ -147,7 +147,11 @@ public class WayptView extends JComponent
         {
         	if (((Track)o).enabled)
         		main.view.map1.fill((Track)o);
+        	else
+        		main.view.map1.fill();
         }
+        else
+        	main.view.map1.fill();
 
         main.view.refreshmap();
     }
