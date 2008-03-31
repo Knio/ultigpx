@@ -362,4 +362,139 @@ abstract public class MapView extends JPanel
     }
     
     
+    
+    protected Waypoint getWaypoint(Point2D click)
+    {
+        Waypoint min_w = null;
+        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+            
+        for (Waypoint i : file.waypoints())
+        {
+            if (!i.enabled) continue;
+            double t = click.distanceSq(project(i));
+            if (t < min_d)
+            {
+                min_d = t;
+                min_w = i;
+            }
+        }
+        return min_w;
+    }
+    
+    
+    protected Route getRoute(Point2D click)
+    {
+        Route min_r = null;
+        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+        
+        boolean first = true;
+        Line2D line = new Line2D.Double(0,0,0,0);
+        rt: for (Route rt : file.routes())
+        {
+            if (!rt.enabled) continue;
+            first = true;
+            for (Waypoint i : rt)
+            {
+                line.setLine(line.getP2(), project(i));
+                if (first)
+                {
+                    first = false;
+                    continue;
+                }
+                double t = line.ptSegDistSq(click);
+                if (t < min_d)
+                {
+                    min_d = t;
+                    min_r = rt;
+                    //break rt;
+                }
+            }
+        }
+        return min_r;
+    }
+    
+    protected Track getTrack(Point2D click)
+    {
+        Track min_t = null;
+        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+        
+        boolean first = true;
+        Line2D line = new Line2D.Double(0,0,0,0);
+        tk: for (Track tk : file.tracks())
+        {
+            if (!tk.enabled) continue;
+            for (TrackSegment ts : tk)
+            {
+                first = true;
+                for (Waypoint i : ts)
+                {
+                    line.setLine(line.getP2(), project(i));
+                    if (first)
+                    {
+                        first = false;
+                        continue;
+                    }
+                    double t = line.ptSegDistSq(click);
+                    if (t < min_d)
+                    {
+                        min_d = t;
+                        min_t = tk;
+                        //break tk;
+                    }
+                }
+            }
+        }
+        return min_t;
+    }
+    
+    
+    protected Waypoint getTrackPoint(Track tk, Point2D click)
+    {
+        Waypoint min_w = null;
+        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+            
+        for (TrackSegment ts : tk)
+            for (Waypoint i : ts)
+            {
+                if (!i.enabled) continue;
+                double t = click.distanceSq(project(i));
+                if (t < min_d)
+                {
+                    min_d = t;
+                    min_w = i;
+                }
+            }
+        
+        return min_w;
+    }
+    
+    protected Waypoint getRoutePoint(Route rt, Point2D click)
+    {
+        Waypoint min_w = null;
+        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+            
+        for (Waypoint i : rt)
+        {
+            if (!i.enabled) continue;
+            double t = click.distanceSq(project(i));
+            if (t < min_d)
+            {
+                min_d = t;
+                min_w = i;
+            }
+        }
+        return min_w;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

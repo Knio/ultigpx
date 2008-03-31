@@ -114,7 +114,7 @@ public abstract class BasicMapView extends MapView
         if (selected != null)
         {
             g.setPaint(SELECTED_COLOR);
-            g.setStroke(new BasicStroke(3.0f));
+            g.setStroke(new BasicStroke(5.0f));
             render(selected);
         }
         
@@ -140,12 +140,13 @@ public abstract class BasicMapView extends MapView
         g.setColor(WAYPOINT_COLOR);
         g.setStroke(new BasicStroke(1.0f));
         
-        
+        /*
         for (Track tk : file.tracks())
             if (tk.enabled)
                 for (TrackSegment ts : tk)
                     for (Waypoint i : ts)
                         render(i);
+        */
         
         for (Route rt : file.routes())
             if (rt.enabled)
@@ -160,12 +161,13 @@ public abstract class BasicMapView extends MapView
             }
         
         // rerender selected so that it is on top
+        //*
         if (selected != null)
         {
             g.setPaint(SELECTED_COLOR);
             g.setStroke(new BasicStroke(3.0f));
             render(selected);
-        }
+        } //*/
     }
     
     
@@ -196,7 +198,34 @@ public abstract class BasicMapView extends MapView
             p.lineTo((float)t.getX(), (float)t.getY());
         }
         
+        //setColor(null, TRACK_COLOR);
         g.draw(p);
+        
+        
+        //setColor(null, WAYPOINT_COLOR);
+        
+        double x = Math.pow(2.0, (int)(Math.log(10.0/scale)/Math.log(2.0)));
+        double d = 0;
+        
+        Waypoint i0 = ts.get(0);
+        render(i0);
+        
+        Point2D p1 = new Point2D.Double(i0.lon, i0.lat);
+        Point2D p2;
+        
+        for (Waypoint i : ts)
+        {
+            p2 = new Point2D.Double(i.lon, i.lat);
+            d += p2.distance(p1);
+            p1 = p2;
+            if (d > x)
+            {
+                d %= x;
+                render(i);
+            }
+        }
+        
+        
     }
     
     
@@ -224,12 +253,8 @@ public abstract class BasicMapView extends MapView
         Rectangle2D r = new Rectangle2D.Double(x, y, name.length()*FONT_SIZE*2/3, FONT_SIZE);
         //*
         for (Rectangle2D t : labelhints)
-        {
             if (r.intersects(t))
-            {
                 return;
-            }
-        }
         //*/
         
         //if (labelhints2.intersects(r)) return;
@@ -259,86 +284,40 @@ public abstract class BasicMapView extends MapView
             Point2D click = new Point2D.Double(e.getX(), e.getY());
             
             Route       min_r  = null;
-            Object      min_o  = null;
             Track       min_t  = null;
             Waypoint    min_w  = null;
             
-            double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
-            boolean first = true;
-            
-            Line2D line = new Line2D.Double(0,0,0,0);
-            tk: for (Track tk : file.tracks())
+            if (selected instanceof Track)
             {
-                if (!tk.enabled) continue;
-                for (TrackSegment ts : tk)
+                min_w = getTrackPoint((Track)selected, click);
+                if (min_w != null)
                 {
-                    first = true;
-                    for (Waypoint i : ts)
-                    {
-                        line.setLine(line.getP2(), project(i));
-                        if (first)
-                        {
-                            first = false;
-                            continue;
-                        }
-                        double t = line.ptSegDistSq(click);
-                        if (t < min_d)
-                        {
-                            min_d = t;
-                            min_o = tk;
-                            //break tk;
-                        }
-                    }
+                    main.view.select(min_w);
+                    return;
                 }
             }
             
-            //min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
-            rt: for (Route rt : file.routes())
+            if (selected instanceof Route)
             {
-                if (!rt.enabled) continue;
-                first = true;
-                for (Waypoint i : rt)
+                min_w = getRoutePoint((Route)selected, click);
+                if (min_w != null)
                 {
-                    line.setLine(line.getP2(), project(i));
-                    if (first)
-                    {
-                        first = false;
-                        continue;
-                    }
-                    double t = line.ptSegDistSq(click);
-                    if (t < min_d)
-                    {
-                        min_d = t;
-                        min_o = rt;
-                        //break rt;
-                    }
+                    main.view.select(min_w);
+                    return;
                 }
             }
             
-            min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
             
-            for (Waypoint i : file.waypoints())
-            {
-                if (!i.enabled) continue;
-                double t = click.distanceSq(project(i));
-                if (t < min_d)
-                {
-                    min_d = t;
-                    min_w = i;
-                }
-            }
+            min_r  = getRoute(click);
+            min_t  = getTrack(click);
+            min_w  = getWaypoint(click);
             
-            //if (min_t != null) select(min_t);
-            //if (min_r != null) select(min_r);
-            
-            if (min_o != null)
-            {
-                if (min_o instanceof Route) selectEvent((Route)min_o);
-                if (min_o instanceof Track) selectEvent((Track)min_o);
-            }
-            if (min_w != null) selectEvent(min_w);
-            
-            main.view.select(selected);
+            if (min_r != null)
+                main.view.select(min_r);
+            else if (min_t != null)
+                main.view.select(min_t);
+            else 
+                main.view.select(min_w);
             
         }
         

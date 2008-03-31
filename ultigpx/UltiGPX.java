@@ -48,7 +48,7 @@ public class UltiGPX
         try
         {
             file = GPXImporter.importGPX(filename);
-            reduceFile(file);
+            //reduceFile(file);
         }
         catch (JDOMException e)
         {
