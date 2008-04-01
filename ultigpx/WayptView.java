@@ -23,7 +23,7 @@ public class WayptView extends JComponent
 
 	UltiGPX         main;
         
-    protected List  select_list;
+    protected List<Object>  select_list;
     protected JButton group_button;
     private JScrollPane wtrPanel;
     private JTree tree;
@@ -37,7 +37,7 @@ public class WayptView extends JComponent
         super();
         this.main = main;
         this.setPreferredSize(new Dimension(100, 300));
-        select_list = new ArrayList();
+        select_list = new ArrayList<Object>();
     }
     
     void fill()

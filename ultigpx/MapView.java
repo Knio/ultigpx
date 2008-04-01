@@ -27,8 +27,9 @@ abstract public class MapView extends JPanel
     
     public static final int        WAYPOINT_SIZE   = 5;
     public static final int        FONT_SIZE       = 9;
+    public static final int        CLICK_THRESHOLD = 5;
     
-    public static final double     MAX_SCALE       = 100000.0;
+    public static final double     MAX_SCALE       = 500000.0;
     public static final double     MIN_SCALE       = 5.0;
     
     public static final double     ZOOM_IN         = 1.10;
@@ -416,7 +417,7 @@ abstract public class MapView extends JPanel
     protected Track getTrack(Point2D click)
     {
         Track min_t = null;
-        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+        double min_d  = CLICK_THRESHOLD*CLICK_THRESHOLD;
         
         boolean first = true;
         Line2D line = new Line2D.Double(0,0,0,0);
@@ -451,7 +452,7 @@ abstract public class MapView extends JPanel
     protected Waypoint getTrackPoint(Track tk, Point2D click)
     {
         Waypoint min_w = null;
-        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+        double min_d  = CLICK_THRESHOLD*CLICK_THRESHOLD;
             
         for (TrackSegment ts : tk)
             for (Waypoint i : ts)
@@ -471,7 +472,7 @@ abstract public class MapView extends JPanel
     protected Waypoint getRoutePoint(Route rt, Point2D click)
     {
         Waypoint min_w = null;
-        double min_d  = (WAYPOINT_SIZE/2+2)*(WAYPOINT_SIZE/2+2);
+        double min_d  = CLICK_THRESHOLD*CLICK_THRESHOLD;
             
         for (Waypoint i : rt)
         {

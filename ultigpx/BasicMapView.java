@@ -265,6 +265,7 @@ public abstract class BasicMapView extends MapView
     }
     
     
+    public enum State  { MAIN, WP, TK_RT, TK_RT_WP, DR_WP }
     
     class EventHandler
         implements  MouseListener,
@@ -275,9 +276,21 @@ public abstract class BasicMapView extends MapView
         int sx;
         int sy;
         
+        
+        State state;
+        Object data;
+        
+        public EventHandler()
+        {
+            super();
+            state = State.MAIN;
+            data  = null;
+        }
+        
+        
         public void mouseClicked(MouseEvent e) 
         {
-            //System.out.println(e);
+            System.out.println("\nCLICK "+e);
             if (file == null)
                 return;
             
@@ -287,38 +300,48 @@ public abstract class BasicMapView extends MapView
             Track       min_t  = null;
             Waypoint    min_w  = null;
             
-            if (selected instanceof Track)
+            if (state == State.TK_RT || state == State.TK_RT_WP)
             {
-                min_w = getTrackPoint((Track)selected, click);
+                // REFACTOR FOR UGPXDATA
+                if (data instanceof Track) min_w = getTrackPoint((Track)data, click);
+                if (data instanceof Route) min_w = getRoutePoint((Route)data, click);
+                
                 if (min_w != null)
                 {
                     main.view.select(min_w);
+                    state = State.TK_RT_WP;
                     return;
                 }
             }
             
-            if (selected instanceof Route)
-            {
-                min_w = getRoutePoint((Route)selected, click);
-                if (min_w != null)
-                {
-                    main.view.select(min_w);
-                    return;
-                }
-            }
             
             
             min_r  = getRoute(click);
             min_t  = getTrack(click);
             min_w  = getWaypoint(click);
+            Object min_tr = min_r != null ? min_r : min_t;
             
-            if (min_r != null)
-                main.view.select(min_r);
-            else if (min_t != null)
-                main.view.select(min_t);
-            else 
+            
+            if (min_tr != null)
+            {
+                main.view.select(min_tr);
+                state = State.TK_RT;
+                data = min_tr;
+            }
+            else
+            {
                 main.view.select(min_w);
-            
+                if (min_w == null)
+                {
+                    state = State.MAIN;
+                    data  = null;
+                }
+                else
+                {
+                    state = State.WP;
+                    data  = min_w;
+                }
+            }
         }
         
         public void mouseEntered(MouseEvent e) 
@@ -333,19 +356,60 @@ public abstract class BasicMapView extends MapView
         
         public void mousePressed(MouseEvent e) 
         {
-            //System.out.println(e);
+            System.out.println("\nPRESS "+e);
             sx = e.getX();
             sy = e.getY();
+            
+            
+            System.out.println(state);
+            System.out.println(selected);
+            if (state == State.WP || state == State.TK_RT_WP)
+            {
+                
+                Point2D click = new Point2D.Double(e.getX(), e.getY());
+                Waypoint wp = null;
+                // REFACTOR UGPXDATA
+                if (data instanceof Waypoint) wp = getWaypoint(click);
+                if (data instanceof Track) wp = getTrackPoint((Track)data, click);
+                if (data instanceof Route) wp = getRoutePoint((Route)data, click);
+                
+                System.out.println(wp);
+                System.out.println(selected);
+                System.out.println(wp==(Waypoint)selected);
+                if (wp == (Waypoint)selected)
+                {
+                    state = State.DR_WP;
+                }
+            }
         }
         
         public void mouseReleased(MouseEvent e)
         {
-            //System.out.println(e);
+            System.out.println("\nRELEASE "+e);
+            
+            if (data instanceof Track) state = State.TK_RT_WP;
+            if (data instanceof Route) state = State.TK_RT_WP;
+            if (data instanceof Waypoint) state = State.WP;
+            
         }
         
         public void mouseDragged(MouseEvent e)
         {
-            //System.out.println(e);
+            System.out.println("\nDRAG "+e);
+            
+            
+            if (state == State.DR_WP)
+            {
+                Point2D click = new Point2D.Double(e.getX(), e.getY());
+                Point2D world = inverseproject(click);
+                
+                Waypoint wp = (Waypoint)selected;
+                wp.lon = world.getX();
+                wp.lat = world.getY();
+                
+                repaint();
+                return;
+            }
             
             scrollByScreen(e.getX() - sx, (e.getY() - sy));
             

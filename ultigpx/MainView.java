@@ -183,6 +183,12 @@ public class MainView extends JFrame
         setVisible(true);
     }
     
+    public void refresh()
+    {
+        refreshmap();
+        setVisible(true);
+    }
+    
     class importal implements ActionListener {
     	public importal() {
     		super();

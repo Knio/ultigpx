@@ -16,14 +16,21 @@ public class UltiGPX
         try
         {
             Installer.install();
-            new UltiGPX();
         }
         catch (IOException e)
         {
             System.out.println("Failed to install UltiGPX");
             System.out.println(e);
         }
-        //System.out.println(args[0]);
+        
+        UltiGPX u = new UltiGPX();
+        
+        
+        if (args.length == 1)
+        {
+            System.out.println(args[0]);
+            u.importGPX(args[0]);
+        }
     }
     
     public UltiGPX()
@@ -60,6 +67,7 @@ public class UltiGPX
             System.out.println("Error reading file:");
             System.out.println(e);
         }
+        view.refresh();
     }
     
     public void exportGPX(String filename)
