@@ -19,6 +19,7 @@ public class MainView extends JFrame
     JTabbedPane pane;
     String filenam;
     WayptView wpview;
+    SearchResult searchresult;
     
     public MainView(UltiGPX _main)
     {
@@ -115,6 +116,8 @@ public class MainView extends JFrame
         map1 = new PlainMapView (main);
         map2 = new GridMapView  (main);
         map3 = new GoogleMapView(main);
+        
+        searchresult = new SearchResult(this);
         
         pane.add("Basic Map",   map1);
         pane.add("Grid Map",    map2);
@@ -213,6 +216,7 @@ public class MainView extends JFrame
                 map1.fill();
                 wpview.fill();
                 setVisible(true); // this fixes the wayptlist bug
+                searchresult.checkForConflicts();
     		}
     	}
     	else if (e.getActionCommand().equals("Exit"))
