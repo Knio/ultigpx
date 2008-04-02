@@ -121,8 +121,11 @@ public class WayptView extends JComponent
         {
             public void mousePressed(MouseEvent e)
             {
-                if(e.getClickCount() == 2)
+            	if((e.getClickCount() == 2) && (e.getButton() == e.BUTTON1))
                     clickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+                if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
+                    rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+
             }
         };
         
@@ -139,6 +142,42 @@ public class WayptView extends JComponent
     }
     //*/
     
+    public void rightclickEvent(TreePath e)
+    {
+        System.out.println("RIGHT CLICK: "+ e);
+        if (e==null) return;
+        
+        Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
+        
+                selectEvent(e);
+        
+        if (o instanceof Track)
+        {
+                if (((Track)o).enabled)
+                        main.view.map1.fill((Track)o);
+                else
+                        main.view.map1.fill();
+        }
+        else if (o instanceof Waypoint)
+        {
+                if (((Waypoint)o).enabled)
+                        main.view.map1.fill((Waypoint)o);
+                else
+                        main.view.map1.fill();
+        }
+        else if (o instanceof Route)
+        {
+                if (((Route)o).enabled)
+                        main.view.map1.fill((Route)o);
+                else
+                        main.view.map1.fill();
+        }
+        else
+                main.view.map1.fill();
+
+        main.view.refreshmap();
+    }
+
     
     public void clickEvent(TreePath e)
     {
