@@ -1,3 +1,4 @@
+
 package ultigpx;
 
 import java.util.ArrayList;
@@ -9,8 +10,9 @@ public class Database {
     private List<Track>     track;
     private List<Route>     route;
     private List<Group>		group;
+    String name;
     
-    **
+    /**
     * Constructor to send in list with list of data
     * @param List<Waypoint> wp
     * @param List<Track> tk
@@ -60,7 +62,7 @@ public class Database {
     * Add group to file
     * @param Group t
     */
-   public void addGroup(Group t) {
+   public void addGroup(Group g) {
    	group.add(g);
    }
    
