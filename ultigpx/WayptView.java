@@ -122,7 +122,7 @@ public class WayptView extends JComponent
             public void mousePressed(MouseEvent e)
             {
             	if((e.getClickCount() == 2) && (e.getButton() == e.BUTTON1))
-                    clickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+                    dblclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
                 if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
                     rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
 
@@ -179,7 +179,7 @@ public class WayptView extends JComponent
     }
 
     
-    public void clickEvent(TreePath e)
+    public void dblclickEvent(TreePath e)
     {
         System.out.println("CLICK: "+ e);
         if (e==null) return;
