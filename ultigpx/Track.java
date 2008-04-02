@@ -120,4 +120,16 @@ public class Track extends ArrayList<TrackSegment>
     {
         return String.format("<TRACK name=%s n=%d>", name, size());
     }
+	
+    /**
+     * Get the total distance of the Track
+     * @return Double value for the total distance of the Track in meters
+     */
+	public Double getDistance() {
+		Double distance = 0.0;
+        for (TrackSegment s:this)
+            distance = distance + s.getDistance();
+			System.out.println("Distance so far is: " + distance);
+		return distance;
+	}
 }

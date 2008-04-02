@@ -274,12 +274,13 @@ public class PropertiesView extends JPanel {
     	else
     		mllabel.append("Status: Disabled\n\n");
     	// displays number of track segments in the Track
-    	mllabel.append("Number of Segments: " + seltrk.size() + "\n\n");
+    	mllabel.append("Number of Segments: " + seltrk.size() + "\n");
+		mllabel.append("Total Distance: " + formatDistance(seltrk.getDistance()) + "\n");
     	// displays color
     	if (seltrk.color != null)
     		mllabel.append("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue() + "\n\n");
     	else
-    		mllabel.append("Color:\n  Default\n\n");
+    		mllabel.append("Color:\n  Default");
     }
     
     /**
@@ -304,13 +305,33 @@ public class PropertiesView extends JPanel {
     	// displays description
     	mllabel.append("Description: " + selrt.getDesc() + "\n\n");
     	// displays number of waypoints in the route
-    	mllabel.append("Number of Waypoints: " + selrt.size() + "\n\n");
+    	mllabel.append("Number of Waypoints: " + selrt.size() + "\n");
+		mllabel.append("Total Distance: " + formatDistance(selrt.getDistance()) + "\n");
     	// displays color
     	if (selrt.color != null)
     		mllabel.append("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue() + "\n\n");
     	else
-    		mllabel.append("Color:\n  Default\n\n");
+    		mllabel.append("Color:\n  Default");
     }
+	
+	/**
+     * Formats a distance for display to the user.
+     * 
+     * @param The distance to format
+     * @return The string value of the distance rounded to 1 decimal place, with km or m appended
+     */
+	protected String formatDistance(double distance){
+		// Kilometers
+		if (distance >= 1000) {
+			distance = Math.rint(distance / 100) / 10;		// Divide by 1000, round to 1 decimal place
+			return "" + distance + " km";
+		}
+		// Meters
+		else {
+			distance = Math.rint(distance * 10) / 10;		// Round to 1 decimal place
+			return "" + distance + " m";
+		}
+	}
     
     /**
      * A simple ActionListener that detects if the button is pressed and shows

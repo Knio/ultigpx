@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import org.jdom.*;
 import java.awt.geom.*;		// For calculating distance between points
+import javax.swing.*;
 
 public class UltiGPX
 {
@@ -54,7 +55,22 @@ public class UltiGPX
     {
         try
         {
-            file = GPXImporter.importGPX(filename);
+			if ((new File(filename).length()) >= 102400) {
+				JOptionPane pane = new JOptionPane("WARNING:\nYou are about to open a file which is over 100kb in size. This may take a while, do you wish to continue opening the file?");
+				Object[] options = new String[] { "Yes", "No" };
+				pane.setOptions(options);
+				JDialog dialog = pane.createDialog(new JFrame(), "Large File");
+				dialog.show();
+				Object obj = pane.getValue(); 
+				int result = -1;
+				for (int k = 0; k < options.length; k++)
+					if (options[k].equals(obj)) result = k;
+				if (result == 0) file = GPXImporter.importGPX(filename);
+			}
+			else {
+            	file = GPXImporter.importGPX(filename);
+			}
+            //file = GPXImporter.importGPX(filename);
             //reduceFile(file);
         }
         catch (JDOMException e)

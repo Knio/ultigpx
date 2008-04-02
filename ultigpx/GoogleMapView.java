@@ -14,8 +14,9 @@ public class GoogleMapView extends MapView {
 
 	UGPXFile	file;
 	WebBrowser	webBrowser;
-	
-	static final Boolean	DEBUG_MODE		= true;
+
+	static final Double     CUTOFF		= 50.0;
+	static final Boolean	DEBUG_MODE	= true;
 
 	// HTML file to output
 	static final String 	HTML_OUT_FILE 	= "maps.html";	
@@ -107,6 +108,7 @@ public class GoogleMapView extends MapView {
 
 	
 	private String getPolyString (Color color, ArrayList<Waypoint> elements) {
+		if (elements.size() == 0) return "";
 		
 		// The string we will return
 		String retString = "";
@@ -157,10 +159,13 @@ public class GoogleMapView extends MapView {
 		
 		// Create an Iterator to loop over the elements
 		Iterator iter = elements.iterator();
+		Waypoint lastPoint = null;
 		for(;iter.hasNext();) {
 			tempWP = (Waypoint) iter.next();
-			
-			if (tempWP.enabled) {
+
+			if ((tempWP.enabled) && ((lastPoint == null) || (tempWP.distanceTo(lastPoint) >= CUTOFF) || (elements.size() <= 10))) {
+				lastPoint = tempWP;
+
 				// Add the Waypoint to the javascript array of waypoints
 				retString = retString + "new GLatLng("+Double.toString(tempWP.lat)+","+Double.toString(tempWP.lon)+"),";
 				// Add the Waypoint to the beginning to have a dot drawn on it
@@ -221,12 +226,13 @@ public class GoogleMapView extends MapView {
 					drawcode.append(getPolyString(rt.color, rt));
 			
 			// For each Waypoint, append the string to draw it
+			Waypoint lastPoint = null;
 			for (Waypoint wp : file.waypoints())
-				if (wp.enabled)
-					drawcode.append(getPointString(wp.color, wp));
-				
-				
-				
+					if ((lastPoint == null) || (!(wp.getName()).equals("")) || (wp.distanceTo(lastPoint) >= CUTOFF)) {
+						lastPoint = wp;
+						drawcode.append(getPointString(wp.color, wp));
+					}
+					
 				
 			// Write the HTML file
 			//char dc = '"';
@@ -261,7 +267,7 @@ public class GoogleMapView extends MapView {
 			wtext = wtext + "//]]>\n";
   			wtext = wtext + "</script>\n";
 			wtext = wtext + "</head>\n";
-  			wtext = wtext + "<body onload=\"load()\" onunload=\"GUnload()\" scroll=no style='width: 100%; height: 100%'>\n";
+  			wtext = wtext + "<body onload=\"load()\" scroll=no style='width: 100%; height: 100%'>\n";
 			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:0px; bottom:0px; width: 100%; height: 100%\"></div>\n";
 			wtext = wtext + "</body>\n";
 			wtext = wtext + "</html>\n";

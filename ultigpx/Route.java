@@ -92,4 +92,23 @@ public class Route extends ArrayList<Waypoint>
     {
         return String.format("<ROUTE name=%s n=%d>", name, size());
     }
+	
+	/**
+     * Get the total distance of the Route
+     * @return Double value for the total distance of the Route in meters
+     */
+	public Double getDistance() {
+		double distance = 0.0;
+		Iterator iter = this.iterator();
+		Waypoint lastPoint = null;
+		Waypoint tempWP;
+		
+		if (iter.hasNext()) lastPoint = (Waypoint)iter.next();
+		for(;iter.hasNext();) {
+			tempWP = (Waypoint)iter.next();
+			distance = distance + lastPoint.distanceTo(tempWP);
+		}
+		
+		return distance;
+	}
 }
