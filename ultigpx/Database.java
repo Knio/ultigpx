@@ -10,7 +10,6 @@ public class Database {
     private List<Track>     track;
     private List<Route>     route;
     private List<Group>		group;
-    String name;
     
     /**
     * Constructor to send in list with list of data
@@ -24,7 +23,6 @@ public class Database {
        track    = new ArrayList<Track>(tk);
        route    = new ArrayList<Route>(rt);
        group    = new ArrayList<Group>(g);
-       name = "";
    }
    
    /**
@@ -35,7 +33,6 @@ public class Database {
    	track = new ArrayList<Track>();
    	route = new ArrayList<Route>();
    	group = new ArrayList<Group>();
-       name = "";
    }
    
    /**
