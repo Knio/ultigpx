@@ -265,7 +265,7 @@ public abstract class BasicMapView extends MapView
     }
     
     
-    public enum State  { MAIN, WP, TK_RT, TK_RT_WP, DR_WP }
+    public enum State  { MAIN, WP, TK_RT, TK_RT_WP, DR_WP, ADD }
     
     class EventHandler
         implements  MouseListener,

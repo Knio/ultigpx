@@ -4,7 +4,7 @@ package ultigpx;
 import java.util.*;
 import java.awt.Color;
 
-public class Route extends ArrayList<Waypoint>
+public class Route extends ArrayList<Waypoint>  implements UGPXDataList
 {
 	static final long serialVersionUID = 0;
     public boolean enabled;

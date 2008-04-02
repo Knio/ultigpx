@@ -3,7 +3,7 @@ package ultigpx;
 
 import java.awt.Color;
 
-public class Waypoint
+public class Waypoint implements UGPXData
 {
     private String name;
     private String desc;

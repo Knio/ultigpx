@@ -90,7 +90,7 @@ public class UltiGPX
     {
         try
         {
-            GPXExporter.exportGPX(file, filename);
+            GPXExporter.exportToGPX(file, filename);
         }
         catch (JDOMException e)
         {
