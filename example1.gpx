@@ -12,7 +12,7 @@
   <wpt lat="42.824438727" lon="-0.499127246">
     <ele>2168.363037</ele>
     <time>2005-09-20T14:45:49Z</time>
-    <name>001</name>
+    <name>duplicatename</name>
     <sym>Waypoint</sym>
     <extensions>
       <gpxx:WaypointExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.garmin.com/xmlschemas/GpxExtensions/v2 http://www.garmin.com/xmlschemas/GpxExtensions/v2/GpxExtensionsv2.xsd">
@@ -24,7 +24,7 @@
   <wpt lat="42.835453553" lon="-0.384249995">
     <ele>1413.974121</ele>
     <time>2005-09-20T14:45:49Z</time>
-    <name>002</name>
+    <name>duplicatename</name>
     <sym>Waypoint</sym>
     <extensions>
       <gpxx:WaypointExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.garmin.com/xmlschemas/GpxExtensions/v2 http://www.garmin.com/xmlschemas/GpxExtensions/v2/GpxExtensionsv2.xsd">
@@ -298,7 +298,7 @@
   </wpt>
 
   <trk>
-    <name>06-SEP-05</name>
+    <name>duplicatename</name>
     <type>Track black</type>
     <extensions>
       <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
