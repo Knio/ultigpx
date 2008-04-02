@@ -26,7 +26,7 @@ public class Database {
    }
    
    /**
-    *Constructor to create null UGPXFile, to be populated by add methods
+    *Constructor to create null Database, to be populated by add methods
     */
    public Database() {
    	waypoint = new ArrayList<Waypoint>();
