@@ -11,7 +11,10 @@ public class UltiGPX
 {
     UGPXFile file;
     MainView view;
-    //guigtx.GuiGTXApp view;
+    
+    ArrayList<Operation> undo;
+    ArrayList<Operation> redo;
+    
     public static void main(String args[])
     {
         try
@@ -45,11 +48,43 @@ public class UltiGPX
         
         view = new MainView(this);
         
+        undo = new ArrayList<Operation>();
+        redo = new ArrayList<Operation>();
         
         
         
         
     }
+    
+    
+    public void undo()
+    {
+        if (undo.size() == 0) return;
+        System.out.println("Undo");
+        Operation o = undo.remove(undo.size()-1);
+        o.undo();
+        redo.add(o);
+        
+        view.refresh();
+        
+    } 
+    
+    public void redo()
+    {
+        if (redo.size() == 0) return;
+        System.out.println("Redo");
+        Operation o = redo.remove(redo.size()-1);
+        o.redo();
+        undo.add(o);
+        
+        view.refresh();
+    } 
+    
+    public void addOperation(Operation o)
+    {
+        undo.add(o);
+    }
+    
     
     public void importGPX(String filename)
     {
@@ -60,7 +95,7 @@ public class UltiGPX
 				Object[] options = new String[] { "Yes", "No" };
 				pane.setOptions(options);
 				JDialog dialog = pane.createDialog(new JFrame(), "Large File");
-				dialog.show();
+				dialog.setVisible(true);
 				Object obj = pane.getValue(); 
 				int result = -1;
 				for (int k = 0; k < options.length; k++)

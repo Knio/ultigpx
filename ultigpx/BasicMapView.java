@@ -95,6 +95,15 @@ public abstract class BasicMapView extends MapView
         
     }
     
+    
+    protected void renderLegend()
+    {
+        
+        
+        
+    }
+    
+    
     protected void render()
     {
         
@@ -104,6 +113,10 @@ public abstract class BasicMapView extends MapView
         
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                            RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        
+        
+        renderLegend();
         
         
         
@@ -279,6 +292,7 @@ public abstract class BasicMapView extends MapView
         
         State state;
         Object data;
+        DragOperation op;
         
         public EventHandler()
         {
@@ -379,6 +393,8 @@ public abstract class BasicMapView extends MapView
                 if (wp == (Waypoint)selected)
                 {
                     state = State.DR_WP;
+                    op = new DragOperation(wp);
+                    op.setStart(new Point2D.Double(wp.lon, wp.lat));
                 }
             }
         }
@@ -386,6 +402,13 @@ public abstract class BasicMapView extends MapView
         public void mouseReleased(MouseEvent e)
         {
             System.out.println("\nRELEASE "+e);
+            
+            if (state == State.DR_WP)
+            {
+                op.setEnd(inverseproject(new Point2D.Double(e.getX(), e.getY())));
+                main.addOperation(op);
+                System.out.println("Added drag op");
+            }
             
             if (data instanceof Track) state = State.TK_RT_WP;
             if (data instanceof Route) state = State.TK_RT_WP;

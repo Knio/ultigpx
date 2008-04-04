@@ -87,9 +87,9 @@ public class SearchResult extends JDialog
 		// this way I push the "original" guy over and over
 		// again into a hash table,And he only is added to the list
 		// the first time.
-		Hashtable conf = new Hashtable();
-		Hashtable added = new Hashtable();
-		Vector list = new Vector();
+		Hashtable<String,Object> conf = new Hashtable<String,Object>();
+		Hashtable<String,Object> added = new Hashtable<String,Object>();
+		Vector<String> list = new Vector<String>();
 		UGPXFile file = main.file;
 		
 		//there is no data to check!

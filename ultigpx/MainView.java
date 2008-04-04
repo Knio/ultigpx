@@ -45,11 +45,47 @@ public class MainView extends JFrame
         JMenu fileMenu = new javax.swing.JMenu();
         fileMenu.setText("File");
         
+        JMenu editMenu = new javax.swing.JMenu();
+        editMenu.setText("Edit");
+        
+        
+        
         JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         exitMenuItem.setActionCommand("Exit");
         exitMenuItem.setText("Exit");
         
         menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        
+        JMenuItem undoMenuItem = new JMenuItem();
+        undoMenuItem.setText("Undo");
+        undoMenuItem.setVisible(true);
+        editMenu.add(undoMenuItem);
+        undoMenuItem.setActionCommand("Undo");
+        undoMenuItem.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    main.undo();
+                }   
+            });
+        
+        
+        JMenuItem redoMenuItem = new JMenuItem();
+        redoMenuItem.setText("Redo");
+        redoMenuItem.setVisible(true);
+        editMenu.add(redoMenuItem);
+        redoMenuItem.setActionCommand("Redo");
+        redoMenuItem.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    main.redo();
+                }   
+            });
+        
+        
+        
         
         JMenuItem importMenuItem = new JMenuItem();
         importMenuItem.setText("Import GPX");
@@ -64,12 +100,12 @@ public class MainView extends JFrame
         exportMenuItem.setActionCommand("Export");
         
         
-        importal fml = new importal();
-        importMenuItem.addActionListener(fml);
-        exportMenuItem.addActionListener(fml);
+        MenuListener ml = new MenuListener();
+        importMenuItem.addActionListener(ml);
+        exportMenuItem.addActionListener(ml);
         
         fileMenu.add(exitMenuItem);
-        exitMenuItem.addActionListener(fml);
+        exitMenuItem.addActionListener(ml);
         
         
         setJMenuBar(menuBar);
@@ -192,51 +228,59 @@ public class MainView extends JFrame
         setVisible(true);
     }
     
-    class importal implements ActionListener {
-    	public importal() {
+    class MenuListener implements ActionListener {
+    	public MenuListener() {
     		super();
     	}
-    	public void actionPerformed(ActionEvent e) {
-    	if (e.getActionCommand().equals("Import"))
-    	{
-    		Frame parent = new Frame();
-    		FileDialog fd = new FileDialog(parent, "Choose a GPX file:",
-    		           FileDialog.LOAD);
-    		fd.setVisible(true);
-    		fd.setFilenameFilter(new GPXFilter());
-    		String GPXfile = fd.getFile();
-    		if (GPXfile == null)
-    		{}
-    		else
-    		{
-    			filenam = fd.getFile();
-    			main.importGPX(GPXfile);
-    			prop.select();
-    			refreshmap();
-                map1.fill();
-                wpview.fill();
-                setVisible(true); // this fixes the wayptlist bug
-                searchresult.checkForConflicts();
-    		}
-    	}
-    	else if (e.getActionCommand().equals("Exit"))
-    		System.exit(1);
-    	else if (e.getActionCommand().equals("Export"))
-    	{
-    		Frame parent = new Frame();
-    		FileDialog fd = new FileDialog(parent, "Choose a KML file:",
-    		           FileDialog.SAVE);
-    		fd.setFile(filenam.replaceFirst(".gpx", ".kml"));
-    		fd.setVisible(true);
-    		fd.setFilenameFilter(new KMLFilter());
-    		String GPXfile = fd.getFile();
-    		if (GPXfile == null)
-    		{}
-    		else
-    		{
-    			main.exportGPX(GPXfile);
-    		}
-    	}
+    	public void actionPerformed(ActionEvent e)
+        {
+            if (e.getActionCommand().equals("Import"))
+            {
+                Frame parent = new Frame();
+                FileDialog fd = new FileDialog(parent, "Choose a GPX file:",
+                           FileDialog.LOAD);
+                fd.setVisible(true);
+                fd.setFilenameFilter(new GPXFilter());
+                String GPXfile = fd.getFile();
+                if (GPXfile == null)
+                {}
+                else
+                {
+                    filenam = fd.getFile();
+                    main.importGPX(GPXfile);
+                    prop.select();
+                    refreshmap();
+                    map1.fill();
+                    wpview.fill();
+                    setVisible(true); // this fixes the wayptlist bug
+                    searchresult.checkForConflicts();
+                }
+            }
+            
+            if (e.getActionCommand().equals("Exit"))
+            {
+                System.exit(1);
+            }
+        
+            if (e.getActionCommand().equals("Export"))
+            {
+                Frame parent = new Frame();
+                FileDialog fd = new FileDialog(parent, "Choose a KML file:",
+                           FileDialog.SAVE);
+                fd.setFile(filenam.replaceFirst(".gpx", ".kml"));
+                fd.setVisible(true);
+                fd.setFilenameFilter(new KMLFilter());
+                String GPXfile = fd.getFile();
+                if (GPXfile == null)
+                {}
+                else
+                {
+                    main.exportGPX(GPXfile);
+                }
+            }
+            
+            
+            
     	}
     }
     class GPXFilter implements FilenameFilter {
