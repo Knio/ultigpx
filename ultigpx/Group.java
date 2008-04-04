@@ -6,9 +6,9 @@ import java.util.*;
 
 public class Group
 {
-    private List<Waypoint>  waypoint;
-    private List<Track>     track;
-    private List<Route>     route;
+    protected List<Waypoint>  waypoint;
+    protected List<Track>     track;
+    protected List<Route>     route;
 
     public String name;
     public boolean enabled;
@@ -140,4 +140,73 @@ public class Group
     public void addWaypoint(Waypoint w) {
     	waypoint.add(w);
     }
+    
+    public void add(UGPXData x)
+    {
+        if (x instanceof Track) addTrack((Track)x);
+        if (x instanceof Route) addRoute((Route)x);
+        if (x instanceof Waypoint) addWaypoint((Waypoint)x);
+    }
+    
+    
+    public boolean remove(UGPXData x)
+    {
+        if (x instanceof Track)     return track.remove((Track)x);
+        if (x instanceof Route)     return route.remove((Route)x);
+        if (x instanceof Waypoint)  return waypoint.remove((Waypoint)x);
+        return false;
+    }
+    
+    
+    
+    public boolean containsRoute(Route x)
+    {
+        return route.contains(x);
+    }   
+    
+    public boolean containsTrack(Track x)
+    {
+        return track.contains(x);
+    }   
+    
+    public boolean containsWaypoint(Waypoint x)
+    {
+        return waypoint.contains(x);
+    }   
+    
+    public boolean contains(UGPXData x)
+    {
+        if (x instanceof Track)     return track.contains((Track)x);
+        if (x instanceof Route)     return route.contains((Route)x);
+        if (x instanceof Waypoint)  return waypoint.contains((Waypoint)x);
+        return false;
+    }   
+    /*
+    public Iterator<UGPXData> iterator()
+    {
+        return new GroupIterator();
+    }
+    
+    /* work in progress
+    class GroupIterator implements iterator<UGPXData>
+    {
+        iterator i;
+        public GroupIterator()
+        {
+        
+        }
+        public UGPXData next() throws NoSuchElementException
+        {
+            try
+            {
+                return i.next();
+            }
+            catch NoSuchElementException
+            {
+                if
+            }
+            
+        }
+    }
+    //*/
 }

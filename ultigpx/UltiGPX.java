@@ -12,8 +12,10 @@ public class UltiGPX
     UGPXFile file;
     MainView view;
     
-    ArrayList<Operation> undo;
-    ArrayList<Operation> redo;
+    List<Operation> undo;
+    List<Operation> redo;
+    
+    Selection selected;
     
     public static void main(String args[])
     {
@@ -51,7 +53,7 @@ public class UltiGPX
         undo = new ArrayList<Operation>();
         redo = new ArrayList<Operation>();
         
-        
+        selected = new Selection();
         
         
     }
