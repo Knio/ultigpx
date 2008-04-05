@@ -100,8 +100,8 @@ public class UltiGPX
     {
         try
         {
-			if ((new File(filename).length()) >= 102400) {
-				JOptionPane pane = new JOptionPane("WARNING:\nYou are about to open a file which is over 100kb in size. This may take a while, do you wish to continue opening the file?");
+			if ((new File(filename).length()) >= 1024000) {
+				JOptionPane pane = new JOptionPane("WARNING:\nYou are about to open a file which is over 1Mb in size. This may take a while, do you wish to continue opening the file?");
 				Object[] options = new String[] { "Yes", "No" };
 				pane.setOptions(options);
 				JDialog dialog = pane.createDialog(new JFrame(), "Large File");

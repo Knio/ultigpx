@@ -39,7 +39,7 @@ public abstract class BasicMapView extends MapView
         // North arrow
         JLabel north = new JLabel("\u2191 North \u2191");
         north.setHorizontalAlignment(JLabel.RIGHT);
-        add(north);
+        //add(north);
         
         load();
         fill();
@@ -105,6 +105,52 @@ public abstract class BasicMapView extends MapView
     
     protected void renderLegend()
     {
+        
+        int top  = 0;
+        int left = 0;
+        int right= getWidth();
+        
+        Point2D topleft     = inverseproject(left,  top);
+        Point2D topright    = inverseproject(right, top);
+        
+        double lat1 = Math.toRadians(topleft.getY());
+        double lon1 = Math.toRadians(topleft.getX());
+        double lon2 = Math.toRadians(topright.getX());
+        double radius = 6371000;			// Approx radius of the earth in meters
+        
+        // Spherical law of cosines
+        double dist1    = Math.acos(Math.sin(lat1) * Math.sin(lat1)
+                        + Math.cos(lat1) * Math.cos(lat1) * Math.cos(lon2-lon1)) * radius;
+        
+        double dist2    = Math.pow(10, (int)Math.log10(dist1/1.5));
+        
+        g.setColor(Color.BLACK);
+        
+        int ex = right - 10;
+        int sx = ex - (int)((dist2/dist1)*(right-left));
+        int sy = 10;
+        
+        System.out.printf("%d %d %d\n", sx,ex,sy);
+        
+        g.drawLine(sx, sy, ex, sy);
+        
+        g.drawLine(sx, sy-5, sx, sy+5);
+        g.drawLine(ex, sy-5, ex, sy+5);
+        
+        for (double i=sx;i<ex;i+=(ex-sx)/10.0)
+        {
+            g.drawLine((int)i, sy, (int)i, sy-5);
+        }
+        
+        String s = "m";
+        if (dist2 >= 1000)
+        {
+            dist2 /= 1000;
+            s = "Km";
+        }
+        
+        g.drawString(String.format("%.0f%s", dist2, s), sx+2, sy+10);
+        
         
         
         
