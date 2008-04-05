@@ -88,8 +88,15 @@ public abstract class BasicMapView extends MapView
         if (file == null)
             return;
         
+        
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                           RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        
         g.setColor(Color.WHITE);
         g.fill(getVisibleRect());
+        
+        
         
         render();
         
@@ -110,10 +117,6 @@ public abstract class BasicMapView extends MapView
         
         labelhints.clear();
         labelhints2 = new RectQuadTree(getVisibleRect());
-        
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                           RenderingHints.VALUE_ANTIALIAS_ON);
-        
         
         
         renderLegend();

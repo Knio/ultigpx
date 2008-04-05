@@ -11,17 +11,36 @@ import java.io.*;
 public class MainView extends JFrame 
 {
     UltiGPX main;
+    
+    JTabbedPane pane;
+    
     MapView map1;
     MapView map2;
     MapView map3;
+    
+    WayptView wpview;
     PropertiesView prop;
     ElevationView ele;
-    JTabbedPane pane;
-    String filenam;
-    WayptView wpview;
+    
     SearchResult searchresult;
     JMenuItem undoMenuItem;
     JMenuItem redoMenuItem;
+    
+    
+    JMenuBar menuBar;
+    
+    JMenu fileMenu;
+    JMenu editMenu;
+    
+    JMenuItem importMenuItem;
+    JMenuItem exportMenuItem;
+    JMenuItem exportGPXMenuItem;
+    JMenuItem exitMenuItem;
+    
+    JMenuItem undoMenuItem;
+    JMenuItem redoMenuItem;
+    
+    
     
     public MainView(UltiGPX _main)
     {
@@ -40,19 +59,32 @@ public class MainView extends JFrame
         
         main = _main;
         
-        JMenuBar menuBar;
+        setupMenu();
+        setupPanes();
+        
+        // zoom maps to fill screen
+        map1.fill();
+        map3.load();
+        
+        setVisible(true);
+        
+    }
+    
+    
+    void setupMenu()
+    {
+        
         menuBar = new javax.swing.JMenuBar();
         
         
-        JMenu fileMenu = new javax.swing.JMenu();
+        fileMenu = new javax.swing.JMenu();
         fileMenu.setText("File");
         
-        JMenu editMenu = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
         editMenu.setText("Edit");
         
         
-        
-        JMenuItem exitMenuItem = new javax.swing.JMenuItem();
+        exitMenuItem = new javax.swing.JMenuItem();
         exitMenuItem.setActionCommand("Exit");
         exitMenuItem.setText("Exit");
         
@@ -65,12 +97,8 @@ public class MainView extends JFrame
         editMenu.add(undoMenuItem);
         undoMenuItem.setActionCommand("Undo");
         undoMenuItem.addActionListener(new ActionListener()
-            {
-                public void actionPerformed(ActionEvent e)
-                {
-                    main.undo();
-                }   
-            });
+            {public void actionPerformed(ActionEvent e)
+             { main.undo(); }});
         
         
         redoMenuItem = new JMenuItem();
@@ -79,30 +107,26 @@ public class MainView extends JFrame
         editMenu.add(redoMenuItem);
         redoMenuItem.setActionCommand("Redo");
         redoMenuItem.addActionListener(new ActionListener()
-            {
-                public void actionPerformed(ActionEvent e)
-                {
-                    main.redo();
-                }   
-            });
+            {public void actionPerformed(ActionEvent e)
+             { main.redo(); }});
         
         redoMenuItem.setEnabled(false);
         undoMenuItem.setEnabled(false);
         
         
-        JMenuItem importMenuItem = new JMenuItem();
+        importMenuItem = new JMenuItem();
         importMenuItem.setText("Import GPX");
         importMenuItem.setVisible(true);
         fileMenu.add(importMenuItem);
         importMenuItem.setActionCommand("Import");
         
-        JMenuItem exportMenuItem = new JMenuItem();
+        exportMenuItem = new JMenuItem();
         exportMenuItem.setText("Export KML");
         exportMenuItem.setVisible(true);
         fileMenu.add(exportMenuItem);
         exportMenuItem.setActionCommand("Export");
         
-        JMenuItem exportGPXMenuItem = new JMenuItem();
+        exportGPXMenuItem = new JMenuItem();
         exportGPXMenuItem.setText("Export GPX");
         exportGPXMenuItem.setVisible(true);
         fileMenu.add(exportGPXMenuItem);
@@ -119,7 +143,12 @@ public class MainView extends JFrame
         
         
         setJMenuBar(menuBar);
-        
+    }
+    
+    
+    void setupPanes()
+    {
+    
         // so that the program doesn't get too small
         // PropertiesView needs at least 55 pixels width
         this.setMinimumSize(new Dimension(250, 250));
@@ -186,11 +215,7 @@ public class MainView extends JFrame
         
         setSize(600, 600);
         
-        // zoom maps to fill screen
-        map1.fill();
-        map3.load();
         
-        setVisible(true);
     }
     
     public void select(Object x) {
@@ -244,6 +269,7 @@ public class MainView extends JFrame
     	}
     	public void actionPerformed(ActionEvent e)
         {
+            String filenam = null;
             if (e.getActionCommand().equals("Import"))
             {
                 Frame parent = new Frame();
