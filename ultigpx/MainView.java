@@ -23,9 +23,6 @@ public class MainView extends JFrame
     ElevationView ele;
     
     SearchResult searchresult;
-    JMenuItem undoMenuItem;
-    JMenuItem redoMenuItem;
-    
     
     JMenuBar menuBar;
     
