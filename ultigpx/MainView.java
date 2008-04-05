@@ -307,7 +307,8 @@ public class MainView extends JFrame
                            FileDialog.LOAD);
                 fd.setVisible(true);
                 fd.setFilenameFilter(new GPXFilter());
-                String GPXfile = fd.getFile();
+                String GPXfile = fd.getDirectory() + fd.getFile();
+                System.out.println("File: "+GPXfile);
                 if (GPXfile == null)
                 {}
                 else
