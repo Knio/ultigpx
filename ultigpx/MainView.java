@@ -99,10 +99,17 @@ public class MainView extends JFrame
         fileMenu.add(exportMenuItem);
         exportMenuItem.setActionCommand("Export");
         
+        JMenuItem exportGPXMenuItem = new JMenuItem();
+        exportGPXMenuItem.setText("Export GPX");
+        exportGPXMenuItem.setVisible(true);
+        fileMenu.add(exportGPXMenuItem);
+        exportGPXMenuItem.setActionCommand("ExportGPX");
+        
         
         MenuListener ml = new MenuListener();
         importMenuItem.addActionListener(ml);
         exportMenuItem.addActionListener(ml);
+        exportGPXMenuItem.addActionListener(ml);
         
         fileMenu.add(exitMenuItem);
         exitMenuItem.addActionListener(ml);
@@ -262,7 +269,7 @@ public class MainView extends JFrame
                 System.exit(1);
             }
         
-            if (e.getActionCommand().equals("Export"))
+            if (e.getActionCommand().equals("Export") && filenam != null)
             {
                 Frame parent = new Frame();
                 FileDialog fd = new FileDialog(parent, "Choose a KML file:",
@@ -273,13 +280,27 @@ public class MainView extends JFrame
                 String GPXfile = fd.getFile();
                 if (GPXfile == null)
                 {}
+                else if (GPXfile.substring(GPXfile.length()-4, GPXfile.length()).equalsIgnoreCase(".kml"))
+                	main.exportKML(GPXfile);
                 else
-                {
-                    main.exportGPX(GPXfile);
-                }
+                    main.exportKML(GPXfile+".kml");
             }
             
-            
+            if (e.getActionCommand().equals("ExportGPX") && filenam != null)
+            {
+                Frame parent = new Frame();
+                FileDialog fd = new FileDialog(parent, "Choose a GPX file:",
+                           FileDialog.SAVE);
+                fd.setVisible(true);
+                fd.setFilenameFilter(new GPXFilter());
+                String GPXfile = fd.getFile();
+                if (GPXfile == null)
+                {}
+                else if (GPXfile.substring(GPXfile.length()-4, GPXfile.length()).equalsIgnoreCase(".gpx"))
+                	main.exportKML(GPXfile);
+                else
+                    main.exportKML(GPXfile+".gpx");
+            }
             
     	}
     }

@@ -141,6 +141,23 @@ public class UltiGPX
         }
     }
     
+    public void exportKML(String filename)
+    {
+        try
+        {
+            GPXExporter.exportToKML(file, filename);
+        }
+        catch (JDOMException e)
+        {
+            System.out.println("Error parsing file:");
+            System.out.println(e);
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error reading file:");
+            System.out.println(e);
+        }
+    }
 	
 	// Reduce the number of waypoints in a file
 	public void reduceFile (UGPXFile file) {
