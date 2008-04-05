@@ -4,8 +4,7 @@ package ultigpx;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 
 public class MainView extends JFrame 
@@ -39,7 +38,7 @@ public class MainView extends JFrame
     
     
     
-    public MainView(UltiGPX _main)
+    public MainView(UltiGPX main)
     {
         super("UltiGPX");
         
@@ -54,7 +53,10 @@ public class MainView extends JFrame
         }
         
         
-        main = _main;
+        this.main = main;
+        
+        addWindowListener(new WinListener());
+        
         
         setupMenu();
         setupPanes();
@@ -257,18 +259,39 @@ public class MainView extends JFrame
     }
     
     public void refreshmap() {
-    	map1.refresh();
-    	map2.refresh();
-    	map3.refresh();
-    	ele.repaint();
+        map1.refresh();
+        map2.refresh();
+        map3.refresh();
+        ele.repaint();
+        
         setVisible(true);
     }
     
     public void refresh()
     {
+        wpview.fill();
         refreshmap();
         setVisible(true);
     }
+    
+    
+    
+    class WinListener implements WindowListener
+    {
+        
+        public void windowActivated(WindowEvent e) {}
+        public void windowClosed(WindowEvent e) {}
+        public void windowClosing(WindowEvent e) { setVisible(false); }
+        public void windowDeactivated(WindowEvent e) {}
+        public void windowDeiconified(WindowEvent e) {}
+        public void windowIconified(WindowEvent e) {}
+        public void windowOpened(WindowEvent e) {}
+        
+    }
+    
+    
+    
+    
     
     class MenuListener implements ActionListener {
     	public MenuListener() {
@@ -291,20 +314,20 @@ public class MainView extends JFrame
                 {
                     filenam = fd.getFile();
                     main.importGPX(GPXfile);
+                    
                     prop.select();
-                    refreshmap();
                     map1.fill();
-                    wpview.fill();
-                    setVisible(true); // this fixes the wayptlist bug
+                    
                     searchresult.checkForConflicts();
                 }
             }
             
             if (e.getActionCommand().equals("Exit"))
             {
+                setVisible(false);
                 System.exit(1);
             }
-        
+            
             if (e.getActionCommand().equals("Export") && filenam != null)
             {
                 Frame parent = new Frame();
