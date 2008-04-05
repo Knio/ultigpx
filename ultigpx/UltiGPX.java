@@ -66,6 +66,9 @@ public class UltiGPX
         Operation o = undo.remove(undo.size()-1);
         o.undo();
         redo.add(o);
+        if (undo.size() == 0)
+        	view.undoMenuItem.setEnabled(false);
+        view.redoMenuItem.setEnabled(true);
         
         view.refresh();
         
@@ -78,6 +81,9 @@ public class UltiGPX
         Operation o = redo.remove(redo.size()-1);
         o.redo();
         undo.add(o);
+        if (redo.size() == 0)
+        	view.redoMenuItem.setEnabled(false);
+        view.undoMenuItem.setEnabled(true);
         
         view.refresh();
     } 
@@ -85,8 +91,10 @@ public class UltiGPX
     public void addOperation(Operation o)
     {
         undo.add(o);
+        redo.clear();
+        view.undoMenuItem.setEnabled(true);
+        view.redoMenuItem.setEnabled(false);
     }
-    
     
     public void importGPX(String filename)
     {

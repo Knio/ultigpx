@@ -20,6 +20,8 @@ public class MainView extends JFrame
     String filenam;
     WayptView wpview;
     SearchResult searchresult;
+    JMenuItem undoMenuItem;
+    JMenuItem redoMenuItem;
     
     public MainView(UltiGPX _main)
     {
@@ -57,7 +59,7 @@ public class MainView extends JFrame
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         
-        JMenuItem undoMenuItem = new JMenuItem();
+        undoMenuItem = new JMenuItem();
         undoMenuItem.setText("Undo");
         undoMenuItem.setVisible(true);
         editMenu.add(undoMenuItem);
@@ -71,7 +73,7 @@ public class MainView extends JFrame
             });
         
         
-        JMenuItem redoMenuItem = new JMenuItem();
+        redoMenuItem = new JMenuItem();
         redoMenuItem.setText("Redo");
         redoMenuItem.setVisible(true);
         editMenu.add(redoMenuItem);
@@ -84,7 +86,8 @@ public class MainView extends JFrame
                 }   
             });
         
-        
+        redoMenuItem.setEnabled(false);
+        undoMenuItem.setEnabled(false);
         
         
         JMenuItem importMenuItem = new JMenuItem();
