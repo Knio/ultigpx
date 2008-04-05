@@ -202,6 +202,22 @@ public class WayptView extends JComponent
     {
         System.out.println("SELECT: "+ e);
         
+        main.selected.clear();
+        TreePath p[] = tree.getSelectionModel().getSelectionPaths();
+        if (p!=null)
+        for (TreePath i : p)
+        {
+            Object o = ((DefaultMutableTreeNode)i.getLastPathComponent()).getUserObject();
+            if (o instanceof UGPXData)
+            {
+                main.selected.add((UGPXData)o);
+                System.out.println((UGPXData)o);
+            }
+        }
+        main.selected.selectionChanged();
+        
+        
+        /*
         if (e==null)
         {
             main.view.select((Object)null);
@@ -211,8 +227,21 @@ public class WayptView extends JComponent
               
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-        select_list.add(o);
-        main.view.select(o);
+        if (!(o instanceof UGPXData))
+            return;
+        
+        
+        if (tree.getSelectionModel().isPathSelected(e))
+        {
+            main.selected.add((UGPXData)o);
+            main.selected.selectionChanged();
+        }
+        else
+        {
+            main.selected.remove((UGPXData)o);
+            main.selected.selectionChanged();
+        }
+        */
         
     }
     

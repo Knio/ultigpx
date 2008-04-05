@@ -215,6 +215,16 @@ public class MainView extends JFrame
         
     }
     
+    public void selectionChanged()
+    {
+        map1.selectionChanged();
+        map2.selectionChanged();
+        //map3.selectionChanged(x);
+    	//prop.selectionChanged(x);
+    	//ele.selectionChanged(x);
+    }
+    
+    
     public void select(Object x) {
         
         select((Waypoint)null);

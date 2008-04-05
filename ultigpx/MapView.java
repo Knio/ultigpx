@@ -63,6 +63,12 @@ abstract public class MapView extends JPanel
         
     }
     
+    public void selectionChanged()
+    {
+        repaint();
+    }
+    
+    
     /**
     * selects a waypoint and re-renders the map
     * @param Waypoint wp

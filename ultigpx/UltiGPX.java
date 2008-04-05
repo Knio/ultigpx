@@ -53,7 +53,7 @@ public class UltiGPX
         undo = new ArrayList<Operation>();
         redo = new ArrayList<Operation>();
         
-        selected = new Selection();
+        selected = new Selection(this);
         
         
     }

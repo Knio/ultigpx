@@ -130,7 +130,7 @@ public abstract class BasicMapView extends MapView
         int sx = ex - (int)((dist2/dist1)*(right-left));
         int sy = 10;
         
-        System.out.printf("%d %d %d\n", sx,ex,sy);
+        //System.out.printf("%d %d %d\n", sx,ex,sy);
         
         g.drawLine(sx, sy, ex, sy);
         
@@ -173,11 +173,11 @@ public abstract class BasicMapView extends MapView
         
         
         // render selected so it has label priority
-        if (selected != null)
+        if (main.selected.get() != null)
         {
             g.setPaint(SELECTED_COLOR);
             g.setStroke(new BasicStroke(5.0f));
-            render(selected);
+            render(main.selected.get());
         }
         
         
@@ -223,13 +223,34 @@ public abstract class BasicMapView extends MapView
             }
         
         // rerender selected so that it is on top
-        //*
-        if (selected != null)
+        /*
+        
+        System.out.println("Selected = "+main.selected.get());
+        if (main.selected.get() != null)
         {
             g.setPaint(SELECTED_COLOR);
             g.setStroke(new BasicStroke(3.0f));
-            render(selected);
+            render(main.selected.get());
         } //*/
+        
+        g.setStroke(new BasicStroke(3.0f));
+        
+        for (Track i : main.selected.tracks())
+        {
+            setColor(null, SELECTED_COLOR);
+            render(i);
+        }
+        for (Route i : main.selected.routes())
+        {
+            setColor(null, SELECTED_COLOR);
+            render(i);
+        }
+        for (Waypoint i : main.selected.waypoints())
+        {
+            setColor(null, SELECTED_COLOR);
+            render(i);
+        }
+        
     }
     
     
@@ -371,7 +392,9 @@ public abstract class BasicMapView extends MapView
                 
                 if (min_w != null)
                 {
-                    main.view.select(min_w);
+                    //main.view.select(min_w);
+                    main.selected.select(min_w);
+                    
                     state = State.TK_RT_WP;
                     return;
                 }
@@ -382,18 +405,20 @@ public abstract class BasicMapView extends MapView
             min_r  = getRoute(click);
             min_t  = getTrack(click);
             min_w  = getWaypoint(click);
-            Object min_tr = min_r != null ? min_r : min_t;
+            UGPXData min_tr = min_r != null ? min_r : min_t;
             
             
             if (min_tr != null)
             {
-                main.view.select(min_tr);
+                //main.view.select(min_tr);
+                main.selected.select(min_tr);
                 state = State.TK_RT;
                 data = min_tr;
             }
             else
             {
-                main.view.select(min_w);
+                //main.view.select(min_w);
+                main.selected.select(min_w);
                 if (min_w == null)
                 {
                     state = State.MAIN;
@@ -425,21 +450,20 @@ public abstract class BasicMapView extends MapView
             
             
             System.out.println(state);
-            System.out.println(selected);
             if (state == State.WP || state == State.TK_RT_WP)
             {
                 
                 Point2D click = new Point2D.Double(e.getX(), e.getY());
                 Waypoint wp = null;
-                // REFACTOR UGPXDATA
-                if (data instanceof Waypoint) wp = getWaypoint(click);
-                if (data instanceof Track) wp = getTrackPoint((Track)data, click);
-                if (data instanceof Route) wp = getRoutePoint((Route)data, click);
                 
-                System.out.println(wp);
-                System.out.println(selected);
-                System.out.println(wp==(Waypoint)selected);
-                if (wp == (Waypoint)selected)
+                // REFACTOR UGPXDATA
+                if (data instanceof Waypoint)   wp = getWaypoint(click);
+                if (data instanceof Track)      wp = getTrackPoint((Track)data, click);
+                if (data instanceof Route)      wp = getRoutePoint((Route)data, click);
+                
+                if (wp == null) return;
+                
+                if (wp == main.selected.get())
                 {
                     state = State.DR_WP;
                     op = new DragOperation(wp);
@@ -475,7 +499,7 @@ public abstract class BasicMapView extends MapView
                 Point2D click = new Point2D.Double(e.getX(), e.getY());
                 Point2D world = inverseproject(click);
                 
-                Waypoint wp = (Waypoint)selected;
+                Waypoint wp = (Waypoint)main.selected.get();
                 wp.lon = world.getX();
                 wp.lat = world.getY();
                 
