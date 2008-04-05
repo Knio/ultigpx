@@ -31,6 +31,7 @@ public class PropertiesView extends JPanel {
 
 	// set color button
 	Button setcolor;
+	Button setAtt;
 	MainView parent;
 	
 	JColorChooser colordialog;
@@ -108,14 +109,19 @@ public class PropertiesView extends JPanel {
         // adds text box to panel
     	add(mllabel,c);
     	// creates button
+        c.insets = new Insets(0,10,0,9);
     	setcolor = new Button("Choose Color");
+    	setAtt = new Button("Edit");
     	c.weighty = 0.5;
+    	add(setAtt, c);
     	// add button
     	c.insets = new Insets(0,10,9,9);
     	add(setcolor, c);
     	// set up button actions
     	setcolor.setActionCommand("SetColor");
     	setcolor.addActionListener(new submitactionlistener());
+    	setAtt.setActionCommand("SetAtt");
+    	setAtt.addActionListener(new submitactionlistener());
     	// set selected element to nothing
 		selected = 0;
 		this.setPreferredSize(new Dimension(100, 100));
@@ -179,6 +185,7 @@ public class PropertiesView extends JPanel {
     protected void paintnull(Graphics2D g2d) {
     	// disables button
     	setcolor.setEnabled(false);
+    	setAtt.setEnabled(false);
     	// sets the text to ""
     	mllabel.setText("");
     }
@@ -227,6 +234,7 @@ public class PropertiesView extends JPanel {
     protected void paintwp(Graphics2D g2d){
     	// enables button
     	setcolor.setEnabled(true);
+    	setAtt.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
     	// displays name
@@ -264,6 +272,7 @@ public class PropertiesView extends JPanel {
     protected void painttrk(Graphics2D g2d){
     	// enables button
     	setcolor.setEnabled(true);
+    	setAtt.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
     	// displays name
@@ -293,6 +302,7 @@ public class PropertiesView extends JPanel {
     protected void paintrt(Graphics2D g2d){
     	// enables button
     	setcolor.setEnabled(true);
+    	setAtt.setEnabled(true);
     	// Clear the text
     	mllabel.setText("");
     	// displays name
@@ -352,25 +362,93 @@ public class PropertiesView extends JPanel {
     	 * Changes the color of a point based on what type of point is selected.
     	 */
     	public void actionPerformed(ActionEvent e) {
-    		if (selected == 1)
+    		if (e.getActionCommand().equals("SetColor"))
     		{
-    			colordialog = new JColorChooser();
-    			Color clr = colordialog.showDialog(parent, "Color Chooser", selwp.getColor());
-    			selwp.setColor(clr);
+    			if (selected == 1)
+    			{
+    				Color clr = JColorChooser.showDialog(parent, "Color Chooser", selwp.getColor());
+    				selwp.setColor(clr);
+    			}
+    			else if (selected == 2)
+    			{
+    				Color clr = JColorChooser.showDialog(parent, "Color Chooser", seltrk.getColor());
+    				seltrk.setColor(clr);
+    			}
+    			else if (selected == 3)
+    			{
+    				Color clr = JColorChooser.showDialog(parent, "Color Chooser", selrt.getColor());
+    				selrt.setColor(clr);
+    			}
     		}
-    		if (selected == 2)
+    		else if (e.getActionCommand().equals("SetAtt"))
     		{
-    			colordialog = new JColorChooser();
-    			Color clr = colordialog.showDialog(parent, "Color Chooser", seltrk.getColor());
-    			seltrk.setColor(clr);
-    		}
-    		if (selected == 3)
-    		{
-    			colordialog = new JColorChooser();
-    			Color clr = colordialog.showDialog(parent, "Color Chooser", selrt.getColor());
-    			selrt.setColor(clr);
+    			dispattdialog();
     		}
     	}
+    }
+    
+    public void dispattdialog(JDialog x,GridBagConstraints c,Waypoint w) {
+    	// TODO
+    	x.add(new Label("Name:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(new TextField(w.getName(), 20),c);
+		
+		JCheckBox v = new JCheckBox("Enabled:                    ",w.getEnabled());
+		v.setHorizontalTextPosition(SwingConstants.LEADING);
+		x.add(v,c);
+        c.gridwidth = 1;
+        
+        x.add(new Label("Description:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(new TextArea(w.getDesc(),10,10,TextArea.SCROLLBARS_VERTICAL_ONLY),c);
+		c.gridwidth = 1;
+        
+        x.add(new Label("Elevation:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(new TextField(""+w.getEle(), 20),c);
+		c.gridwidth = 1;
+        
+        x.add(new Label("Time:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(new TextField(""+new Date((long)w.getTime()), 20),c);
+		
+    }
+    
+    public void dispattdialog(JDialog x,GridBagConstraints c,Track t) {
+    	// TODO
+    }
+    
+    public void dispattdialog(JDialog x,GridBagConstraints c,Route r) {
+    	// TODO
+    }
+    
+    public void dispattdialog(JDialog x,GridBagConstraints c,Group g) {
+    	// TODO
+    	// do we even need this?
+    }
+    
+    /**
+     * Displays the set attributes dialog for a 
+     */
+    public void dispattdialog() {
+    	JDialog x = new JDialog(parent, "", true);
+		x.setAlwaysOnTop(true);
+		x.setResizable(false);
+		x.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+    	c.fill = GridBagConstraints.BOTH;
+    	c.weightx = 1.0;
+        c.weighty = 1.0;
+		x.setBounds(parent.getX()+parent.getWidth()/2-150, parent.getY()+parent.getHeight()/2-150, 300, 300);
+
+        if (selected == 1)
+        	dispattdialog(x,c,selwp);
+        else if (selected == 2)
+        	dispattdialog(x,c,seltrk);
+        else if (selected == 3)
+        	dispattdialog(x,c,selrt);
+        //*/
+        x.setVisible(true);
     }
     
 }
