@@ -1,4 +1,4 @@
-package p2;
+package ultigpx;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
