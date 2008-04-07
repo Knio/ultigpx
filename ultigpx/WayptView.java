@@ -37,7 +37,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 
 public class WayptView extends JComponent{
-	
 	UltiGPX   main;
     
     protected List  select_list;
