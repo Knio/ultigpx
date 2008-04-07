@@ -23,8 +23,10 @@ public class PropertiesView extends JPanel {
 	Track seltrk;
 	// selected route
 	Route selrt;
+	// selected group
+	Group selgp;
 	// integer that tells which type of data is selected
-	// 0 = none, 1 = wp, 2 = trk, 3 = rt, else = crashed program
+	// 0 = none, 1 = wp, 2 = trk, 3 = rt, 4 = group, else = crashed program
 	int selected;
 	// TextArea that holds the info
 	TextArea mllabel;
@@ -74,6 +76,24 @@ public class PropertiesView extends JPanel {
 		selrt = rt;
 		selected = 3;
 		repaint();
+	}
+	
+	public void select(Group g) {
+		//TODO
+		if (g.route.size() == 1 && g.track.size() == 0 && g.waypoint.size() == 0)
+			select(g.getRoute(0));
+		else if (g.route.size() == 0 && g.track.size() == 1 && g.waypoint.size() == 0)
+			select(g.getTrack(0));
+		else if (g.route.size() == 0 && g.track.size() == 0 && g.waypoint.size() == 1)
+			select(g.getWaypoint(0));
+		else if (g.route.size() == 0 && g.track.size() == 0 && g.waypoint.size() == 0)
+			select();
+		else
+		{
+			selgp = g;
+			selected = 4;
+			repaint();
+		}
 	}
 	
 	/**
@@ -174,6 +194,9 @@ public class PropertiesView extends JPanel {
             case (3):
             	paintrt(g2d);
             	break;
+            case (4):
+            	paintgrp(g2d);
+            	break;
         }//*/
     }
     
@@ -183,6 +206,19 @@ public class PropertiesView extends JPanel {
      * @param g2d	the Graphics2D element to draw onto
      */
     protected void paintnull(Graphics2D g2d) {
+    	// disables button
+    	setcolor.setEnabled(false);
+    	setAtt.setEnabled(false);
+    	// sets the text to ""
+    	mllabel.setText("");
+    }
+    
+    /**
+     * Disables the color change Button and displays nothing in the TextArea.
+     * 
+     * @param g2d	the Graphics2D element to draw onto
+     */
+    protected void paintgrp(Graphics2D g2d) {
     	// disables button
     	setcolor.setEnabled(false);
     	setAtt.setEnabled(false);

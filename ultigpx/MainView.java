@@ -222,7 +222,7 @@ public class MainView extends JFrame
         map1.selectionChanged();
         map2.selectionChanged();
         //map3.selectionChanged(x);
-    	//prop.selectionChanged(x);
+    	prop.select(main.selected);
     	//ele.selectionChanged(x);
     }
     
