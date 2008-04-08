@@ -38,6 +38,8 @@ public class PropertiesView extends JPanel {
 	
 	JColorChooser colordialog;
 	
+	EditOperation editop;
+	
 	PropertiesView me = this;
 	
 	TextField name;
@@ -47,6 +49,8 @@ public class PropertiesView extends JPanel {
 	TextField ele;
 	double timex;
 	Label stat;
+	Button submit;
+	JDialog x;
 	
 	/**
 	 * Displays the properties of a Waypoint.
@@ -87,7 +91,6 @@ public class PropertiesView extends JPanel {
 	}
 	
 	public void select(Group g) {
-		//TODO
 		if (g.route.size() == 1 && g.track.size() == 0 && g.waypoint.size() == 0)
 			select(g.getRoute(0));
 		else if (g.route.size() == 0 && g.track.size() == 1 && g.waypoint.size() == 0)
@@ -228,10 +231,18 @@ public class PropertiesView extends JPanel {
      */
     protected void paintgrp(Graphics2D g2d) {
     	// disables button
-    	setcolor.setEnabled(false);
+    	setcolor.setEnabled(true);
     	setAtt.setEnabled(false);
     	// sets the text to ""
-    	mllabel.setText("");
+    	mllabel.setText("Name: " + selgrp.name + "\n");
+    	if (selgrp.getEnabled())
+    		mllabel.append("Status: Enabled\n");
+    	else
+    		mllabel.append("Status: Disabled\n");
+    	mllabel.append("Number of Waypoints: " + selgrp.waypoint.size() + "\n");
+    	mllabel.append("Number of Tracks: " + selgrp.track.size() + "\n");
+    	mllabel.append("Number of Routes: " + selgrp.route.size() + "\n");
+    	
     }
     
     /**
@@ -282,28 +293,28 @@ public class PropertiesView extends JPanel {
     	// Clear the text
     	mllabel.setText("");
     	// displays name
-    	mllabel.append("Waypoint: " + selwp.getName() + "\n\n");
+    	mllabel.append("Waypoint: " + selwp.getName() + "\n");
     	// displays status
     	if (selwp.getEnabled())
-    		mllabel.append("Status: Enabled\n\n");
+    		mllabel.append("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n\n");
+    		mllabel.append("Status: Disabled\n");
     	// displays time
     	Date x = new Date((long)selwp.getTime());
-    	mllabel.append("Time: " + x.toString() + "\n\n");
+    	mllabel.append("Time: " + x.toString() + "\n");
     	// displays description
-    	mllabel.append("Description: " + selwp.getDesc() + "\n\n");
+    	mllabel.append("Description: " + selwp.getDesc() + "\n");
     	// displays latitude
-    	mllabel.append("Latitude: " + selwp.getLat() + "\n\n");
+    	mllabel.append("Latitude: " + selwp.getLat() + "\n");
     	// displays longitude
-    	mllabel.append("Longitude: " + selwp.getLon() + "\n\n");
+    	mllabel.append("Longitude: " + selwp.getLon() + "\n");
     	// displays elevation
-    	mllabel.append("Elevation: " + selwp.getEle() + "\n\n");
+    	mllabel.append("Elevation: " + selwp.getEle() + "\n");
     	// displays color
     	if (selwp.getColor() != null)
-    		mllabel.append("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue() + "\n\n");
+    		mllabel.append("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue());
     	else
-    		mllabel.append("Color:\n  Default\n\n");
+    		mllabel.append("Color:\n  Default");
     }
     
     /**
@@ -320,18 +331,18 @@ public class PropertiesView extends JPanel {
     	// Clear the text
     	mllabel.setText("");
     	// displays name
-    	mllabel.append("Track: " + seltrk.getName() + "\n\n");
+    	mllabel.append("Track: " + seltrk.getName() + "\n");
     	// displays status
     	if (seltrk.enabled)
-    		mllabel.append("Status: Enabled\n\n");
+    		mllabel.append("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n\n");
+    		mllabel.append("Status: Disabled\n");
     	// displays number of track segments in the Track
     	mllabel.append("Number of Segments: " + seltrk.size() + "\n");
 		mllabel.append("Total Distance: " + formatDistance(seltrk.getDistance()) + "\n");
     	// displays color
     	if (seltrk.color != null)
-    		mllabel.append("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue() + "\n\n");
+    		mllabel.append("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue());
     	else
     		mllabel.append("Color:\n  Default");
     }
@@ -350,20 +361,20 @@ public class PropertiesView extends JPanel {
     	// Clear the text
     	mllabel.setText("");
     	// displays name
-    	mllabel.append("Route: " + selrt.getName() + "\n\n");
+    	mllabel.append("Route: " + selrt.getName() + "\n");
     	// displays status
     	if (selrt.enabled)
-    		mllabel.append("Status: Enabled\n\n");
+    		mllabel.append("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n\n");
+    		mllabel.append("Status: Disabled\n");
     	// displays description
-    	mllabel.append("Description: " + selrt.getDesc() + "\n\n");
+    	mllabel.append("Description: " + selrt.getDesc() + "\n");
     	// displays number of waypoints in the route
     	mllabel.append("Number of Waypoints: " + selrt.size() + "\n");
 		mllabel.append("Total Distance: " + formatDistance(selrt.getDistance()) + "\n");
     	// displays color
     	if (selrt.color != null)
-    		mllabel.append("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue() + "\n\n");
+    		mllabel.append("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue());
     	else
     		mllabel.append("Color:\n  Default");
     }
@@ -432,7 +443,6 @@ public class PropertiesView extends JPanel {
     }
     
     public void dispattdialog(JDialog x,GridBagConstraints c,Waypoint w) {
-    	// TODO
     	name = new TextField(w.getName(), 20);
     	x.add(new Label("Name:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -462,18 +472,21 @@ public class PropertiesView extends JPanel {
         time.setEditable(false);
 		x.add(time,c);
 		
-		Button submit = new Button("Submit");
+		submit = new Button("Apply");
 		x.add(submit,c);
 		submit.addActionListener(new ActionListener() {			
 			public void actionPerformed(ActionEvent e) {
-					// change waypoint
+		    	editop = new EditOperation(selwp);
 				selwp.setName(name.getText());
 				selwp.setDesc(desc.getText());
+				stat.setText("");
 				try{
 				selwp.setEle(Double.valueOf(ele.getText()));
 				} catch (Exception ex) {stat.setText("Error: Could not parse Elevation");System.out.println(ex);};
 				selwp.setEnabled(enabled.isSelected());
 				parent.refreshmap();
+				editop.setnew(selwp);
+				parent.main.addOperation(editop);
 			}
 		});
 		
@@ -483,23 +496,109 @@ public class PropertiesView extends JPanel {
     
 
     public void dispattdialog(JDialog x,GridBagConstraints c,Track t) {
-    	// TODO
+    	name = new TextField(t.getName(), 20);
+    	x.add(new Label("Name:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(name,c);
+		
+		enabled = new JCheckBox("Enabled:                    ",t.getEnabled());
+		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
+		x.add(enabled,c);
+        c.gridwidth = 1;
+        
+        desc = new TextArea(t.getDesc(),10,10,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        x.add(new Label("Description:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(desc,c);
+		c.gridwidth = 1;
+		
+		submit = new Button("Apply");
+		x.add(submit,c);
+		submit.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {
+		    	editop = new EditOperation(seltrk);
+				seltrk.setName(name.getText());
+				seltrk.setDesc(desc.getText());
+				seltrk.setEnabled(enabled.isSelected());
+				parent.refreshmap();
+				editop.setnew(seltrk);
+				parent.main.addOperation(editop);
+			}
+		});
+		
+		stat = new Label();
+		x.add(stat,c);
     }
     
     public void dispattdialog(JDialog x,GridBagConstraints c,Route r) {
-    	// TODO
+    	name = new TextField(r.getName(), 20);
+    	x.add(new Label("Name:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(name,c);
+		
+		enabled = new JCheckBox("Enabled:                    ",r.getEnabled());
+		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
+		x.add(enabled,c);
+        c.gridwidth = 1;
+        
+        desc = new TextArea(r.getDesc(),10,10,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        x.add(new Label("Description:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(desc,c);
+		c.gridwidth = 1;
+		
+		submit = new Button("Apply");
+		x.add(submit,c);
+		submit.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {
+		    	editop = new EditOperation(selrt);
+				selrt.setName(name.getText());
+				selrt.setDesc(desc.getText());
+				selrt.setEnabled(enabled.isSelected());
+				parent.refreshmap();
+				editop.setnew(selrt);
+				parent.main.addOperation(editop);
+			}
+		});
+		
+		stat = new Label();
+		x.add(stat,c);
     }
     
     public void dispattdialog(JDialog x,GridBagConstraints c,Group g) {
-    	// TODO
-    	// do we even need this?
+    	name = new TextField(g.name, 20);
+    	x.add(new Label("Name:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(name,c);
+		
+		enabled = new JCheckBox("Enabled:                    ",g.getEnabled());
+		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
+		x.add(enabled,c);
+        c.gridwidth = 1;
+		
+		submit = new Button("Apply");
+		x.add(submit,c);
+		submit.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {
+				editop = new EditOperation(selgrp);
+				selgrp.name = name.getText();
+				selgrp.setEnabled(enabled.isSelected());
+				parent.refreshmap();
+				editop.setnew(selgrp);
+				parent.main.addOperation(editop);
+				
+			}
+		});
+		
+		stat = new Label();
+		x.add(stat,c);
     }
     
     /**
      * Displays the set attributes dialog for a 
      */
     public void dispattdialog() {
-    	JDialog x = new JDialog(parent, "", true);
+    	x = new JDialog(parent, "Edit Attributes", true);
 		x.setAlwaysOnTop(true);
 		x.setResizable(false);
 		x.setLayout(new GridBagLayout());
