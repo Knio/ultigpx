@@ -535,10 +535,13 @@ public class WayptView extends JComponent{
    	      
        MouseListener ml = new MouseAdapter()
        {
-           public void mousePressed(MouseEvent e)
+    	   public void mousePressed(MouseEvent e)
            {
-               if(e.getClickCount() == 2)
-                   clickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+        	   if((e.getClickCount() == 2) && (e.getButton() == e.BUTTON1))
+                   dblclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+               if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
+                   rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+
            }
        };
        
@@ -713,10 +716,26 @@ public class WayptView extends JComponent{
    	 
     }  
     
-    public void selectEvent(TreePath e)
+   	public void selectEvent(TreePath e)
     {
         System.out.println("SELECT: "+ e);
         
+        main.selected.clear();
+        TreePath p[] = tree.getSelectionModel().getSelectionPaths();
+        if (p!=null)
+        for (TreePath i : p)
+        {
+            Object o = ((DefaultMutableTreeNode)i.getLastPathComponent()).getUserObject();
+            if (o instanceof UGPXData)
+            {
+                main.selected.add((UGPXData)o);
+                System.out.println((UGPXData)o);
+            }
+        }
+        main.selected.selectionChanged();
+        
+        
+        /*
         if (e==null)
         {
             main.view.select((Object)null);
@@ -726,44 +745,27 @@ public class WayptView extends JComponent{
               
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-        System.out.println("object o =" +o);
-        main.view.select(o);
+        if (!(o instanceof UGPXData))
+            return;
         
-        if(o.equals("Tracks")){
-        	List<Track> tracks = main.file.tracks();
-        	select_list.addAll(tracks);
-        	
-        }else if(o.equals("Routes")){
-        	 List<Route> routes = main.file.routes();
-        	select_list.addAll(routes);
-        	
-        }else if(o.equals("Waypoints")){
-       	 List<Waypoint> waypoints = main.file.waypoints();
-     	select_list.addAll(waypoints);
-     	
-        }else{
-        	select_list.add(o);
+        
+        if (tree.getSelectionModel().isPathSelected(e))
+        {
+            main.selected.add((UGPXData)o);
+            main.selected.selectionChanged();
         }
-    /* 
-       DefaultMutableTreeNode list = ((DefaultMutableTreeNode)e.getLastPathComponent());
-        Enumeration nodes = list.children();
-      
-        	
-       while(nodes.hasMoreElements()) {
-    	   o = nodes.nextElement();
-    	   System.out.println("object o "+o);
-    	 
-    	  // Track trk = (Track) b;
-    	   
-    		   select_list.add(o);
-     
+        else
+        {
+            main.selected.remove((UGPXData)o);
+            main.selected.selectionChanged();
         }
-   
         */
         
-        
     }
-    public void clickEvent(TreePath e)
+
+        
+
+    public void dblclickEvent(TreePath e)
     {
         System.out.println("CLICK: "+ e);
         if (e==null) return;
@@ -778,6 +780,42 @@ public class WayptView extends JComponent{
         if (o instanceof Waypoint)
             ((Waypoint)o).enabled = !((Waypoint)o).enabled;
         
+        main.view.refreshmap();
+    }
+    
+    public void rightclickEvent(TreePath e)
+    {
+        System.out.println("RIGHT CLICK: "+ e);
+        if (e==null) return;
+        
+        Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
+        
+                selectEvent(e);
+        
+        if (o instanceof Track)
+        {
+                if (((Track)o).enabled)
+                        main.view.map1.fill((Track)o);
+                else
+                        main.view.map1.fill();
+        }
+        else if (o instanceof Waypoint)
+        {
+                if (((Waypoint)o).enabled)
+                        main.view.map1.fill((Waypoint)o);
+                else
+                        main.view.map1.fill();
+        }
+        else if (o instanceof Route)
+        {
+                if (((Route)o).enabled)
+                        main.view.map1.fill((Route)o);
+                else
+                        main.view.map1.fill();
+        }
+        else
+                main.view.map1.fill();
+
         main.view.refreshmap();
     }
     
@@ -894,7 +932,7 @@ private void createNodes() {
 }
 
 public void propertyChange(PropertyChangeEvent arg0) {
-	// TODO Auto-generated method stub
+	// 
 	
 }
       
