@@ -247,7 +247,7 @@ public class WayptView extends JComponent{
     	    this(null);
     	  }
 
-    	  /** No one may add mouse listeners, not even Swing! */
+    	  
     	  public void addMouseListener(MouseListener l) { }
     	  /**
     	   * Set the new state to either SELECTED, NOT_SELECTED or
@@ -264,12 +264,7 @@ public class WayptView extends JComponent{
     	      setState(NOT_SELECTED);
     	    }
     	  }
-    	  /**
-    	   * Exactly which Design Pattern is this?  Is it an Adapter,
-    	   * a Proxy or a Decorator?  In this case, my vote lies with the
-    	   * Decorator, because we are extending functionality and
-    	   * "decorating" the original model with a more powerful model.
-    	   */
+    	 
     	  
     	  private class TristateDecorator implements ButtonModel {
     	    private final ButtonModel other;
@@ -503,10 +498,7 @@ public class WayptView extends JComponent{
            public void valueChanged(TreeSelectionEvent e)
            
            {
-        	   /*
-        	   TreePath checkedPaths[] = e.getPaths();
-        	   System.out.println("path count =" + checkedPaths[0].getPath());
-        	   */
+        	   
               selectEvent(e.getPath());
                             
            }
@@ -516,10 +508,10 @@ public class WayptView extends JComponent{
        
        if(main.file != null){
        
-	      // CheckTreeManager checkTreeManager = new CheckTreeManager(tree);
+	      
     	   checkTreeManager = new CheckTreeManager(tree);
 	       
-	      // TreePath checkedPaths[] = checkTreeManager.getSelectionModel().getSelectionPaths();
+	      
 	       
        }
        wtrPanel = new JScrollPane(tree); 
@@ -674,9 +666,9 @@ public class WayptView extends JComponent{
    	    {
    		 JOptionPane pane = new JOptionPane();
    		 String input = JOptionPane.showInputDialog(null,"Enter name of the group");
-   		 pane.show();
+   		 pane.setVisible(true);
    		 if(input == null){
-   			 pane.hide();
+   			 pane.setVisible(false);
    			 input = " ";
    		 }
    		 return input;
@@ -700,10 +692,13 @@ public class WayptView extends JComponent{
               
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         DefaultMutableTreeNode list = ((DefaultMutableTreeNode)e.getLastPathComponent());
-      //  Enumeration e = list.children();
+        Enumeration nodes = list.children();
+       while(nodes.hasMoreElements()) {
+            System.out.println("children " + nodes.nextElement());
+
+        }
         
-        
-        System.out.println("object o is "+ list.getChildCount());
+        //System.out.println("object o is "+ list.getChildCount());
         //System.out.println(o.getClass().getName());
         select_list.add(o);
         main.view.select(o);
