@@ -223,7 +223,7 @@ public class MainView extends JFrame
         map2.selectionChanged();
         //map3.selectionChanged(x);
     	prop.select(main.selected);
-    	//ele.selectionChanged(x);
+    	ele.select(main.selected);
     }
     
     
@@ -263,6 +263,7 @@ public class MainView extends JFrame
         map2.refresh();
         map3.refresh();
         ele.repaint();
+        prop.repaint();
         
         setVisible(true);
     }

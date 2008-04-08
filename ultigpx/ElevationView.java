@@ -39,6 +39,15 @@ public class ElevationView extends JPanel
 		super();
 		this.main = main;
 	}
+	
+	public void select(Group g) {
+		if (g.route.size() == 1 && g.track.size() == 0 && g.waypoint.size() == 0)
+			select(g.getRoute(0));
+		else if (g.route.size() == 0 && g.track.size() == 1 && g.waypoint.size() == 0)
+			select(g.getTrack(0));
+		else if (g.route.size() == 0 && g.track.size() == 0 && g.waypoint.size() == 1)
+			select(g.getWaypoint(0));
+	}
 
 	/**
 	 * identifies a point to be displayed as the "Selected" point

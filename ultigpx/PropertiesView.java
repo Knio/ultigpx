@@ -24,7 +24,7 @@ public class PropertiesView extends JPanel {
 	// selected route
 	Route selrt;
 	// selected group
-	Group selgp;
+	Group selgrp;
 	// integer that tells which type of data is selected
 	// 0 = none, 1 = wp, 2 = trk, 3 = rt, 4 = group, else = crashed program
 	int selected;
@@ -39,6 +39,14 @@ public class PropertiesView extends JPanel {
 	JColorChooser colordialog;
 	
 	PropertiesView me = this;
+	
+	TextField name;
+	JCheckBox enabled;
+	TextArea desc;
+	TextField time;
+	TextField ele;
+	double timex;
+	Label stat;
 	
 	/**
 	 * Displays the properties of a Waypoint.
@@ -90,7 +98,7 @@ public class PropertiesView extends JPanel {
 			select();
 		else
 		{
-			selgp = g;
+			selgrp = g;
 			selected = 4;
 			repaint();
 		}
@@ -425,31 +433,55 @@ public class PropertiesView extends JPanel {
     
     public void dispattdialog(JDialog x,GridBagConstraints c,Waypoint w) {
     	// TODO
+    	name = new TextField(w.getName(), 20);
     	x.add(new Label("Name:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
-		x.add(new TextField(w.getName(), 20),c);
+		x.add(name,c);
 		
-		JCheckBox v = new JCheckBox("Enabled:                    ",w.getEnabled());
-		v.setHorizontalTextPosition(SwingConstants.LEADING);
-		x.add(v,c);
+		enabled = new JCheckBox("Enabled:                    ",w.getEnabled());
+		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
+		x.add(enabled,c);
         c.gridwidth = 1;
         
+        desc = new TextArea(w.getDesc(),10,10,TextArea.SCROLLBARS_VERTICAL_ONLY);
         x.add(new Label("Description:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
-		x.add(new TextArea(w.getDesc(),10,10,TextArea.SCROLLBARS_VERTICAL_ONLY),c);
+		x.add(desc,c);
 		c.gridwidth = 1;
         
+		ele = new TextField(""+w.getEle(), 20);
         x.add(new Label("Elevation:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
-		x.add(new TextField(""+w.getEle(), 20),c);
+		x.add(ele,c);
 		c.gridwidth = 1;
         
+		time = new TextField(""+new Date((long)w.getTime()), 20);
         x.add(new Label("Time:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
-		x.add(new TextField(""+new Date((long)w.getTime()), 20),c);
+        time.setEnabled(false);
+        time.setEditable(false);
+		x.add(time,c);
 		
+		Button submit = new Button("Submit");
+		x.add(submit,c);
+		submit.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {
+					// change waypoint
+				selwp.setName(name.getText());
+				selwp.setDesc(desc.getText());
+				try{
+				selwp.setEle(Double.valueOf(ele.getText()));
+				} catch (Exception ex) {stat.setText("Error: Could not parse Elevation");System.out.println(ex);};
+				selwp.setEnabled(enabled.isSelected());
+				parent.refreshmap();
+			}
+		});
+		
+		stat = new Label();
+		x.add(stat,c);
     }
     
+
     public void dispattdialog(JDialog x,GridBagConstraints c,Track t) {
     	// TODO
     }
@@ -483,6 +515,8 @@ public class PropertiesView extends JPanel {
         	dispattdialog(x,c,seltrk);
         else if (selected == 3)
         	dispattdialog(x,c,selrt);
+        else if (selected == 4)
+        	dispattdialog(x,c,selgrp);
         //*/
         x.setVisible(true);
     }
