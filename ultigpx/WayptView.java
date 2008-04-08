@@ -39,7 +39,8 @@ import javax.swing.tree.TreeSelectionModel;
 public class WayptView extends JComponent{
 	UltiGPX   main;
     
-    protected List  select_list;
+    protected List<Object>  select_list;
+        
     protected JButton group_button;
     private JScrollPane wtrPanel;
     private JTree tree;
@@ -567,16 +568,49 @@ public class WayptView extends JComponent{
    			}// end while
    			if(input != null){
    				filename = input;
+   				creategroup(select_list);
    				fill();
-   				System.out.println("selection list size " + select_list.size());
+   				
+   				//System.out.println("selection list size " + select_list.size());
    				main.view.refreshmap();
    			}
    			
    		}
    		
    	}
-   	
-   	private void ShowSelectMessageDialogBox() {
+   /* Creates a group with user selected list */	
+   	private void creategroup(List<Object> s_list) {
+   		List<Waypoint> wp = null; 
+   		List<Track> tk = null; 
+   		List<Route> rt =  null;
+   		System.out.println("debug: in create group method");
+   		for(int i = 0;i<s_list.size();i++){
+   			Object o = s_list.get(i);
+   			if(o instanceof Track){
+   				tk.add((Track) o);
+   				
+   			}else if(o instanceof Route){
+   				rt.add((Route) o);
+   				
+   			}else if(o instanceof Waypoint){
+   				wp.add((Waypoint) o);
+   				
+   			}else{
+   				System.out.println("debug not an instance of objects(tk.rt,wp)");
+   			}
+   			
+   		}
+   		
+   		
+   		Group newgrp = new Group( wp, tk,  rt);
+   		newgrp.name = filename;
+   		System.out.println("group added succesfully");
+		
+	}
+
+
+
+	private void ShowSelectMessageDialogBox() {
    		 JOptionPane pane = new JOptionPane();
    		  pane.showMessageDialog(null,"Please Select the Tracks, Waypoints, or Routes to form a group",
    				    "Message Dialog",JOptionPane.PLAIN_MESSAGE);
@@ -597,9 +631,9 @@ public class WayptView extends JComponent{
    	    {
    		 JOptionPane pane = new JOptionPane();
    		 String input = JOptionPane.showInputDialog(null,"Enter name of the group");
-   		 pane.show();
+   		 pane.setVisible(true);
    		 if(input == null){
-   			 pane.hide();
+   			 pane.setVisible(false);
    			 input = " ";
    		 }
    		 return input;
@@ -637,7 +671,7 @@ public class WayptView extends JComponent{
    			if(input != null){
    				filename = input;
    				fill();
-   				System.out.println("selection list size " + select_list.size());
+   				//System.out.println("selection list size " + select_list.size());
    				main.view.refreshmap();
    			}
    			
@@ -691,17 +725,42 @@ public class WayptView extends JComponent{
         
               
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
-        DefaultMutableTreeNode list = ((DefaultMutableTreeNode)e.getLastPathComponent());
-        Enumeration nodes = list.children();
-       while(nodes.hasMoreElements()) {
-            System.out.println("children " + nodes.nextElement());
-
-        }
         
-        //System.out.println("object o is "+ list.getChildCount());
-        //System.out.println(o.getClass().getName());
-        select_list.add(o);
+        System.out.println("object o =" +o);
         main.view.select(o);
+        
+        if(o.equals("Tracks")){
+        	List<Track> tracks = main.file.tracks();
+        	select_list.addAll(tracks);
+        	
+        }else if(o.equals("Routes")){
+        	 List<Route> routes = main.file.routes();
+        	select_list.addAll(routes);
+        	
+        }else if(o.equals("Waypoints")){
+       	 List<Waypoint> waypoints = main.file.waypoints();
+     	select_list.addAll(waypoints);
+     	
+        }else{
+        	select_list.add(o);
+        }
+    /* 
+       DefaultMutableTreeNode list = ((DefaultMutableTreeNode)e.getLastPathComponent());
+        Enumeration nodes = list.children();
+      
+        	
+       while(nodes.hasMoreElements()) {
+    	   o = nodes.nextElement();
+    	   System.out.println("object o "+o);
+    	 
+    	  // Track trk = (Track) b;
+    	   
+    		   select_list.add(o);
+     
+        }
+   
+        */
+        
         
     }
     public void clickEvent(TreePath e)
@@ -817,11 +876,15 @@ private void createNodes() {
             }else if (o instanceof String){
             	info = new DefaultMutableTreeNode((String)o);
             	subcategory.add(info);
+            }else{
+            	System.out.println("add nodes here" + o.toString());
+            	info = new DefaultMutableTreeNode(" debug");
+            	subcategory.add(info);
             }
             
         } 
         
-         select_list.clear();
+         //select_list.clear();
               
         } 
         
