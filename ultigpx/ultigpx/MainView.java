@@ -310,7 +310,7 @@ public class MainView extends JFrame
                 fd.setVisible(true);
                 fd.setFilenameFilter(new GPXFilter());
                 String GPXfile = fd.getDirectory() + fd.getFile();
-                
+                wpview.mainfile = fd.getFile();
                 System.out.println("File: "+GPXfile);
                 if (GPXfile == null)
                 {}
@@ -318,7 +318,6 @@ public class MainView extends JFrame
                 {
                     filenam = fd.getFile();
                     main.importGPX(GPXfile);
-                    wpview.mainfile = fd.getFile();
                     prop.select();
                     map1.fill();
                     
