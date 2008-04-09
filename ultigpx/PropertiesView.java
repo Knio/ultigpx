@@ -228,6 +228,7 @@ public class PropertiesView extends JPanel {
      * Disables the color change Button and displays nothing in the TextArea.
      * 
      * @param g2d	the Graphics2D element to draw onto
+     * @see		Group
      */
     protected void paintgrp(Graphics2D g2d) {
     	// disables button
@@ -242,7 +243,6 @@ public class PropertiesView extends JPanel {
     	mllabel.append("Number of Waypoints: " + selgrp.waypoint.size() + "\n");
     	mllabel.append("Number of Tracks: " + selgrp.track.size() + "\n");
     	mllabel.append("Number of Routes: " + selgrp.route.size() + "\n");
-    	
     }
     
     /**
@@ -510,7 +510,6 @@ public class PropertiesView extends JPanel {
         x.add(new Label("Description:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(desc,c);
-		c.gridwidth = 1;
 		
 		submit = new Button("Apply");
 		x.add(submit,c);
@@ -525,9 +524,6 @@ public class PropertiesView extends JPanel {
 				parent.main.addOperation(editop);
 			}
 		});
-		
-		stat = new Label();
-		x.add(stat,c);
     }
     
     public void dispattdialog(JDialog x,GridBagConstraints c,Route r) {
@@ -545,7 +541,6 @@ public class PropertiesView extends JPanel {
         x.add(new Label("Description:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(desc,c);
-		c.gridwidth = 1;
 		
 		submit = new Button("Apply");
 		x.add(submit,c);
@@ -560,9 +555,6 @@ public class PropertiesView extends JPanel {
 				parent.main.addOperation(editop);
 			}
 		});
-		
-		stat = new Label();
-		x.add(stat,c);
     }
     
     public void dispattdialog(JDialog x,GridBagConstraints c,Group g) {
@@ -576,6 +568,7 @@ public class PropertiesView extends JPanel {
 		x.add(enabled,c);
         c.gridwidth = 1;
 		
+        c.gridwidth = GridBagConstraints.REMAINDER;
 		submit = new Button("Apply");
 		x.add(submit,c);
 		submit.addActionListener(new ActionListener() {			
@@ -586,12 +579,8 @@ public class PropertiesView extends JPanel {
 				parent.refreshmap();
 				editop.setnew(selgrp);
 				parent.main.addOperation(editop);
-				
 			}
 		});
-		
-		stat = new Label();
-		x.add(stat,c);
     }
     
     /**

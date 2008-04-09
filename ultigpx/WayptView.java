@@ -695,7 +695,7 @@ public class WayptView extends JComponent{
         
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-                selectEvent(e);
+                selectThis(e);
         
         if (o instanceof Track)
         {
@@ -722,6 +722,19 @@ public class WayptView extends JComponent{
                 main.view.map1.fill();
 
         main.view.refreshmap();
+    }
+    
+   	public void selectThis(TreePath e)
+    {
+        System.out.println("   SELECTED: "+ e);
+        
+        main.selected.clear();
+            Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
+            if (o instanceof UGPXData)
+            {
+                main.selected.add((UGPXData)o);
+            }
+        main.selected.selectionChanged();
     }
     
 private void createNodes() {
