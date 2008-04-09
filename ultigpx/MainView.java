@@ -27,6 +27,7 @@ public class MainView extends JFrame
     
     JMenu fileMenu;
     JMenu editMenu;
+    JMenu waypMenu;
     
     JMenuItem importMenuItem;
     JMenuItem exportMenuItem;
@@ -36,6 +37,8 @@ public class MainView extends JFrame
     JMenuItem undoMenuItem;
     JMenuItem redoMenuItem;
     
+    JMenuItem addwp;
+    JMenuItem delwp;
     
     
     public MainView(UltiGPX main)
@@ -82,6 +85,8 @@ public class MainView extends JFrame
         editMenu = new javax.swing.JMenu();
         editMenu.setText("Edit");
         
+        waypMenu = new javax.swing.JMenu();
+        waypMenu.setText("Waypoint");
         
         exitMenuItem = new javax.swing.JMenuItem();
         exitMenuItem.setActionCommand("Exit");
@@ -89,6 +94,27 @@ public class MainView extends JFrame
         
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
+        menuBar.add(waypMenu);
+        
+        addwp = new JMenuItem();
+        addwp.setText("Add");
+        addwp.setVisible(true);
+        waypMenu.add(addwp);
+        addwp.addActionListener(new ActionListener()
+        	{public void actionPerformed(ActionEvent e)
+        		{ // TODO do something
+        		}});
+        addwp.setEnabled(false);
+        
+        delwp = new JMenuItem();
+        delwp.setText("Delete");
+        delwp.setVisible(true);
+        waypMenu.add(delwp);
+        delwp.addActionListener(new ActionListener()
+        	{public void actionPerformed(ActionEvent e)
+        		{ // TODO do something
+        		}});
+        delwp.setEnabled(false);
         
         undoMenuItem = new JMenuItem();
         undoMenuItem.setText("Undo");

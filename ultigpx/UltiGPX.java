@@ -128,6 +128,8 @@ public class UltiGPX
             System.out.println("Error reading file:");
             System.out.println(e);
         }
+        view.addwp.setEnabled(true);
+        view.delwp.setEnabled(true);
         view.refresh();
     }
     
