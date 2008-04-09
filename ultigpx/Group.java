@@ -141,6 +141,10 @@ public class Group
     	waypoint.add(w);
     }
     
+    /**
+     * Add a UGPXData object to the current group
+     * @param UGPXData x
+     */
     public void add(UGPXData x)
     {
         if (x instanceof Track) addTrack((Track)x);
@@ -148,7 +152,11 @@ public class Group
         if (x instanceof Waypoint) addWaypoint((Waypoint)x);
     }
     
-    
+    /**
+     * Remove an instance of UGPXData object from current group
+     * @param x
+     * @return boolean value of  removal
+     */
     public boolean remove(UGPXData x)
     {
         if (x instanceof Track)     return track.remove((Track)x);
@@ -158,22 +166,41 @@ public class Group
     }
     
     
-    
+    /**
+     * Check if current group has an instance of a route
+     * @param Route x
+     * @return boolean value of search
+     */
     public boolean containsRoute(Route x)
     {
         return route.contains(x);
     }   
     
+    /**
+     * Check if current group has an instance of a track
+     * @param track x
+     * @return boolean value of search
+     */
     public boolean containsTrack(Track x)
     {
         return track.contains(x);
     }   
     
+    /**
+     * Check if current group has an instance of a waypoint
+     * @param waypoint x
+     * @return boolean value of search
+     */
     public boolean containsWaypoint(Waypoint x)
     {
         return waypoint.contains(x);
     }   
     
+    /**
+     * Check if current group has an instance of an UGPXData ojbect
+     * @param UGPXData x
+     * @return boolean value of search
+     */
     public boolean contains(UGPXData x)
     {
         if (x instanceof Track)     return track.contains((Track)x);
