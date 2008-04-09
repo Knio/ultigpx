@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.TextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -322,7 +323,7 @@ public class WayptView extends JComponent{
     	        setState(NOT_SELECTED);
     	      }
     	    }
-    	    /** Filter: No one may change the armed status except us. */
+    	    
     	    public void setArmed(boolean b) {
     	    }
     	    /** We disable focusing on the component when it is not
@@ -480,8 +481,7 @@ public class WayptView extends JComponent{
                                 boolean hasFocus)
            {
                Object o  = ((DefaultMutableTreeNode)value).getUserObject();
-               //System.out.println(o);
-               //System.out.println(o.getClass().getCanonicalName());
+               
                if (o instanceof Track)
                    return ((Track)o).getName();
                if (o instanceof Route)
@@ -535,7 +535,8 @@ public class WayptView extends JComponent{
    	else 
    		group_button.setEnabled(true);
    	
-   	    group_button.addActionListener(new ActionHandler());
+   group_button.addActionListener(new ActionHandler());
+   
    	      
        MouseListener ml = new MouseAdapter()
        {
@@ -543,10 +544,13 @@ public class WayptView extends JComponent{
            {
                if(e.getClickCount() == 2)
                    clickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+               
+              
            }
        };
        
        tree.addMouseListener(ml);
+       
 
 }
      	
@@ -594,7 +598,7 @@ public class WayptView extends JComponent{
    		List<Waypoint> wp = new ArrayList(); 
    		List<Track> tk = new ArrayList(); 
    		List<Route> rt =  new ArrayList();
-   		System.out.println("debug: in create group method");
+   		
    		for(int i = 0;i<s_list.size();i++){
    			Object o = s_list.get(i);
    			if(o instanceof Track){
@@ -616,7 +620,6 @@ public class WayptView extends JComponent{
    		Group newgrp = new Group( wp, tk,  rt);
    		newgrp.name = filename;
    		groups.add(newgrp);
-   		System.out.println("group added succesfully and group size " + groups.size());
    		
 		
 	}
@@ -668,7 +671,7 @@ public class WayptView extends JComponent{
               
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-        System.out.println("object o =" +o);
+        
         main.view.select(o);
         
         if(o.equals("Tracks")){
