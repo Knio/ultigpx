@@ -461,7 +461,7 @@ public class WayptView extends JComponent{
         
 	
 	 top =
-        new DefaultMutableTreeNode((main.file == null ? "GPX File" : main.file.name));
+        new DefaultMutableTreeNode((main.file == null ? "GPX File" : "GPX File"));
        createNodes();
 
        DefaultTreeModel treeModel = new DefaultTreeModel(top);

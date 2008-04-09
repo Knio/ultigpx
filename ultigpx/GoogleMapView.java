@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class GoogleMapView extends MapView {
 
-	UGPXFile	file;
+	Database	file;
 	WebBrowser	webBrowser;
 
 	static final Double     CUTOFF		= 50.0;

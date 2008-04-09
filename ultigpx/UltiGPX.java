@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class UltiGPX
 {
-    UGPXFile file;
+    Database file;
     MainView view;
     
     List<Operation> undo;
@@ -110,10 +110,15 @@ public class UltiGPX
 				int result = -1;
 				for (int k = 0; k < options.length; k++)
 					if (options[k].equals(obj)) result = k;
-				if (result == 0) file = GPXImporter.importGPX(filename);
+				if (result == 0)
+				{
+					file = new Database();
+					GPXImporter.importGPX(file, filename);
+				}
 			}
 			else {
-            	file = GPXImporter.importGPX(filename);
+				file = new Database();
+            	GPXImporter.importGPX(file, filename);
 			}
             //file = GPXImporter.importGPX(filename);
             //reduceFile(file);
@@ -134,10 +139,10 @@ public class UltiGPX
     }
     
     public void exportGPX(String filename)
-    {
+    {/*
         try
         {
-            GPXExporter.exportToGPX(file, filename);
+            //GPXExporter.exportToGPX(file, filename);
         }
         catch (JDOMException e)
         {
@@ -148,11 +153,11 @@ public class UltiGPX
         {
             System.out.println("Error reading file:");
             System.out.println(e);
-        }
+        }*/
     }
     
     public void exportKML(String filename)
-    {
+    {/*
         try
         {
             GPXExporter.exportToKML(file, filename);
@@ -166,7 +171,7 @@ public class UltiGPX
         {
             System.out.println("Error reading file:");
             System.out.println(e);
-        }
+        }*/
     }
 	
 	// Reduce the number of waypoints in a file

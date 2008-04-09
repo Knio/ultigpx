@@ -90,7 +90,7 @@ public class SearchResult extends JDialog
 		Hashtable<String,Object> conf = new Hashtable<String,Object>();
 		Hashtable<String,Object> added = new Hashtable<String,Object>();
 		Vector<String> list = new Vector<String>();
-		UGPXFile file = main.file;
+		Database file = main.file;
 		
 		//there is no data to check!
 		if(file == null)

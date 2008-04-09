@@ -11,7 +11,7 @@ import java.util.*;
 abstract public class MapView extends JPanel
 {
     UltiGPX  main;
-    UGPXFile file;
+    Database file;
     static Object   selected;
     
     static java.util.List<Waypoint> entities;
