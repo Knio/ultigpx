@@ -1,5 +1,4 @@
 package ultigpx;
-
 import junit.framework.*;
 import junit.extensions.*;
 
@@ -275,4 +274,45 @@ public class GPXExporterTester extends TestCase {
         assertEquals(ExceptionHasBeenThrown, false);
     } //end testExport12
     
+    /**
+     * testExport13 test the GPX exporter when you import and then export a test file
+     * No impor, no output, throws no exceptions.
+     */
+    public void testExport13(){
+        boolean ExceptionHasBeenThrown = false;
+        
+        try{
+            UGPXFile file = (new GPXImporter()).importGPX("t1.gpx");
+            GPXExporter exporter = new GPXExporter();
+            exporter.exportToGPX(file, "exportT1.gpx");
+            file = (new GPXImporter()).importGPX("exportT1.gpx");
+            exporter.exportToGPX(file, "export2T1.gpx");
+        } //end try
+        
+        catch (Exception e) {
+            ExceptionHasBeenThrown = true;
+            System.out.println(e);
+        } //end catch
+        assertEquals(ExceptionHasBeenThrown, false);
+    } //end testExport13
+    
+    public void testExport14(){
+        boolean ExceptionHasBeenThrown = false;
+        
+        try{
+            UGPXFile file = (new GPXImporter()).importGPX("t1.gpx");
+            GPXExporter exporter = new GPXExporter();
+            exporter.exportToUltiGPX(file, "exportT1.ultigpx");
+            file = (new GPXImporter()).importUltiGPX("exportT1.ultigpx");
+            exporter.exportToUltiGPX(file, "export2T1.ultigpx");
+        } //end try
+        
+        catch (Exception e) {
+            ExceptionHasBeenThrown = true;
+            System.out.println(e);
+        } //end catch
+        assertEquals(ExceptionHasBeenThrown, false);
+    } //end testExport14
+    
 } //end GPXExporterTester
+
