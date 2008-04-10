@@ -335,6 +335,7 @@ public class MainView extends JFrame
                 fd.setVisible(true);
                 fd.setFilenameFilter(new GPXFilter());
                 String GPXfile = fd.getDirectory() + fd.getFile();
+                wpview.mainfile = fd.getFile();
                 System.out.println("File: "+GPXfile);
                 if (GPXfile == null)
                 {}
