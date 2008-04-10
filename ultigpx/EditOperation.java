@@ -10,6 +10,12 @@ public class EditOperation extends Operation
     String newdesc;
     double oldele;
     double newele;
+    double oldtime;
+    double newtime;
+    double oldlon;
+    double newlon;
+    double oldlat;
+    double newlat;
     boolean isgrp;
     boolean isrt;
     boolean istrk;
@@ -28,6 +34,9 @@ public class EditOperation extends Operation
         this.olddesc = pt.getDesc();
         this.oldenabled = pt.getEnabled();
         this.oldele = pt.getEle();
+        this.oldtime = pt.getTime();
+        this.oldlon = pt.getLon();
+        this.oldlat = pt.getLat();
     }
     
     public EditOperation(Track pt)
@@ -64,6 +73,9 @@ public class EditOperation extends Operation
     		this.newdesc = pt.getDesc();
     		this.newenabled = pt.getEnabled();
     		this.newele = pt.getEle();
+            this.newtime = pt.getTime();
+            this.newlon = pt.getLon();
+            this.newlat = pt.getLat();
     	}
     }
     
@@ -104,6 +116,9 @@ public class EditOperation extends Operation
     		wp.setDesc(newdesc);
     		wp.setEnabled(newenabled);
     		wp.setEle(newele);
+            wp.setTime(newtime);
+            wp.setLon(newlon);
+            wp.setLat(newlat);
     	}
     	if (istrk)
     	{
@@ -132,6 +147,9 @@ public class EditOperation extends Operation
     		wp.setDesc(olddesc);
     		wp.setEnabled(oldenabled);
     		wp.setEle(oldele);
+    		wp.setTime(oldtime);
+            wp.setLon(oldlon);
+            wp.setLat(oldlat);
     	}
     	if (istrk)
     	{

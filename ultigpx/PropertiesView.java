@@ -48,6 +48,8 @@ public class PropertiesView extends JPanel {
 	TextArea desc;
 	DateTimePicker time;
 	TextField ele;
+	TextField lon;
+	TextField lat;
 	Label stat;
 	Button submit;
 	JDialog x;
@@ -434,6 +436,7 @@ public class PropertiesView extends JPanel {
     				Color clr = JColorChooser.showDialog(parent, "Color Chooser", selrt.getColor());
     				selrt.setColor(clr);
     			}
+    			parent.refreshmap();
     		}
     		else if (e.getActionCommand().equals("SetAtt"))
     		{
@@ -448,12 +451,12 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(name,c);
 		
-		enabled = new JCheckBox("Enabled:                    ",w.getEnabled());
+		enabled = new JCheckBox("Enabled:                   ",w.getEnabled());
 		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
 		x.add(enabled,c);
         c.gridwidth = 1;
         
-        desc = new TextArea(w.getDesc(),10,10,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        desc = new TextArea(w.getDesc(),5,5,TextArea.SCROLLBARS_VERTICAL_ONLY);
         x.add(new Label("Description:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(desc,c);
@@ -463,6 +466,18 @@ public class PropertiesView extends JPanel {
         x.add(new Label("Elevation:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(ele,c);
+		c.gridwidth = 1;
+        
+		lat = new TextField(""+w.getLat(), 20);
+        x.add(new Label("Latitude:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(lat,c);
+		c.gridwidth = 1;
+        
+		lon = new TextField(""+w.getLon(), 20);
+        x.add(new Label("Longitude:"),c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+		x.add(lon,c);
         
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		time = new DateTimePicker();
@@ -477,12 +492,28 @@ public class PropertiesView extends JPanel {
 		    	editop = new EditOperation(selwp);
 				selwp.setName(name.getText());
 				selwp.setDesc(desc.getText());
-				stat.setText("");
+				stat.setText("Attributes have been set");
 				try{
 				selwp.setEle(Double.valueOf(ele.getText()));
 				} catch (Exception ex) {stat.setText("Error: Could not parse Elevation");System.out.println(ex);};
 				selwp.setEnabled(enabled.isSelected());
 				selwp.setTime(time.getDate().getTime());
+				// TODO lat and lon
+				// make sure they aren't out of bounds also
+				try {
+				if (Double.valueOf(lat.getText()) >= -90 && Double.valueOf(lat.getText()) <= 90)
+					selwp.setLat(Double.valueOf(lat.getText()));
+				else
+					stat.setText("Error: Latitude is not valid");
+				} catch (Exception ex) {stat.setText("Error: Could not parse Latitude");System.out.println(ex);};
+				
+				try {
+				if (Double.valueOf(lon.getText()) >= -180 && Double.valueOf(lon.getText()) <= 180)
+					selwp.setLon(Double.valueOf(lon.getText()));
+				else
+					stat.setText("Error: Longitude is not valid");
+				} catch (Exception ex) {stat.setText("Error: Could not parse Longitude");System.out.println(ex);};
+				
 				parent.refreshmap();
 				editop.setnew(selwp);
 				parent.main.addOperation(editop);
@@ -500,7 +531,7 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(name,c);
 		
-		enabled = new JCheckBox("Enabled:                    ",t.getEnabled());
+		enabled = new JCheckBox("Enabled:                   ",t.getEnabled());
 		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
 		x.add(enabled,c);
         c.gridwidth = 1;
@@ -531,7 +562,7 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(name,c);
 		
-		enabled = new JCheckBox("Enabled:                    ",r.getEnabled());
+		enabled = new JCheckBox("Enabled:                   ",r.getEnabled());
 		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
 		x.add(enabled,c);
         c.gridwidth = 1;
@@ -562,7 +593,7 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(name,c);
 		
-		enabled = new JCheckBox("Enabled:                    ",g.getEnabled());
+		enabled = new JCheckBox("Enabled:                   ",g.getEnabled());
 		enabled.setHorizontalTextPosition(SwingConstants.LEADING);
 		x.add(enabled,c);
         c.gridwidth = 1;
