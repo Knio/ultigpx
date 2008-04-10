@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.JColorChooser;
+import com.lavantech.gui.comp.DateTimePicker;
 
 /**
  * Displays the properties of a selected point. This class also allows you to change
@@ -45,9 +46,8 @@ public class PropertiesView extends JPanel {
 	TextField name;
 	JCheckBox enabled;
 	TextArea desc;
-	TextField time;
+	DateTimePicker time;
 	TextField ele;
-	double timex;
 	Label stat;
 	Button submit;
 	JDialog x;
@@ -463,14 +463,12 @@ public class PropertiesView extends JPanel {
         x.add(new Label("Elevation:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(ele,c);
-		c.gridwidth = 1;
         
-		time = new TextField(""+new Date((long)w.getTime()), 20);
-        x.add(new Label("Time:"),c);
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        time.setEnabled(false);
-        time.setEditable(false);
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		time = new DateTimePicker();
 		x.add(time,c);
+		time.setDate(new Date((long)selwp.getTime()));
+		
 		
 		submit = new Button("Apply");
 		x.add(submit,c);
@@ -484,6 +482,7 @@ public class PropertiesView extends JPanel {
 				selwp.setEle(Double.valueOf(ele.getText()));
 				} catch (Exception ex) {stat.setText("Error: Could not parse Elevation");System.out.println(ex);};
 				selwp.setEnabled(enabled.isSelected());
+				selwp.setTime(time.getDate().getTime());
 				parent.refreshmap();
 				editop.setnew(selwp);
 				parent.main.addOperation(editop);
@@ -589,7 +588,7 @@ public class PropertiesView extends JPanel {
     public void dispattdialog() {
     	x = new JDialog(parent, "Edit Attributes", true);
 		x.setAlwaysOnTop(true);
-		x.setResizable(false);
+		x.setResizable(true);
 		x.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
     	c.fill = GridBagConstraints.BOTH;
