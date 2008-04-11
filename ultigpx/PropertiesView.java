@@ -501,7 +501,7 @@ public class PropertiesView extends JPanel {
 		
 		/**
 		 * Apply button applies the changes to a waypoint
-		 * and sets adds the action to the undo list.
+		 * and adds the action to the undo list.
 		 * It also displays an error if one of the inputs are
 		 * not correctly formatted or out of the required range.
 		 */

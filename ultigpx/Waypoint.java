@@ -172,7 +172,7 @@ public class Waypoint implements UGPXData
 	
 	/**
 	 * Get the distance between this point and the given point
-	 * @param The other waypoint
+	 * @param wpt The other waypoint
 	 * @return Double value of the distance in meters
 	 */
 	public double distanceTo(Waypoint wpt)
