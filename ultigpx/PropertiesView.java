@@ -11,8 +11,8 @@ import javax.swing.JColorChooser;
 import com.lavantech.gui.comp.DateTimePicker;
 
 /**
- * Displays the properties of a selected point. This class also allows you to change
- * the color of the selected point.
+ * Displays the properties of a selected waypoint/track/route or group. This class also allows you to change
+ * the color and attributes of the selected object.
  * 
  * @author Steven
  */
@@ -43,6 +43,7 @@ public class PropertiesView extends JPanel {
 	
 	PropertiesView me = this;
 	
+	// needed for the attribute changer
 	TextField name;
 	JCheckBox enabled;
 	TextArea desc;
@@ -92,6 +93,12 @@ public class PropertiesView extends JPanel {
 		repaint();
 	}
 	
+	/**
+	 * Displays the properties of a Group
+	 * 
+	 * @param g	a {@link Group}
+	 * @see		Group
+	 */
 	public void select(Group g) {
 		if (g.route.size() == 1 && g.track.size() == 0 && g.waypoint.size() == 0)
 			select(g.getRoute(0));
@@ -110,8 +117,7 @@ public class PropertiesView extends JPanel {
 	}
 	
 	/**
-	 * Displays nothing. Currently unused since you can not unselect a point
-	 * once you have selected it as the program is now.
+	 * Displays nothing.
 	 */
 	public void select() {
 		selected = 0;
@@ -120,7 +126,7 @@ public class PropertiesView extends JPanel {
 	
 	/**
 	 * The constructor for the PropertiesView class. Initially sets up the panel
-	 * to display nothing in the TextArea and disable the Button.
+	 * to display nothing in the TextArea and disable the Buttons.
 	 * 
 	 * @param view	the MainView that PropertiesView is contained within.
 	 * @see		MainView
@@ -214,7 +220,7 @@ public class PropertiesView extends JPanel {
     }
     
     /**
-     * Disables the color change Button and displays nothing in the TextArea.
+     * Disables both buttons and displays nothing in the TextArea.
      * 
      * @param g2d	the Graphics2D element to draw onto
      */
@@ -227,15 +233,15 @@ public class PropertiesView extends JPanel {
     }
     
     /**
-     * Disables the color change Button and displays nothing in the TextArea.
+     * Displays some information about the group.
      * 
      * @param g2d	the Graphics2D element to draw onto
      * @see		Group
      */
     protected void paintgrp(Graphics2D g2d) {
     	// disables button
-    	setcolor.setEnabled(true);
-    	setAtt.setEnabled(false);
+    	setcolor.setEnabled(false);
+    	setAtt.setEnabled(true);
     	// sets the text to ""
     	mllabel.setText("Name: " + selgrp.name + "\n");
     	if (selgrp.getEnabled())
@@ -384,7 +390,7 @@ public class PropertiesView extends JPanel {
 	/**
      * Formats a distance for display to the user.
      * 
-     * @param The distance to format
+     * @param distance The distance to format
      * @return The string value of the distance rounded to 1 decimal place, with km or m appended
      */
 	protected String formatDistance(double distance){
@@ -401,8 +407,8 @@ public class PropertiesView extends JPanel {
 	}
     
     /**
-     * A simple ActionListener that detects if the button is pressed and shows
-     * a color selection dialog to the user.
+     * A simple ActionListener that detects if a button is pressed and shows
+     * the correct dialog to the user.
      * 
      * @author Steven
      * @see	ActionListener
@@ -416,7 +422,9 @@ public class PropertiesView extends JPanel {
     	}
     	
     	/**
-    	 * Changes the color of a point based on what type of point is selected.
+    	 * Displays a dialog when a button is pressed. If set color is pressed it displays
+    	 * a color dialog and if the edit button is pressed it displays a custom change
+    	 * attributes dialog.
     	 */
     	public void actionPerformed(ActionEvent e) {
     		if (e.getActionCommand().equals("SetColor"))
@@ -445,6 +453,13 @@ public class PropertiesView extends JPanel {
     	}
     }
     
+    /**
+     * Displays the information that can be edited for a waypoint.
+     * 
+     * @param x	a JDialog to write on
+     * @param c the GridGagConstraints
+     * @param w the waypoint
+     */
     public void dispattdialog(JDialog x,GridBagConstraints c,Waypoint w) {
     	name = new TextField(w.getName(), 20);
     	x.add(new Label("Name:"),c);
@@ -484,7 +499,12 @@ public class PropertiesView extends JPanel {
 		x.add(time,c);
 		time.setDate(new Date((long)selwp.getTime()));
 		
-		
+		/**
+		 * Apply button applies the changes to a waypoint
+		 * and sets adds the action to the undo list.
+		 * It also displays an error if one of the inputs are
+		 * not correctly formatted or out of the required range.
+		 */
 		submit = new Button("Apply");
 		x.add(submit,c);
 		submit.addActionListener(new ActionListener() {			
@@ -498,8 +518,6 @@ public class PropertiesView extends JPanel {
 				} catch (Exception ex) {stat.setText("Error: Could not parse Elevation");System.out.println(ex);};
 				selwp.setEnabled(enabled.isSelected());
 				selwp.setTime(time.getDate().getTime());
-				// TODO lat and lon
-				// make sure they aren't out of bounds also
 				try {
 				if (Double.valueOf(lat.getText()) >= -90 && Double.valueOf(lat.getText()) <= 90)
 					selwp.setLat(Double.valueOf(lat.getText()));
@@ -524,7 +542,13 @@ public class PropertiesView extends JPanel {
 		x.add(stat,c);
     }
     
-
+    /**
+     * Displays the information that can be edited for a track.
+     * 
+     * @param x	a JDialog to write on
+     * @param c the GridGagConstraints
+     * @param t the track
+     */
     public void dispattdialog(JDialog x,GridBagConstraints c,Track t) {
     	name = new TextField(t.getName(), 20);
     	x.add(new Label("Name:"),c);
@@ -541,6 +565,10 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(desc,c);
 		
+		/**
+		 * Apply button applies the changes to a track
+		 * and sets adds the action to the undo list.
+		 */
 		submit = new Button("Apply");
 		x.add(submit,c);
 		submit.addActionListener(new ActionListener() {			
@@ -556,6 +584,13 @@ public class PropertiesView extends JPanel {
 		});
     }
     
+    /**
+     * Displays the information that can be edited for a route.
+     * 
+     * @param x	a JDialog to write on
+     * @param c the GridGagConstraints
+     * @param r the route
+     */
     public void dispattdialog(JDialog x,GridBagConstraints c,Route r) {
     	name = new TextField(r.getName(), 20);
     	x.add(new Label("Name:"),c);
@@ -572,6 +607,10 @@ public class PropertiesView extends JPanel {
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(desc,c);
 		
+		/**
+		 * Apply button applies the changes to a route
+		 * and sets adds the action to the undo list.
+		 */
 		submit = new Button("Apply");
 		x.add(submit,c);
 		submit.addActionListener(new ActionListener() {			
@@ -587,6 +626,13 @@ public class PropertiesView extends JPanel {
 		});
     }
     
+    /**
+     * Displays the information that can be edited for a group.
+     * 
+     * @param x	a JDialog to write on
+     * @param c the GridGagConstraints
+     * @param g the group
+     */
     public void dispattdialog(JDialog x,GridBagConstraints c,Group g) {
     	name = new TextField(g.name, 20);
     	x.add(new Label("Name:"),c);
@@ -598,6 +644,10 @@ public class PropertiesView extends JPanel {
 		x.add(enabled,c);
         c.gridwidth = 1;
 		
+        /**
+		 * Apply button applies the changes to a group
+		 * and sets adds the action to the undo list.
+		 */
         c.gridwidth = GridBagConstraints.REMAINDER;
 		submit = new Button("Apply");
 		x.add(submit,c);
@@ -614,7 +664,8 @@ public class PropertiesView extends JPanel {
     }
     
     /**
-     * Displays the set attributes dialog for a 
+     * Displays the set attributes dialog and calls the
+     * corresponding function to fill the dialog with information.
      */
     public void dispattdialog() {
     	x = new JDialog(parent, "Edit Attributes", true);
