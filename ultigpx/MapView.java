@@ -278,7 +278,8 @@ abstract public class MapView extends JPanel
         this.lon = lon;
         this.lat = lat;
         
-        repaint();
+        main.view.refreshmap();
+        //repaint();
     }
     
     protected void scrollBy(double lon, double lat)
@@ -297,12 +298,33 @@ abstract public class MapView extends JPanel
         
     }
     
+    /*
+     * I don't know if this is the best place for this, but I needed to pull it out so I could
+     *  reimplement it in Elevation View. If anyone has better ideas feel free to move it somewhere else.
+     * @param x
+     * @param y
+     */
+    protected void movePoint(double x, double y) {
+		Point2D click = new Point2D.Double(x,y);
+		Point2D world = inverseproject(click);
+		
+		Waypoint wp = (Waypoint)main.selected.get();
+		wp.lon = world.getX();
+		wp.lat = world.getY();
+		
+		//this keeps the views synced up. by Nate
+		main.view.refreshmap();
+		//repaint();
+	}
+    
     protected void scale(double s)
     {
         s = Math.min(s, MAX_SCALE);
         s = Math.max(s, MIN_SCALE);
         scale = s;
-        repaint();
+
+        main.view.refreshmap();
+        //repaint();
         
     }
     

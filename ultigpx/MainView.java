@@ -19,7 +19,7 @@ public class MainView extends JFrame
     
     WayptView wpview;
     PropertiesView prop;
-    ElevationView ele;
+    MapView ele;
     
     SearchResult searchresult;
     
@@ -249,7 +249,7 @@ public class MainView extends JFrame
         map2.selectionChanged();
         //map3.selectionChanged(x);
     	prop.select(main.selected);
-    	ele.select(main.selected);
+    	ele.selectionChanged();
     }
     
     
@@ -347,7 +347,8 @@ public class MainView extends JFrame
                     prop.select();
                     map1.fill();
                     
-                    searchresult.checkForConflicts();
+                    //by Nate. This is just getting annoying.
+                    //searchresult.checkForConflicts();
                 }
             }
             

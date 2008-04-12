@@ -496,14 +496,7 @@ public abstract class BasicMapView extends MapView
             
             if (state == State.DR_WP)
             {
-                Point2D click = new Point2D.Double(e.getX(), e.getY());
-                Point2D world = inverseproject(click);
-                
-                Waypoint wp = (Waypoint)main.selected.get();
-                wp.lon = world.getX();
-                wp.lat = world.getY();
-                
-                repaint();
+                movePoint(e.getX(), e.getY());
                 return;
             }
             
@@ -511,7 +504,7 @@ public abstract class BasicMapView extends MapView
             
             sx = e.getX();
             sy = e.getY();
-        }
+        }		
         
         public void mouseMoved(MouseEvent e)
         {
