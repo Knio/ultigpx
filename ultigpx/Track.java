@@ -11,7 +11,7 @@ public class Track implements UGPXData
 	String desc;
     public boolean enabled;
     public Color color;
-    private ArrayList<TrackSegment> trackSegments;
+    private ArrayList<TrackSegment> trackSegments = new ArrayList<TrackSegment>();
     
     /**
      * Constructor for collection of track segments, making empty list
@@ -54,7 +54,7 @@ public class Track implements UGPXData
      * @param TrackSegment t
      */
     public void add(TrackSegment t) {
-    	trackSegments.add(t);
+    	this.trackSegments.add(t);
     
     }
     
@@ -63,7 +63,7 @@ public class Track implements UGPXData
      * @param TrackSegment t
      */
     public void remove(TrackSegment t) {
-    	trackSegments.remove(t);
+    	this.trackSegments.remove(t);
     }
     
     /**
@@ -72,7 +72,7 @@ public class Track implements UGPXData
      * @return true is t is in this Track, false otherwise
      */
     public boolean contains(TrackSegment t) {
-    	return trackSegments.contains(t);
+    	return this.trackSegments.contains(t);
     }
     
     /**
