@@ -4,13 +4,14 @@ package ultigpx;
 import java.util.*;
 import java.awt.Color;
 
-public class Track extends ArrayList<TrackSegment>  implements UGPXDataList
+public class Track
 {
 	//static final long serialVersionUID = 0;
     String name;
 	String desc;
     public boolean enabled;
     public Color color;
+    private ArrayList<TrackSegment> trackSegments;
     
     /**
      * Constructor for collection of track segments, making empty list
@@ -18,7 +19,6 @@ public class Track extends ArrayList<TrackSegment>  implements UGPXDataList
      */
     public Track()
     {
-        super();
         enabled = true;
         color = null;
     }
@@ -29,7 +29,6 @@ public class Track extends ArrayList<TrackSegment>  implements UGPXDataList
      */
     public Track(String name)
     {
-        super();
         this.name = name;
         enabled = true;
         color = null;
@@ -42,10 +41,38 @@ public class Track extends ArrayList<TrackSegment>  implements UGPXDataList
      */
     public Track(String name, Collection<TrackSegment> c)
     {
-        super(c);
+    	for (x = 0; x < c.length(); x++) {
+    		add(c.get(x));
+    	}
         this.name = name;
         enabled = true;
         color = null;
+    }
+    
+    /**
+     * Add a track segment t to the Track's list
+     * @param TrackSegment t
+     */
+    public void add(TrackSegment t) {
+    	trackSegment.add(t);
+    
+    }
+    
+    /**
+     * Remove a track segment t from the Track's list
+     * @param TrackSegment t
+     */
+    public void remove(TrackSegment t) {
+    	trackSegment.remove(t);
+    }
+    
+    /**
+     * Check if a TrackSegment is in this Track
+     * @param TrackSegment t
+     * @return true is t is in this Track, false otherwise
+     */
+    public boolean contains(TrackSegment t) {
+    	return trackSegment.contains(t);
     }
     
     /**
@@ -131,5 +158,9 @@ public class Track extends ArrayList<TrackSegment>  implements UGPXDataList
             distance = distance + s.getDistance();
 			System.out.println("Distance so far is: " + distance);
 		return distance;
+	}
+	
+	public Track getArray() {
+		return trackSegments;
 	}
 }
