@@ -184,7 +184,7 @@ public class UltiGPX
 		Point2D oldPT;
 		
 		for (Track tk : file.tracks()) {
-			for (TrackSegment ts : tk) {
+			for (TrackSegment ts : tk.getArray()) {
 				if (ts.size() >= 10) {
 					oldPT = null;
 					for (Waypoint wp : ts) {

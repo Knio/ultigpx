@@ -4,7 +4,7 @@ package ultigpx;
 import java.util.*;
 import java.awt.Color;
 
-public class Track
+public class Track implements UGPXData
 {
 	//static final long serialVersionUID = 0;
     String name;

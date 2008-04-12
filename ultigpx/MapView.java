@@ -129,7 +129,7 @@ abstract public class MapView extends JPanel
                 entities.add(i);
             
         for (Track r:file.tracks())
-            for (TrackSegment s:r)
+            for (TrackSegment s:r.getArray())
                 for (Waypoint i:s)
                     entities.add(i);
         
@@ -188,12 +188,12 @@ abstract public class MapView extends JPanel
              return;
          }
          
-         double max_lon = ent.get(0).get(0).lon;
-         double max_lat = ent.get(0).get(0).lat;
+         double max_lon = ent.getArray().get(0).get(0).lon;
+         double max_lat = ent.getArray().get(0).get(0).lat;
          double min_lon = max_lon;
          double min_lat = max_lat;
          
-         for (TrackSegment j:ent)
+         for (TrackSegment j:ent.getArray())
          {
         	 for (Waypoint i:j)
         	 {
@@ -452,7 +452,7 @@ abstract public class MapView extends JPanel
         tk: for (Track tk : file.tracks())
         {
             if (!tk.enabled) continue;
-            for (TrackSegment ts : tk)
+            for (TrackSegment ts : tk.getArray())
             {
                 first = true;
                 for (Waypoint i : ts)
@@ -482,7 +482,7 @@ abstract public class MapView extends JPanel
         Waypoint min_w = null;
         double min_d  = CLICK_THRESHOLD*CLICK_THRESHOLD;
             
-        for (TrackSegment ts : tk)
+        for (TrackSegment ts : tk.getArray())
             for (Waypoint i : ts)
             {
                 if (!i.enabled) continue;

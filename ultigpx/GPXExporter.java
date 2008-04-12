@@ -97,7 +97,7 @@ public class GPXExporter {
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
-                        TrackSegment currentTrackSegment = currentTrack.get(counter);
+                        TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);
                             outputFile.write("\t\t\t\t\t" + currentWaypoint.getLon() + "," + currentWaypoint.getLat() + "," + currentWaypoint.getEle());
@@ -233,7 +233,7 @@ public class GPXExporter {
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
-                        TrackSegment currentTrackSegment = currentTrack.get(counter);
+                        TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
                         outputFile.write("<trkseg>\n");
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);
@@ -358,7 +358,7 @@ public class GPXExporter {
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
-                        TrackSegment currentTrackSegment = currentTrack.get(counter);
+                        TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
                         outputFile.write("<trackSegment>\n");
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);
@@ -485,7 +485,7 @@ public class GPXExporter {
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
-                        TrackSegment currentTrackSegment = currentTrack.get(counter);
+                        TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
                         outputFile.write("<trackSegment>\n");
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);

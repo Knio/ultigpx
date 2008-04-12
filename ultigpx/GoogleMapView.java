@@ -80,7 +80,7 @@ public class GoogleMapView extends MapView {
                 entities.add(i);
             
         for (Track r:file.tracks())
-            for (TrackSegment s:r)
+            for (TrackSegment s:r.getArray())
                 for (Waypoint i:s)
                     entities.add(i);
         
@@ -217,7 +217,7 @@ public class GoogleMapView extends MapView {
 			// For each TrackSegment in each Track, append the string to draw it
 			for (Track tk : file.tracks())
 				if (tk.enabled)
-					for (TrackSegment ts : tk)
+					for (TrackSegment ts : tk.getArray())
 						drawcode.append(getPolyString(tk.color, ts));
 			
 			// For each Route, append the string to draw it

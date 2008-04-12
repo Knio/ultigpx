@@ -263,7 +263,7 @@ public abstract class BasicMapView extends MapView
     
     protected void render(Track tk)
     {
-        for (TrackSegment i : tk)
+        for (TrackSegment i : tk.getArray())
             render(i);
     }
     
