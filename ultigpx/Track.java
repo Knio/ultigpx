@@ -39,9 +39,9 @@ public class Track
      * @param name of track
      * @ param Collection of track segments
      */
-    public Track(String name, Collection<TrackSegment> c)
+    public Track(String name, List<TrackSegment> c)
     {
-    	for (x = 0; x < c.length(); x++) {
+    	for (int x = 0; x < c.size(); x++) {
     		add(c.get(x));
     	}
         this.name = name;
@@ -54,7 +54,7 @@ public class Track
      * @param TrackSegment t
      */
     public void add(TrackSegment t) {
-    	trackSegment.add(t);
+    	trackSegments.add(t);
     
     }
     
@@ -63,7 +63,7 @@ public class Track
      * @param TrackSegment t
      */
     public void remove(TrackSegment t) {
-    	trackSegment.remove(t);
+    	trackSegments.remove(t);
     }
     
     /**
@@ -72,7 +72,7 @@ public class Track
      * @return true is t is in this Track, false otherwise
      */
     public boolean contains(TrackSegment t) {
-    	return trackSegment.contains(t);
+    	return trackSegments.contains(t);
     }
     
     /**
@@ -145,7 +145,7 @@ public class Track
      */
     public String toString()
     {
-        return String.format("<TRACK name=%s n=%d>", name, size());
+        return String.format("<TRACK name=%s n=%d>", name, this.trackSegments.size());
     }
 	
     /**
@@ -154,13 +154,17 @@ public class Track
      */
 	public Double getDistance() {
 		Double distance = 0.0;
-        for (TrackSegment s:this)
+        for (TrackSegment s:this.trackSegments)
             distance = distance + s.getDistance();
 			System.out.println("Distance so far is: " + distance);
 		return distance;
 	}
 	
-	public Track getArray() {
-		return trackSegments;
+	public ArrayList<TrackSegment> getArray() {
+		return this.trackSegments;
+	}
+	
+	public int size() {
+		return this.trackSegments.size();
 	}
 }
