@@ -74,7 +74,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     } //end while
                     
                     //Add the waypoint to the GPXFile
-                    inputGroup.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
+                    inputGroup.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time));
                 } //end if waypoint
                 
                 //If it is a route
@@ -110,7 +110,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             } //end while
                             
                             //Add point to the route
-                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
+                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
                             newRoute.add(newWaypoint);
                             
                         } //end if waypoint
@@ -163,7 +163,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     } //end while
                                     
                                     //Add trackpoints to track segments
-                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
+                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
                                     newTrackSegment.add(newWaypoint);
                                     
                                     
@@ -267,7 +267,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     } //end while
                     
                     //Add the waypoint to the GPXFile
-                    returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
+                    returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time));
                 } //end if waypoint
                 
                 //If it is a route
@@ -303,7 +303,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             } //end while
                             
                             //Add point to the route
-                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
+                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
                             newRoute.add(newWaypoint);
                             
                         } //end if waypoint
@@ -360,7 +360,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     } //end while
                                     
                                     //Add trackpoints to track segments
-                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
+                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
                                     newTrackSegment.add(newWaypoint);
                                     
                                     
