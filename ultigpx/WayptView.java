@@ -407,8 +407,9 @@ public class WayptView extends JComponent{
                 }
             } 
             removeAll();
-            if(first ==1)
-            	checkBox.setState(TristateCheckBox.SELECTED); 
+            if (!(((DefaultMutableTreeNode)value).getUserObject() instanceof String))
+            	if(((UGPXData)((DefaultMutableTreeNode)value).getUserObject()).getEnabled())
+            		checkBox.setState(TristateCheckBox.SELECTED); 
             add(checkBox, BorderLayout.WEST); 
             add(renderer, BorderLayout.CENTER); 
             return this; 
@@ -437,11 +438,13 @@ public class WayptView extends JComponent{
      
             boolean selected = selectionModel.isPathSelected(path, true); 
             selectionModel.removeTreeSelectionListener(this); 
-     
+            Object value = path.getLastPathComponent();
             try{ 
-                if(selected) 
+            if(!(((DefaultMutableTreeNode)value).getUserObject() instanceof String))
+            {
+            	UGPXData data = (UGPXData)((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+                if (data.getEnabled())
                 {
-                    selectionModel.removeSelectionPath(path);
                     Object o = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
                     if (o instanceof UGPXData)
                     {
@@ -453,7 +456,6 @@ public class WayptView extends JComponent{
                 }
                 else 
                 {
-                    selectionModel.addSelectionPath(path); 
                     
                     Object o = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
                     if (o instanceof UGPXData)
@@ -466,6 +468,7 @@ public class WayptView extends JComponent{
                     System.out.println("check "+path);
                     
                 }
+            }
             } finally{ 
                 selectionModel.addTreeSelectionListener(this); 
                 tree.treeDidChange(); 
@@ -570,9 +573,9 @@ public class WayptView extends JComponent{
            public void mousePressed(MouseEvent e)
            {
         	   if((e.getClickCount() == 2) && (e.getButton() == e.BUTTON1))
-                   dblclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
-               if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
                    rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+               /*if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
+                   rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));//*/
            }
        };
        
@@ -731,7 +734,7 @@ public class WayptView extends JComponent{
         */
     }
 
-    public void dblclickEvent(TreePath e)
+    /*public void dblclickEvent(TreePath e)
     {
         System.out.println("CLICK: "+ e);
         if (e==null) return;
@@ -747,7 +750,7 @@ public class WayptView extends JComponent{
             ((Waypoint)o).enabled = !((Waypoint)o).enabled;
         
         main.view.refreshmap();
-    }
+    }//*/
     
     public void rightclickEvent(TreePath e)
     {
