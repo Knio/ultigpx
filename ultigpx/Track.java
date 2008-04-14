@@ -160,10 +160,18 @@ public class Track implements UGPXData
 		return distance;
 	}
 	
+	/**
+	 * Return an ArrayList of track segments
+	 * @return ArrayList<TrackSegment>
+	 */
 	public ArrayList<TrackSegment> getArray() {
 		return this.trackSegments;
 	}
 	
+	/**
+	 * Return the size of the track segment array
+	 * @return int
+	 */
 	public int size() {
 		return this.trackSegments.size();
 	}
