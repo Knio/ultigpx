@@ -13,14 +13,14 @@ public class Waypoint implements UGPXData
     public double lat;
     public double lon;
     public double ele;
-    public double time;
+    public long time;
     
     public Waypoint(String _name, 
                     String _desc, 
                     double _lat,
                     double _lon,
                     double _ele,
-                    double _time)
+                    long _time)
     {
         name    = _name;
         desc    = _desc;
@@ -117,15 +117,15 @@ public class Waypoint implements UGPXData
      * Returns time parameter
      * @return time
      */
-    public double getTime() {
+    public long getTime() {
         return time;
     }
     
     /**
      * Set time
-     * @param double x
+     * @param long x
      */
-    public void setTime(double x) {
+    public void setTime(long x) {
     	time = x;
     }
     
