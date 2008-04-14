@@ -66,7 +66,7 @@ public class PropertiesView extends JPanel {
 		selected = 1;
         if (wp == null)
             selected = 0;
-		repaint();
+		paintThis();
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public class PropertiesView extends JPanel {
 	public void select(Track trk) {
 		seltrk = trk;
 		selected = 2;
-		repaint();
+		paintThis();
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class PropertiesView extends JPanel {
 	public void select(Route rt) {
 		selrt = rt;
 		selected = 3;
-		repaint();
+		paintThis();
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class PropertiesView extends JPanel {
 		{
 			selgrp = g;
 			selected = 4;
-			repaint();
+			paintThis();
 		}
 	}
 	
@@ -121,7 +121,7 @@ public class PropertiesView extends JPanel {
 	 */
 	public void select() {
 		selected = 0;
-		repaint();
+		paintThis();
 	}
 	
 	/**
@@ -164,26 +164,15 @@ public class PropertiesView extends JPanel {
     	// set selected element to nothing
 		selected = 0;
 		this.setPreferredSize(new Dimension(100, 100));
-		repaint();
+		paintThis();
 	}
 	
 	/**
 	 * Repaints the panel. Draws the components of the panel on the screen.
-	 * 
-	 * @param g	A Graphics to render the panel with.
 	 */
-    public void paintComponent(Graphics g) {
-    	// paints the background
-        super.paintComponent(g);
-        
-        // converts the graphic into a 2D graphic
-        Graphics2D g2d = (Graphics2D)g;
-        
-        // draws the outer frame
-        g2d.draw(new Rectangle2D.Double(5, 5, getWidth()-10, getHeight()-10));
-        
+    public void paintThis() {
         // writes the info on the screen
-        paintinfo(g2d);
+        paintinfo();
     }
     
     /**
@@ -192,7 +181,7 @@ public class PropertiesView extends JPanel {
      * 
      * @param g2d	the Graphics2D element to draw onto
      */
-    protected void paintinfo(Graphics2D g2d) {
+    protected void paintinfo() {
     	// prints a changing test string to the frame
     	/*painttest(g2d);
     	return;//*/
@@ -202,19 +191,19 @@ public class PropertiesView extends JPanel {
     	switch (selected)
         {
             case (0):
-                paintnull(g2d);
+                paintnull();
             	break;
             case (1):
-            	paintwp(g2d);
+            	paintwp();
             	break;
             case (2):
-            	painttrk(g2d);
+            	painttrk();
             	break;
             case (3):
-            	paintrt(g2d);
+            	paintrt();
             	break;
             case (4):
-            	paintgrp(g2d);
+            	paintgrp();
             	break;
         }//*/
     }
@@ -224,7 +213,7 @@ public class PropertiesView extends JPanel {
      * 
      * @param g2d	the Graphics2D element to draw onto
      */
-    protected void paintnull(Graphics2D g2d) {
+    protected void paintnull() {
     	// disables button
     	setcolor.setEnabled(false);
     	setAtt.setEnabled(false);
@@ -238,7 +227,7 @@ public class PropertiesView extends JPanel {
      * @param g2d	the Graphics2D element to draw onto
      * @see		Group
      */
-    protected void paintgrp(Graphics2D g2d) {
+    protected void paintgrp() {
     	// disables button
     	setcolor.setEnabled(false);
     	setAtt.setEnabled(true);
@@ -260,26 +249,26 @@ public class PropertiesView extends JPanel {
      * 
      * @param g2d	the Graphics2D element to draw onto
      */
-    protected void painttest(Graphics2D g2d) {
+    protected void painttest() {
     	// prints a waypoint and then on repaint prints
     	// a track and then on repaint prints a route
     	// and then repeats cycle.
     	if (selected == 1)
     	{
-    	selwp = new Waypoint("Name", "This is a super long description used to test how well my line splitter works. I really have nothing to say in the description so I'm just typing a lot of words because it will help me test.", 10.0, 5.21483726152, 72.7162535412365213, 11.2);
-    	paintwp(g2d);
+    	selwp = new Waypoint("Name", "This is a super long description used to test how well my line splitter works. I really have nothing to say in the description so I'm just typing a lot of words because it will help me test.", 10.0, 5.21483726152, 72.7162535412365213, 11);
+    	paintwp();
     	selected = 2;
     	}
     	else if (selected == 2)
     	{
     	seltrk = new Track("Name");
-    	painttrk(g2d);
+    	painttrk();
     	selected = 3;
     	}
     	else
     	{
     	selrt = new Route();
-    	paintrt(g2d);
+    	paintrt();
     	selected = 1;
     	}
     	// disclaimer cause people might think my part works without
@@ -294,7 +283,7 @@ public class PropertiesView extends JPanel {
      * @param g2d	the Graphics2D element to draw onto
      * @see		Waypoint
      */
-    protected void paintwp(Graphics2D g2d){
+    protected void paintwp(){
     	// enables button
     	setcolor.setEnabled(true);
     	setAtt.setEnabled(true);
@@ -332,7 +321,7 @@ public class PropertiesView extends JPanel {
      * @param g2d	the Graphics2D element to draw onto
      * @see		Track
      */
-    protected void painttrk(Graphics2D g2d){
+    protected void painttrk(){
     	// enables button
     	setcolor.setEnabled(true);
     	setAtt.setEnabled(true);
@@ -362,7 +351,7 @@ public class PropertiesView extends JPanel {
      * @param g2d	the Graphics2D element to draw onto
      * @see		Route
      */
-    protected void paintrt(Graphics2D g2d){
+    protected void paintrt(){
     	// enables button
     	setcolor.setEnabled(true);
     	setAtt.setEnabled(true);
