@@ -18,7 +18,7 @@ public interface GPXImporterExporterConstants {
     public static final double DEFAULT_ELEVATION = 0;
     public static final String TIME = "time";
     public static final double DEFAULT_TIME = -1;
-    public static final String ROUTE = "route";
+    public static final String ROUTE = "rte";
     public static final String ROUTE_POINT = "rtept";
     public static final String TRACK = "trk";
     public static final String TRACK_SEGMENT = "trkseg";
