@@ -113,6 +113,11 @@ public class Group
         return waypoint.get(n);
     }
     
+    public int size()
+    {
+        return track.size() + route.size() + waypoint.size();
+    }
+    
     /**
      * Add track to file
      * @param Track t

@@ -341,7 +341,6 @@ public class MainView extends JFrame
                 {}
                 else
                 {
-                    filenam = fd.getFile();
                     main.importGPX(GPXfile);
                     
                     prop.select();
@@ -358,7 +357,7 @@ public class MainView extends JFrame
                 System.exit(1);
             }
             
-            if (e.getActionCommand().equals("Export") && filenam != null)
+            if (e.getActionCommand().equals("Export"))
             {
                 Frame parent = new Frame();
                 FileDialog fd = new FileDialog(parent, "Choose a KML file:",
@@ -375,7 +374,7 @@ public class MainView extends JFrame
                     main.exportKML(GPXfile+".kml");
             }
             
-            if (e.getActionCommand().equals("ExportGPX") && filenam != null)
+            if (e.getActionCommand().equals("ExportGPX"))
             {
                 Frame parent = new Frame();
                 FileDialog fd = new FileDialog(parent, "Choose a GPX file:",
