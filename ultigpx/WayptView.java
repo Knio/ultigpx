@@ -54,6 +54,7 @@ public class WayptView extends JComponent{
     MainView parent;
     TextArea tArealabel;
     String mainfile = null;
+    int first;
        
     public WayptView(UltiGPX main) {
         super();
@@ -400,11 +401,14 @@ public class WayptView extends JComponent{
                 if(selectionModel.isPathSelected(path, true)){ 
                 	checkBox.setState(TristateCheckBox.SELECTED); 
                 	                	
-                }else {
+                }
+                else {
                 	checkBox.setState(selectionModel.isPartiallySelected(path) ? null : TristateCheckBox.NOT_SELECTED); 
                 }
             } 
-            removeAll(); 
+            removeAll();
+            if(first ==1)
+            	checkBox.setState(TristateCheckBox.SELECTED); 
             add(checkBox, BorderLayout.WEST); 
             add(renderer, BorderLayout.CENTER); 
             return this; 
@@ -513,7 +517,7 @@ public class WayptView extends JComponent{
        
        if(main.file != null){
        
-	      
+	       first = 1;
     	   checkTreeManager = new CheckTreeManager(tree);
 	       
 	      
@@ -661,7 +665,7 @@ public class WayptView extends JComponent{
    	public void selectEvent(TreePath e)
     {
         System.out.println("SELECT: "+ e);
-        
+        first =0;
         main.selected.clear();
         TreePath p[] = tree.getSelectionModel().getSelectionPaths();
         if (p!=null)
