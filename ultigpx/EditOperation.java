@@ -10,8 +10,8 @@ public class EditOperation extends Operation
     String newdesc;
     double oldele;
     double newele;
-    double oldtime;
-    double newtime;
+    long oldtime;
+    long newtime;
     double oldlon;
     double newlon;
     double oldlat;
