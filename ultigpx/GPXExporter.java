@@ -1,7 +1,7 @@
 package ultigpx;
 
 /**
- * Class GPX Exporter is used for Exporting the UltiGPXFile to a GPX file or a KML file
+ * Class GPX Exporter is used for Exporting the UltiGPXFile to a GPX file, a KML file or an ultiGPX file
  * The KML file can then be view using Google Earth
  * For more information about Google Earth, see http://earth.google.com/
  * This class was written for Part 1 of the project for CPSC 301, Winter 2008
@@ -15,13 +15,13 @@ import org.jdom.*;
 import org.jdom.input.*;
 
 
-public class GPXExporter {
+public class GPXExporter implements GPXImporterExporterConstants {
     
     /**
-     * exportToKML exports a UGPXFile to KML.  The filename is given as a string as well as the UGPXFile.
+     * exportToKML exports a Group to KML.  The filename is given as a string as well as the Group.
      * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
      * @param filename, a String, the name of the file you want to export
-     * @param UGPXFile, containing the tracks, routes, and waypoints
+     * @param outputData, a Group, containing the tracks, routes, and waypoints
      * @throws JDOMException if a problem occurs when exporting the file
      * @throws IOException if a problem occurs when exporting the file
      */
@@ -31,8 +31,7 @@ public class GPXExporter {
         BufferedWriter outputFile = new BufferedWriter(new FileWriter(filename));
         
         //Output KML header
-        outputFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        outputFile.write("<kml xmlns=\"http://earth.google.com/kml/2.2\">\n");
+        outputFile.write(KML_HEADER);
         
         //Put waypoints in the file
         List<Waypoint> waypointsToExport = outputData.waypoints();
@@ -78,11 +77,11 @@ public class GPXExporter {
                     outputFile.write("\t\t<description></description>");
                     outputFile.write("\t\t<Style id=\"yellowLineGreenPoly\">\n");
                     outputFile.write("\t\t\t<LineStyle>\n");
-                    outputFile.write("\t\t\t\t<color>7f00ffff</color>\n");
+                    outputFile.write("\t\t\t\t<color>7" + currentTrack.getColor() + "</color>\n");
                     outputFile.write("\t\t\t\t<width>4</width>\n");
                     outputFile.write("\t\t\t</LineStyle>\n");
                     outputFile.write("\t\t\t<PolyStyle>\n");
-                    outputFile.write("\t\t\t\t<color>7f00ff00</color>\n");
+                    outputFile.write("\t\t\t\t<color>" + currentTrack.getColor() + "</color>\n");
                     outputFile.write("\t\t\t</PolyStyle>\n");
                     outputFile.write("\t\t</Style>\n");
                     outputFile.write("\t\t<Placemark>\n");
@@ -168,12 +167,34 @@ public class GPXExporter {
         } //end if
         
         //Write footer
-        outputFile.write("</kml>");
+        outputFile.write(KML_FOOTER);
         
         //Close input file
         outputFile.close();
         
     } //end exportGPX
+    
+    /**
+     * exportToGPX exports a UGPXFile to GPX.  The filename is given as a string as well as the UGPXFile.
+     * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
+     * @param filename, a String, the name of the file you want to export
+     * @param UGPXFile, containing the tracks, routes, and waypoints
+     * @throws JDOMException if a problem occurs when exporting the file
+     * @throws IOException if a problem occurs when exporting the file
+     */
+    public static void exportToKML(Database outputData, String filename) throws JDOMException, IOException {
+        Group groupToExport = new Group();
+        List<Route> routesToExport = outputData.routes();
+        List<Track> tracksToExport = outputData.tracks();
+        List<Waypoint> waypointsToExport = outputData.waypoints();
+        for (int counter = 0; counter < routesToExport.size(); counter++)
+            groupToExport.addRoute(routesToExport.get(counter));
+        for (int counter = 0; counter < tracksToExport.size(); counter++)
+            groupToExport.addTrack(tracksToExport.get(counter));
+        for (int counter = 0; counter < waypointsToExport.size(); counter++)
+            groupToExport.addWaypoint(waypointsToExport.get(counter));
+        exportToKML(groupToExport, filename);
+    } //end exportToKML
     
     /**
      * exportToGPX exports a UGPXFile to GPX.  The filename is given as a string as well as the UGPXFile.
@@ -189,9 +210,7 @@ public class GPXExporter {
         BufferedWriter outputFile = new BufferedWriter(new FileWriter(filename));
         
         //Output GPX header
-        outputFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
-        outputFile.write("<gpx creator=\"UltiGPX\" version=\"1.1\">\n");
-        outputFile.write("<metadata> metadataType </metadata>\n");
+        outputFile.write(GPX_HEADER);
         
         //Put waypoints in the file
         List<Waypoint> waypointsToExport = outputData.waypoints();
@@ -204,14 +223,14 @@ public class GPXExporter {
                 if (currentWaypoint.getEnabled()) {
                     
                     //Print out waypoint
-                    outputFile.write("<wpt ");
-                    outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                    outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                    outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                    outputFile.write("<time>" + convertTime(currentWaypoint.getTime()) + "</time>\n");
-                    outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                    outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                    outputFile.write("</wpt>\n");
+                    outputFile.write("<"+ WAYPOINT + " ");
+                    outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                    outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                    outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                    outputFile.write("<" + TIME + ">" + convertTime(currentWaypoint.getTime()) + "</" + TIME + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                    outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                    outputFile.write("</" + WAYPOINT + ">\n");
                 } //end if getEnabled
             } //end while
         } //end if
@@ -228,29 +247,29 @@ public class GPXExporter {
                     
                     //Print out header stuff
                     
-                    outputFile.write("<trk>\n");
-                    outputFile.write("<name>" + currentTrack.getName() + "</name>\n");
+                    outputFile.write("<" + TRACK + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentTrack.getName() + "</" + NAME + ">\n");
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
                         TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
-                        outputFile.write("<trkseg>\n");
+                        outputFile.write("<" + TRACK_SEGMENT + ">\n");
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);
-                            outputFile.write("<trkpt ");
-                            outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                            outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                            outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                            outputFile.write("<time>" + convertTime(currentWaypoint.getTime()) + "</time>\n");
-                            outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                            outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                            outputFile.write("</trkpt>\n");
+                            outputFile.write("<" + TRACK_POINT + " ");
+                            outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                            outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                            outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                            outputFile.write("<" + TIME + ">" + convertTime(currentWaypoint.getTime()) + "</" + TIME + ">\n");
+                            outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                            outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                            outputFile.write("</" + TRACK_POINT + ">\n");
                         } //end for
-                        outputFile.write("</trkseg>");
+                        outputFile.write("</" + TRACK_SEGMENT + ">");
                     } //end for
                     
                     //Print out footer stuff
-                    outputFile.write("</trk>");
+                    outputFile.write("</" + TRACK + ">");
                     
                 } //end if getEnabled
             } //end while
@@ -270,35 +289,57 @@ public class GPXExporter {
                     
                     //Print out header stuff
                     
-                    outputFile.write("<rte>\n");
-                    outputFile.write("<name>" + currentRoute.getName() + "</name>\n");
+                    outputFile.write("<" + ROUTE + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentRoute.getName() + "</" + NAME + ">\n");
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentRoute.size(); counter++) {
                         Waypoint currentWaypoint = currentRoute.get(counter);
-                        outputFile.write("<rtept ");
-                        outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                        outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                        outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                        outputFile.write("<time>" + convertTime(currentWaypoint.getTime()) + "</time>\n");
-                        outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                        outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                        outputFile.write("</rtept>\n");
+                        outputFile.write("<" + ROUTE_POINT + " ");
+                        outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                        outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                        outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                        outputFile.write("<" + TIME + ">" + convertTime(currentWaypoint.getTime()) + "</" + TIME + ">\n");
+                        outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                        outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                        outputFile.write("</" + ROUTE_POINT + ">\n");
                     } //end for
                     
                     //Print out footer stuff
-                    outputFile.write("</rte>");
+                    outputFile.write("</" + ROUTE + ">");
                     
                 } //end if getEnabled
             } //end while
         } //end if
         
         //Write footer
-        outputFile.write("</gpx>");
+        outputFile.write("</" + GPX + ">");
         
         //Close input file
         outputFile.close();
         
+    } //end exportToGPX
+    
+    /**
+     * exportToGPX exports a UGPXFile to GPX.  The filename is given as a string as well as the UGPXFile.
+     * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
+     * @param filename, a String, the name of the file you want to export
+     * @param UGPXFile, containing the tracks, routes, and waypoints
+     * @throws JDOMException if a problem occurs when exporting the file
+     * @throws IOException if a problem occurs when exporting the file
+     */
+    public static void exportToGPX(Database outputData, String filename) throws JDOMException, IOException {
+        Group groupToExport = new Group();
+        List<Route> routesToExport = outputData.routes();
+        List<Track> tracksToExport = outputData.tracks();
+        List<Waypoint> waypointsToExport = outputData.waypoints();
+        for (int counter = 0; counter < routesToExport.size(); counter++)
+            groupToExport.addRoute(routesToExport.get(counter));
+        for (int counter = 0; counter < tracksToExport.size(); counter++)
+            groupToExport.addTrack(tracksToExport.get(counter));
+        for (int counter = 0; counter < waypointsToExport.size(); counter++)
+            groupToExport.addWaypoint(waypointsToExport.get(counter));
+        exportToGPX(groupToExport, filename);
     } //end exportToGPX
     
     /**
@@ -315,8 +356,7 @@ public class GPXExporter {
         BufferedWriter outputFile = new BufferedWriter(new FileWriter(filename));
         
         //Output GPX header
-        outputFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
-        outputFile.write("<UltiGPX>\n");
+        outputFile.write(ULTI_GPX_HEADER);
         
         //Put waypoints in the file
         List<Waypoint> waypointsToExport = outputData.waypoints();
@@ -329,14 +369,14 @@ public class GPXExporter {
                 if (currentWaypoint.getEnabled()) {
                     
                     //Print out waypoint
-                    outputFile.write("<waypoint ");
-                    outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                    outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                    outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                    outputFile.write("<time>" + currentWaypoint.getTime() + "</time>\n");
-                    outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                    outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                    outputFile.write("</waypoint>\n");
+                    outputFile.write("<" + WAYPOINT + " ");
+                    outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                    outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                    outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                    outputFile.write("<" + TIME + ">" + currentWaypoint.getTime() + "</" + TIME + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                    outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                    outputFile.write("</" + WAYPOINT + ">\n");
                 } //end if getEnabled
             } //end while
         } //end if
@@ -353,29 +393,29 @@ public class GPXExporter {
                     
                     //Print out header stuff
                     
-                    outputFile.write("<track>\n");
-                    outputFile.write("<name>" + currentTrack.getName() + "</name>\n");
+                    outputFile.write("<" + TRACK + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentTrack.getName() + "</" + NAME + ">\n");
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
                         TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
-                        outputFile.write("<trackSegment>\n");
+                        outputFile.write("<" + TRACK_SEGMENT + ">\n");
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);
-                            outputFile.write("<trackPoint ");
-                            outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                            outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                            outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                            outputFile.write("<time>" + currentWaypoint.getTime() + "</time>\n");
-                            outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                            outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                            outputFile.write("</trackPoint>\n");
+                            outputFile.write("<" + TRACK_POINT + " ");
+                            outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                            outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                            outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                            outputFile.write("<" + TIME + ">" + currentWaypoint.getTime() + "</" + TIME + ">\n");
+                            outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                            outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                            outputFile.write("</" + TRACK_POINT + ">\n");
                         } //end for
-                        outputFile.write("</trackSegment>");
+                        outputFile.write("</" + TRACK_SEGMENT + ">");
                     } //end for
                     
                     //Print out footer stuff
-                    outputFile.write("</track>");
+                    outputFile.write("</" + TRACK + ">");
                     
                 } //end if getEnabled
             } //end while
@@ -396,31 +436,31 @@ public class GPXExporter {
                     
                     //Print out header stuff
                     
-                    outputFile.write("<route>\n");
-                    outputFile.write("<name>" + currentRoute.getName() + "</name>\n");
+                    outputFile.write("<" + ROUTE + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentRoute.getName() + "</" + NAME + ">\n");
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentRoute.size(); counter++) {
                         Waypoint currentWaypoint = currentRoute.get(counter);
-                        outputFile.write("<routePoint ");
-                        outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                        outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                        outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                        outputFile.write("<time>" + currentWaypoint.getTime() + "</time>\n");
-                        outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                        outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                        outputFile.write("</routePoint>\n");
+                        outputFile.write("<" + ROUTE_POINT + " ");
+                        outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                        outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                        outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</"+ ELEVATION + ">\n");
+                        outputFile.write("<" + TIME + ">" + currentWaypoint.getTime() + "</" + TIME + ">\n");
+                        outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                        outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                        outputFile.write("</" + ROUTE_POINT + ">\n");
                     } //end for
                     
                     //Print out footer stuff
-                    outputFile.write("</route>");
+                    outputFile.write("</"+ ROUTE + ">");
                     
                 } //end if getEnabled
             } //end while
         } //end if
         
         //Write footer
-        outputFile.write("</UltiGPX>");
+        outputFile.write("</" + ULTI_GPX + ">");
         
         //Close input file
         outputFile.close();
@@ -430,6 +470,7 @@ public class GPXExporter {
     
     /**
      * exportToUltiGPX exports a UGPXFile to UltiGPX.  The filename is given as a string as well as the UGPXFile.
+     * Use indexOf in arraylist
      * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
      * @param filename, a String, the name of the file you want to export
      * @param UGPXFile, containing the tracks, routes, and waypoints
@@ -442,8 +483,7 @@ public class GPXExporter {
         BufferedWriter outputFile = new BufferedWriter(new FileWriter(filename));
         
         //Output GPX header
-        outputFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
-        outputFile.write("<UltiGPX>\n");
+        outputFile.write(ULTI_GPX_HEADER);
         
         //Put waypoints in the file
         List<Waypoint> waypointsToExport = outputData.waypoints();
@@ -456,14 +496,14 @@ public class GPXExporter {
                 if (currentWaypoint.getEnabled()) {
                     
                     //Print out waypoint
-                    outputFile.write("<waypoint ");
-                    outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                    outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                    outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                    outputFile.write("<time>" + currentWaypoint.getTime() + "</time>\n");
-                    outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                    outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                    outputFile.write("</waypoint>\n");
+                    outputFile.write("<" + WAYPOINT + " ");
+                    outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                    outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                    outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                    outputFile.write("<" + TIME + ">" + currentWaypoint.getTime() + "</" + TIME + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                    outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                    outputFile.write("</" + WAYPOINT + ">\n");
                 } //end if getEnabled
             } //end while
         } //end if
@@ -480,29 +520,29 @@ public class GPXExporter {
                     
                     //Print out header stuff
                     
-                    outputFile.write("<track>\n");
-                    outputFile.write("<name>" + currentTrack.getName() + "</name>\n");
+                    outputFile.write("<" + TRACK + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentTrack.getName() + "</" + NAME + ">\n");
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentTrack.size(); counter++) {
                         TrackSegment currentTrackSegment = currentTrack.getArray().get(counter);
-                        outputFile.write("<trackSegment>\n");
+                        outputFile.write("<" + TRACK_SEGMENT + ">\n");
                         for(int counter2 = 0; counter2 < currentTrackSegment.size(); counter2++) {
                             Waypoint currentWaypoint = currentTrackSegment.get(counter2);
-                            outputFile.write("<trackPoint ");
-                            outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                            outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                            outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                            outputFile.write("<time>" + currentWaypoint.getTime() + "</time>\n");
-                            outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                            outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                            outputFile.write("</trackPoint>\n");
+                            outputFile.write("<" + TRACK_POINT + " ");
+                            outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                            outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                            outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                            outputFile.write("<" + TIME + ">" + currentWaypoint.getTime() + "</" + TIME + ">\n");
+                            outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                            outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                            outputFile.write("</" + TRACK_POINT + ">\n");
                         } //end for
-                        outputFile.write("</trackSegment>");
+                        outputFile.write("</" + TRACK_SEGMENT + ">");
                     } //end for
                     
                     //Print out footer stuff
-                    outputFile.write("</track>");
+                    outputFile.write("</" + TRACK + ">");
                     
                 } //end if getEnabled
             } //end while
@@ -523,31 +563,61 @@ public class GPXExporter {
                     
                     //Print out header stuff
                     
-                    outputFile.write("<route>\n");
-                    outputFile.write("<name>" + currentRoute.getName() + "</name>\n");
+                    outputFile.write("<" + ROUTE + ">\n");
+                    outputFile.write("<" + NAME + ">" + currentRoute.getName() + "</" + NAME + ">\n");
                     
                     //Print out all coordinates
                     for (int counter = 0; counter < currentRoute.size(); counter++) {
                         Waypoint currentWaypoint = currentRoute.get(counter);
-                        outputFile.write("<routePoint ");
-                        outputFile.write("lat=\"" + currentWaypoint.getLat() + "\" ");
-                        outputFile.write("lon=\"" + currentWaypoint.getLon() + "\" >\n");
-                        outputFile.write("<ele>" + currentWaypoint.getEle() + "</ele>\n");
-                        outputFile.write("<time>" + currentWaypoint.getTime() + "</time>\n");
-                        outputFile.write("<name>" + currentWaypoint.getName() + "</name>\n");
-                        outputFile.write("<desc>" + currentWaypoint.getDesc() + "</desc>\n");
-                        outputFile.write("</routePoint>\n");
+                        outputFile.write("<" + ROUTE_POINT + " ");
+                        outputFile.write(LATITUDE + "=\"" + currentWaypoint.getLat() + "\" ");
+                        outputFile.write(LONGITUDE + "=\"" + currentWaypoint.getLon() + "\" >\n");
+                        outputFile.write("<" + ELEVATION + ">" + currentWaypoint.getEle() + "</" + ELEVATION + ">\n");
+                        outputFile.write("<" + TIME + ">" + currentWaypoint.getTime() + "</" + TIME + ">\n");
+                        outputFile.write("<" + NAME + ">" + currentWaypoint.getName() + "</" + NAME + ">\n");
+                        outputFile.write("<" + DESCRIPTION + ">" + currentWaypoint.getDesc() + "</" + DESCRIPTION + ">\n");
+                        outputFile.write("</" + ROUTE_POINT + ">\n");
                     } //end for
                     
                     //Print out footer stuff
-                    outputFile.write("</route>");
+                    outputFile.write("</" + ROUTE + ">");
+                    
+                } //end if getEnabled
+            } //end while
+        } //end if
+        
+        //Put routes in file
+        List<Group> groupsToExport = outputData.groups();
+        if (routesToExport != null) {
+            //For each route
+            Iterator<Group> groupsIterator = groupsToExport.iterator();
+            while (groupsIterator.hasNext()) {
+                //Export each enabled route
+                Group currentGroup = groupsIterator.next();
+                if (currentGroup.getEnabled()) {
+                    //print out name
+                    outputFile.write("<" + NAME + ">" + currentGroup.name + "</" + NAME + ">\n");
+                    //print out waypoints
+                    List<Waypoint> waypointsToExportFromGroup = currentGroup.waypoints();
+                    for (int counter = 0; counter < waypointsToExport.size(); counter++)
+                        outputFile.write("<" + WAYPOINT + ">" + outputData.waypoints().indexOf(waypointsToExportFromGroup.get(counter)) + "</" + WAYPOINT + ">\n");
+                    //print out tracks
+                    List<Track> tracksToExportFromGroup = currentGroup.tracks();
+                    for (int counter = 0; counter < tracksToExport.size(); counter++)
+                        outputFile.write("<" + TRACK + ">" + outputData.tracks().indexOf(tracksToExportFromGroup.get(counter)) + "</" + TRACK + ">\n");
+                    
+                    //print out routes
+                    List<Route> routesToExportFromGroup = currentGroup.routes();
+                    for (int counter = 0; counter < routesToExport.size(); counter++)
+                        outputFile.write("<" + ROUTE + ">" + outputData.routes().indexOf(routesToExportFromGroup.get(counter)) + "</" + ROUTE + ">\n");
+                    
                     
                 } //end if getEnabled
             } //end while
         } //end if
         
         //Write footer
-        outputFile.write("</UltiGPX>");
+        outputFile.write("</" + ULTI_GPX + ">");
         
         //Close input file
         outputFile.close();
