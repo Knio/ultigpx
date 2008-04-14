@@ -60,8 +60,8 @@ public class WayptView extends JComponent{
         super();
         this.main = main;
         this.setPreferredSize(new Dimension(100, 300));
-        select_list = new ArrayList();
-        groups = new ArrayList();
+        select_list = new ArrayList<Object>();
+        groups = new ArrayList<Group>();
     }
     public class CheckTreeSelectionModel extends DefaultTreeSelectionModel{ 
         private TreeModel model; 
@@ -117,7 +117,7 @@ public class WayptView extends JComponent{
                 TreePath[] selectionPaths = getSelectionPaths(); 
                 if(selectionPaths==null) 
                     break; 
-                ArrayList toBeRemoved = new ArrayList(); 
+                ArrayList<Object> toBeRemoved = new ArrayList<Object>(); 
                 for(int j = 0; j<selectionPaths.length; j++){ 
                     if(isDescendant(selectionPaths[j], path)) 
                         toBeRemoved.add(selectionPaths[j]); 
@@ -182,7 +182,7 @@ public class WayptView extends JComponent{
         //  and selection all its descendants except given path and descendants. 
         // otherwise just unselect the given path 
         private void toggleRemoveSelection(TreePath path){ 
-            Stack stack = new Stack(); 
+            Stack<Object> stack = new Stack<Object>(); 
             TreePath parent = path.getParentPath(); 
             while(parent!=null && !isPathSelected(parent)){ 
                 stack.push(parent); 
@@ -440,9 +440,32 @@ public class WayptView extends JComponent{
      
             try{ 
                 if(selected) 
-                    selectionModel.removeSelectionPath(path); 
+                {
+                    selectionModel.removeSelectionPath(path);
+                    Object o = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+                    if (o instanceof UGPXData)
+                    {
+                        UGPXData d = (UGPXData)o;
+                        d.setEnabled(false);
+                        main.view.refresh();
+                    }
+                    System.out.println("unckecked "+path);
+                }
                 else 
+                {
                     selectionModel.addSelectionPath(path); 
+                    
+                    Object o = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+                    if (o instanceof UGPXData)
+                    {
+                        UGPXData d = (UGPXData)o;
+                        d.setEnabled(true);
+                        main.view.refresh();
+                    }
+                    
+                    System.out.println("check "+path);
+                    
+                }
             } finally{ 
                 selectionModel.addTreeSelectionListener(this); 
                 tree.treeDidChange(); 
@@ -599,9 +622,9 @@ public class WayptView extends JComponent{
    	}
     /* Creates a group with user selected list */	
    	private void creategroup(List<Object> s_list) {
-   		List<Waypoint> wp = new ArrayList(); 
-   		List<Track> tk = new ArrayList(); 
-   		List<Route> rt =  new ArrayList();
+   		List<Waypoint> wp = new ArrayList<Waypoint>(); 
+   		List<Track> tk = new ArrayList<Track>(); 
+   		List<Route> rt =  new ArrayList<Route>();
    		
    		for(int i = 0;i<s_list.size();i++){
    			Object o = s_list.get(i);
