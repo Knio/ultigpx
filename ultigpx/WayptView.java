@@ -730,7 +730,7 @@ public class WayptView extends JComponent{
             Object o = ((DefaultMutableTreeNode)i.getLastPathComponent()).getUserObject();
             if (o instanceof UGPXData)
             {
-                main.selected.add((UGPXData)o);
+               // main.selected.add((UGPXData)o);
                 System.out.println((UGPXData)o);
             }
         }
