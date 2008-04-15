@@ -248,7 +248,7 @@ public class MainView extends JFrame
         map1.selectionChanged();
         map2.selectionChanged();
         //map3.selectionChanged(x);
-    	prop.select(main.selected);
+        //prop.select(main.selected);
     	ele.selectionChanged();
     }
     
@@ -296,7 +296,8 @@ public class MainView extends JFrame
     
     public void refresh()
     {
-        wpview.fill();
+        
+        wpview.updateUI();
         refreshmap();
         setVisible(true);
     }
@@ -345,6 +346,7 @@ public class MainView extends JFrame
                     
                     prop.select();
                     map1.fill();
+                    wpview.fill();
                     
                     //by Nate. This is just getting annoying.
                     //searchresult.checkForConflicts();
