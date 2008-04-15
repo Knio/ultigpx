@@ -397,19 +397,22 @@ public class WayptView extends JComponent{
             Component renderer = delegate.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus); 
      
             TreePath path = tree.getPathForRow(row); 
-            if(path!=null){ 
+            if(path!=null){
+            	
                 if(selectionModel.isPathSelected(path, true)){ 
                 	checkBox.setState(TristateCheckBox.SELECTED); 
-                	                	
+                	               	
                 }
                 else {
                 	checkBox.setState(selectionModel.isPartiallySelected(path) ? null : TristateCheckBox.NOT_SELECTED); 
                 }
+                
             } 
-            removeAll();
+            //removeAll();
             if (!(((DefaultMutableTreeNode)value).getUserObject() instanceof String))
             	if(((UGPXData)((DefaultMutableTreeNode)value).getUserObject()).getEnabled())
             		checkBox.setState(TristateCheckBox.SELECTED); 
+            System.out.println("expanded = " + expanded);
             add(checkBox, BorderLayout.WEST); 
             add(renderer, BorderLayout.CENTER); 
             return this; 
@@ -454,6 +457,7 @@ public class WayptView extends JComponent{
                         main.view.refresh();
                         
                     }
+         
                     System.out.println("unckecked "+path);
                 }
                 else 
@@ -548,10 +552,9 @@ public class WayptView extends JComponent{
        
 	       
     	   checkTreeManager = new CheckTreeManager(tree);
-    	   expandAll(tree,true);
-	       
-	      
-	       
+    	  // TreePath p[] = tree.getSelectionModel().getSelectionPaths();
+    	   
+           	       
        }
        wtrPanel = new JScrollPane(tree); 
        c.gridx = 0;
@@ -589,31 +592,6 @@ public class WayptView extends JComponent{
 }
      	
 
-//  If expand is true, expands all nodes in the tree.
-    // Otherwise, collapses all nodes in the tree.
-    public void expandAll(JTree tree, boolean expand) {
-        TreeNode root = (TreeNode)tree.getModel().getRoot();
-    
-        // Traverse tree from root
-        expandAll(tree, new TreePath(root), expand);
-    }
-    private void expandAll(JTree tree, TreePath parent, boolean expand) {
-        // Traverse children
-        TreeNode node = (TreeNode)parent.getLastPathComponent();
-        if (node.getChildCount() >= 0) {
-            for (Enumeration e=node.children(); e.hasMoreElements(); ) {
-                TreeNode n = (TreeNode)e.nextElement();
-                TreePath path = parent.pathByAddingChild(n);
-                expandAll(tree, path, expand);
-            }
-        }
-        // Expansion or collapse must be done bottom-up
-        if (expand) {
-            tree.expandPath(parent);
-        } else {
-            tree.collapsePath(parent);
-        }
-    }
 
 	class ActionHandler implements ActionListener{
    	 /**
