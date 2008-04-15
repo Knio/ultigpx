@@ -1,4 +1,3 @@
-// driver to test MapView classes
 
 package ultigpx;
 
@@ -7,6 +6,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
+/**
+ * The GUI that displays and manages the components.
+ * 
+ * @author Steven, Tom
+ */
 public class MainView extends JFrame 
 {
     UltiGPX main;
@@ -40,7 +44,7 @@ public class MainView extends JFrame
     JMenuItem addwp;
     JMenuItem delwp;
     
-    
+    // sets up the GUI with all the components
     public MainView(UltiGPX main)
     {
         super("UltiGPX");
@@ -72,7 +76,7 @@ public class MainView extends JFrame
         
     }
     
-    
+    // sets up the menu bar
     void setupMenu()
     {
         
@@ -171,7 +175,7 @@ public class MainView extends JFrame
         setJMenuBar(menuBar);
     }
     
-    
+    // sets up the components to be displayed
     void setupPanes()
     {
     
@@ -228,7 +232,7 @@ public class MainView extends JFrame
         
         c.gridwidth = 1;
         
-        c.weighty = .5;
+        c.weighty = 1;
         // sets horiz weight of PropertiesView
         c.weightx = 1.0;
         
@@ -244,16 +248,20 @@ public class MainView extends JFrame
         
     }
     
+    // if what is selected is changed this should be called
     public void selectionChanged()
     {
         map1.selectionChanged();
         map2.selectionChanged();
-        //map3.selectionChanged(x);
+        //map3.selectionChanged(x); // google maps doesn't work with selecting
         prop.select(main.selected);
     	ele.selectionChanged();
     }
     
-    
+    /**
+     * @deprecated
+     * @param x
+     */
     public void select(Object x) {
         
         select((Waypoint)null);
@@ -261,6 +269,10 @@ public class MainView extends JFrame
         if (x instanceof Track) select((Track)x);
         if (x instanceof Route) select((Route)x);
     }
+    /**
+     * @deprecated
+     * @param x
+     */
     public void select(Waypoint x) {
         map1.select(x);
         map2.select(x);
@@ -268,7 +280,10 @@ public class MainView extends JFrame
     	prop.select(x);
     	ele.select(x);
     }
-    
+    /**
+     * @deprecated
+     * @param x
+     */
     public void select(Track x) {
         map1.select(x);
         map2.select(x);
@@ -276,7 +291,10 @@ public class MainView extends JFrame
     	prop.select(x);
     	ele.select(x);
     }
-    
+    /**
+     * @deprecated
+     * @param x
+     */
     public void select(Route x) {
         map1.select(x);
         map2.select(x);
@@ -285,6 +303,7 @@ public class MainView extends JFrame
     	ele.select(x);
     }
     
+    // refreshes the maps and most of the other components
     public void refreshmap() {
         map1.refresh();
         map2.refresh();
@@ -295,6 +314,7 @@ public class MainView extends JFrame
         setVisible(true);
     }
     
+    // refreshes the waypoint viewer as well as everything else
     public void refresh()
     {
         
@@ -303,8 +323,8 @@ public class MainView extends JFrame
         setVisible(true);
     }
     
-    
-    
+    // makes closing the window "faster" since
+    // it hides the gui as it is closing
     class WinListener implements WindowListener
     {
         
@@ -318,10 +338,7 @@ public class MainView extends JFrame
         
     }
     
-    
-    
-    
-    
+    // listens for action commands from the menu items
     class MenuListener implements ActionListener {
     	public MenuListener() {
     		super();
@@ -402,11 +419,15 @@ public class MainView extends JFrame
             
     	}
     }
+    
+    // filter for importing/exporting a GPX file
     class GPXFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
             return (name.endsWith(".gpx"));
         }
     }
+    
+    // filter for exporting a KML file
     class KMLFilter implements FilenameFilter {
     	public boolean accept(File dir, String name) {
     		return (name.endsWith(".kml"));
