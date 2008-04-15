@@ -431,12 +431,12 @@ public class GPXImporter implements GPXImporterExporterConstants {
         
         //Parse the time out of the string
         try {
-            year = year.parseInt(toParse.substring(0, 3));
-            month = month.parseInt(toParse.substring(5, 6));
-            day = day.parseInt(toParse.substring(8, 9));
-            hour = hour.parseInt(toParse.substring(11, 12));
-            minute = minute.parseInt(toParse.substring(14, 15));
-            second = second.parseInt(toParse.substring(17, 18));
+            year = year.parseInt(toParse.substring(0, 4));
+            month = month.parseInt(toParse.substring(5, 7));
+            day = day.parseInt(toParse.substring(8, 10));
+            hour = hour.parseInt(toParse.substring(11, 13));
+            minute = minute.parseInt(toParse.substring(14, 16));
+            second = second.parseInt(toParse.substring(17, 19));
         } //end try
         
         //If there was a problem, return -1

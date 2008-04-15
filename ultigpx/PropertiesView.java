@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.JColorChooser;
-import com.lavantech.gui.comp.DateTimePicker;
 
 /**
  * Displays the properties of a selected waypoint/track/route or group. This class also allows you to change
@@ -47,7 +46,7 @@ public class PropertiesView extends JPanel {
 	TextField name;
 	JCheckBox enabled;
 	TextArea desc;
-	DateTimePicker time;
+	JSpinner spinner;
 	TextField ele;
 	TextField lon;
 	TextField lat;
@@ -240,6 +239,8 @@ public class PropertiesView extends JPanel {
     	mllabel.append("Number of Waypoints: " + selgrp.waypoint.size() + "\n");
     	mllabel.append("Number of Tracks: " + selgrp.track.size() + "\n");
     	mllabel.append("Number of Routes: " + selgrp.route.size() + "\n");
+    	//scroll window back to top
+    	mllabel.setCaretPosition(0);
     }
     
     /**
@@ -274,6 +275,8 @@ public class PropertiesView extends JPanel {
     	// disclaimer cause people might think my part works without
     	// all of the other parts done. It does not!
     	mllabel.append("\n\nThis data is for testing only!");
+    	//scroll window back to top
+    	mllabel.setCaretPosition(0);
     }
     
     /**
@@ -312,6 +315,8 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue());
     	else
     		mllabel.append("Color:\n  Default");
+    	//scroll window back to top
+    	mllabel.setCaretPosition(0);
     }
     
     /**
@@ -342,6 +347,8 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue());
     	else
     		mllabel.append("Color:\n  Default");
+    	//scroll window back to top
+    	mllabel.setCaretPosition(0);
     }
     
     /**
@@ -374,6 +381,8 @@ public class PropertiesView extends JPanel {
     		mllabel.append("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue());
     	else
     		mllabel.append("Color:\n  Default");
+    	//scroll window back to top
+    	mllabel.setCaretPosition(0);
     }
 	
 	/**
@@ -482,11 +491,18 @@ public class PropertiesView extends JPanel {
         x.add(new Label("Longitude:"),c);
         c.gridwidth = GridBagConstraints.REMAINDER;
 		x.add(lon,c);
-        
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		time = new DateTimePicker();
-		x.add(time,c);
-		time.setDate(new Date((long)selwp.getTime()));
+		
+		Calendar cal = Calendar.getInstance();
+		Date initDate = new Date((long)selwp.getTime());
+		Date earliestDate = new Date(0);
+		cal.add(Calendar.YEAR, 200);
+		Date latestDate = cal.getTime();
+		SpinnerModel model = new SpinnerDateModel(initDate,
+		                             earliestDate,
+		                             latestDate,
+		                             Calendar.YEAR);
+		spinner = new JSpinner(model);
+		x.add(spinner,c);
 		
 		/**
 		 * Apply button applies the changes to a waypoint
@@ -506,7 +522,6 @@ public class PropertiesView extends JPanel {
 				selwp.setEle(Double.valueOf(ele.getText()));
 				} catch (Exception ex) {stat.setText("Error: Could not parse Elevation");System.out.println(ex);};
 				selwp.setEnabled(enabled.isSelected());
-				selwp.setTime(time.getDate().getTime());
 				try {
 				if (Double.valueOf(lat.getText()) >= -90 && Double.valueOf(lat.getText()) <= 90)
 					selwp.setLat(Double.valueOf(lat.getText()));
@@ -520,6 +535,10 @@ public class PropertiesView extends JPanel {
 				else
 					stat.setText("Error: Longitude is not valid");
 				} catch (Exception ex) {stat.setText("Error: Could not parse Longitude");System.out.println(ex);};
+
+				SpinnerModel mod = spinner.getModel();
+				long dat = ((SpinnerDateModel)mod).getDate().getTime();
+				selwp.setTime(dat);
 				
 				parent.refreshmap();
 				editop.setnew(selwp);
