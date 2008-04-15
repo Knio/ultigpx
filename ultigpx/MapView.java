@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.*;
 
 
+
 abstract public class MapView extends JPanel
 {
     UltiGPX  main;
@@ -135,6 +136,8 @@ abstract public class MapView extends JPanel
         
         fill();
     }
+   
+    
     
     /**
     * zooms the map so that all of the loaded objects
