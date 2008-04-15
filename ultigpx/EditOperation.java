@@ -1,5 +1,9 @@
 package ultigpx;
 
+/**
+ * Allows editing of a track/route/group/waypoint to be undone.
+ * @author Steven
+ */
 public class EditOperation extends Operation
 {
     String oldname;
@@ -25,7 +29,10 @@ public class EditOperation extends Operation
     Route rt;
     Group grp;
     
-    
+    /**
+     * Sets the old data for the undo.
+     * @param pt A waypoint
+     */
     public EditOperation(Waypoint pt)
     {
         this.wp = pt;
@@ -39,6 +46,10 @@ public class EditOperation extends Operation
         this.oldlat = pt.getLat();
     }
     
+    /**
+     * Sets the old data for the undo.
+     * @param pt A track
+     */
     public EditOperation(Track pt)
     {
         this.trk = pt;
@@ -48,6 +59,10 @@ public class EditOperation extends Operation
         this.oldenabled = pt.getEnabled();
     }
     
+    /**
+     * Sets the old data for the undo.
+     * @param pt A route
+     */
     public EditOperation(Route pt)
     {
         this.rt = pt;
@@ -57,6 +72,10 @@ public class EditOperation extends Operation
         this.oldenabled = pt.getEnabled();
     }
     
+    /**
+     * Sets the old data for the undo.
+     * @param pt A group
+     */
     public EditOperation(Group pt)
     {
         this.grp = pt;
@@ -65,6 +84,10 @@ public class EditOperation extends Operation
         this.oldenabled = pt.getEnabled();
     }
 
+    /**
+     * Sets the new data for the undo.
+     * @param pt A waypoint
+     */
     public void setnew(Waypoint pt)
     {
     	if (iswp)
@@ -79,6 +102,10 @@ public class EditOperation extends Operation
     	}
     }
     
+    /**
+     * Sets the new data for the undo.
+     * @param pt A track
+     */
     public void setnew(Track pt)
     {
     	if (istrk)
@@ -89,6 +116,10 @@ public class EditOperation extends Operation
     	}
     }
     
+    /**
+     * Sets the new data for the undo.
+     * @param pt A route
+     */
     public void setnew(Route pt)
     {
     	if (isrt)
@@ -99,6 +130,10 @@ public class EditOperation extends Operation
     	}
     }
     
+    /**
+     * Sets the new data for the undo.
+     * @param pt A group
+     */
     public void setnew(Group pt)
     {
     	if (isgrp)
@@ -108,6 +143,9 @@ public class EditOperation extends Operation
     	}
     }
     
+    /**
+     * Redoes an edit.
+     */
     public void redo()
     {
     	if (iswp)
@@ -139,6 +177,9 @@ public class EditOperation extends Operation
     	}
     }
     
+    /**
+     * Undoes an edit.
+     */
     public void undo()
     {
     	if (iswp)

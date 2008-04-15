@@ -12,6 +12,7 @@ public abstract class BasicMapView extends MapView
 {
     EventHandler    evt;
     Graphics2D      g;
+    BasicMapView me = this;
 	
 	int mouseX;
 	int mouseY;
@@ -467,7 +468,7 @@ public abstract class BasicMapView extends MapView
                 {
                     state = State.DR_WP;
                     op = new DragOperation(wp);
-                    op.setStart(new Point2D.Double(wp.lon, wp.lat));
+                    op.setStart(wp);
                 }
             }
         }
@@ -478,7 +479,17 @@ public abstract class BasicMapView extends MapView
             
             if (state == State.DR_WP)
             {
-                op.setEnd(inverseproject(new Point2D.Double(e.getX(), e.getY())));
+            	// this is sort of a hack but at least it works with elevation now too
+            	if ((me instanceof GridMapView) || (me instanceof BasicMapView))
+            	{
+            		Point2D pt = inverseproject(new Point2D.Double(e.getX(), e.getY()));
+            		op.setEnd(pt.getX(), pt.getY(), null);
+            	}
+            	else if (me instanceof ElevationView)
+            	{
+            		Point2D pt = inverseproject(new Point2D.Double(e.getX(), e.getY()));
+            		op.setEnd(pt.getX(), null, pt.getY());
+            	}
                 main.addOperation(op);
                 System.out.println("Added drag op");
             }

@@ -1,7 +1,10 @@
 package ultigpx;
 
 import java.awt.geom.*;
-
+/**
+ * Allows a drag to be done / undone.
+ * @author Tom
+ */
 public class DragOperation extends Operation
 {
     Waypoint pt;
@@ -9,25 +12,37 @@ public class DragOperation extends Operation
     double slat;
     double elon;
     double elat;
+    double sele;
+    double eele;
     
     
     public DragOperation(Waypoint pt)
     {
         this.pt = pt;
-        
     }
     
-    public void setStart(Point2D p)
+    public void setStart(Waypoint p)
     {
-        slon = p.getX();
-        slat = p.getY();
+        slon = p.getLon();
+        slat = p.getLat();
+        sele = p.getEle();
     }
     
     
-    public void setEnd(Point2D p)
+    public void setEnd(Double lon, Double lat, Double ele)
     {
-        elon = p.getX();
-        elat = p.getY();
+    	if (lon != null)
+    		elon = lon;
+    	else
+    		elon = slon;
+    	if (lat != null)
+    		elat = lat;
+    	else
+    		elat = slat;
+    	if (ele != null)
+    		eele = ele;
+    	else
+    		eele = sele;
     }
     
     
@@ -35,12 +50,14 @@ public class DragOperation extends Operation
     {
         pt.lat = elat;
         pt.lon = elon;
+        pt.ele = eele;
     }
     
     public void undo()
     {
         pt.lat = slat;
         pt.lon = slon;
+        pt.ele = sele;
     }
     
     
