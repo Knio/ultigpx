@@ -150,13 +150,14 @@ public class MainView extends JFrame
         exportMenuItem.setVisible(true);
         fileMenu.add(exportMenuItem);
         exportMenuItem.setActionCommand("Export");
+        exportMenuItem.setEnabled(false);
         
         exportGPXMenuItem = new JMenuItem();
         exportGPXMenuItem.setText("Export GPX");
         exportGPXMenuItem.setVisible(true);
         fileMenu.add(exportGPXMenuItem);
         exportGPXMenuItem.setActionCommand("ExportGPX");
-        
+        exportGPXMenuItem.setEnabled(false);
         
         MenuListener ml = new MenuListener();
         importMenuItem.addActionListener(ml);
@@ -342,11 +343,18 @@ public class MainView extends JFrame
                 {}
                 else
                 {
+                	boolean exflag=false;
+                	try{
                     main.importGPX(GPXfile);
-                    
-                    prop.select();
-                    map1.fill();
-                    wpview.fill();
+                	} catch (Exception ex) {exflag = true;}
+                    if (!exflag)
+                    {
+                    	prop.select();
+                    	map1.fill();
+                    	wpview.fill();
+                    }
+                    else
+                    	JOptionPane.showMessageDialog(main.view,"Could not parse the selected file.","Parsing Error",JOptionPane.ERROR_MESSAGE);
                     
                     //by Nate. This is just getting annoying.
                     //searchresult.checkForConflicts();

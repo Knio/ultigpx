@@ -7,6 +7,11 @@ import org.jdom.*;
 import java.awt.geom.*;		// For calculating distance between points
 import javax.swing.*;
 
+/**
+ * Main class that starts everything up.
+ * 
+ * @author Tom
+ */
 public class UltiGPX
 {
     Database file;
@@ -17,6 +22,7 @@ public class UltiGPX
     
     Selection selected;
     
+    // installs needed files and if passed an argument loads that file
     public static void main(String args[])
     {
         try
@@ -35,15 +41,15 @@ public class UltiGPX
         if (args.length == 1)
         {
             System.out.println(args[0]);
+            try{
             u.importGPX(args[0]);
+            } catch (Exception e) {System.out.println("Could not parse the input file"); System.exit(1);}
         }
     }
     
+    // creates a new gui and undo/redo lists
     public UltiGPX()
-    {
-        
-        System.out.println("Hello, World!");
-        
+    {        
         //importGPX("example2.gpx");
         //exportGPX("example2.kml");
         
@@ -54,11 +60,9 @@ public class UltiGPX
         redo = new ArrayList<Operation>();
         
         selected = new Selection(this);
-        
-        
     }
     
-    
+    // undoes the top operation
     public void undo()
     {
         if (undo.size() == 0) return;
@@ -74,6 +78,7 @@ public class UltiGPX
         
     } 
     
+    // redoes the top operation
     public void redo()
     {
         if (redo.size() == 0) return;
@@ -88,6 +93,10 @@ public class UltiGPX
         view.refresh();
     } 
     
+    // adds an operation to the undo list
+    // also clears the redo list because if you undid something
+    // and then did something else you shouldn't still be able
+    // to redo what you did a while ago
     public void addOperation(Operation o)
     {
         undo.add(o);
@@ -96,7 +105,8 @@ public class UltiGPX
         view.redoMenuItem.setEnabled(false);
     }
     
-    public void importGPX(String filename)
+    // imports a GPX file to the database
+    public void importGPX(String filename) throws JDOMException, IOException
     {
         try
         {
@@ -120,6 +130,8 @@ public class UltiGPX
 				file = new Database();
             	GPXImporter.importGPX(file, filename);
 			}
+			view.exportGPXMenuItem.setEnabled(true);
+			view.exportMenuItem.setEnabled(true);
             //file = GPXImporter.importGPX(filename);
             //reduceFile(file);
         }
@@ -127,22 +139,25 @@ public class UltiGPX
         {
             System.out.println("Error parsing file:");
             System.out.println(e);
+            throw e;
         }
         catch (IOException e)
         {
             System.out.println("Error reading file:");
             System.out.println(e);
+            throw e;
         }
         view.addwp.setEnabled(true);
         view.delwp.setEnabled(true);
         view.refresh();
     }
     
+    // export to GPX
     public void exportGPX(String filename)
-    {/*
+    {
         try
         {
-            //GPXExporter.exportToGPX(file, filename);
+            GPXExporter.exportToGPX(file, filename);
         }
         catch (JDOMException e)
         {
@@ -153,11 +168,12 @@ public class UltiGPX
         {
             System.out.println("Error reading file:");
             System.out.println(e);
-        }*/
+        }
     }
     
+    // export to KML
     public void exportKML(String filename)
-    {/*
+    {
         try
         {
             GPXExporter.exportToKML(file, filename);
@@ -171,7 +187,7 @@ public class UltiGPX
         {
             System.out.println("Error reading file:");
             System.out.println(e);
-        }*/
+        }
     }
 	
 	// Reduce the number of waypoints in a file
