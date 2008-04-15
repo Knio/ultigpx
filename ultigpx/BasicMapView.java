@@ -480,14 +480,14 @@ public abstract class BasicMapView extends MapView
             if (state == State.DR_WP)
             {
             	// this is sort of a hack but at least it works with elevation now too
-            	if ((me instanceof GridMapView) || (me instanceof BasicMapView))
+            	if ((me instanceof GridMapView) || (me instanceof PlainMapView))
             	{
             		Point2D pt = inverseproject(new Point2D.Double(e.getX(), e.getY()));
             		op.setEnd(pt.getX(), pt.getY(), null);
             	}
             	else if (me instanceof ElevationView)
             	{
-            		Point2D pt = inverseproject(new Point2D.Double(e.getX(), e.getY()));
+            		Point2D pt = ((ElevationView)me).inverseproject(new Point2D.Double(e.getX(), e.getY()));
             		op.setEnd(pt.getX(), null, pt.getY());
             	}
                 main.addOperation(op);
