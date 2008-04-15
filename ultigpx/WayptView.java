@@ -580,7 +580,7 @@ public class WayptView extends JComponent{
            public void mousePressed(MouseEvent e)
            {
         	   if((e.getClickCount() == 2) && (e.getButton() == e.BUTTON1))
-                   rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
+                   dblclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
                /*if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
                    rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));//*/
            }
@@ -742,6 +742,7 @@ public class WayptView extends JComponent{
         */
     }
 
+   	// deprecated in favour of check boxes
     /*public void dblclickEvent(TreePath e)
     {
         System.out.println("CLICK: "+ e);
@@ -760,14 +761,15 @@ public class WayptView extends JComponent{
         main.view.refreshmap();
     }//*/
     
-    public void rightclickEvent(TreePath e)
+   	// on double click zoom to fit selected on screen
+    public void dblclickEvent(TreePath e)
     {
         System.out.println("RIGHT CLICK: "+ e);
         if (e==null) return;
         
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
         
-                selectThis(e);
+                //selectThis(e);
         
         if (o instanceof Track)
         {
@@ -796,7 +798,8 @@ public class WayptView extends JComponent{
         main.view.refreshmap();
     }
     
-        public void selectThis(TreePath e)
+    // deprecated as click already selects the object
+    /*public void selectThis(TreePath e)
     {
         System.out.println("   SELECTED: "+ e);
         
@@ -807,7 +810,7 @@ public class WayptView extends JComponent{
                 main.selected.add((UGPXData)o);
             }
         main.selected.selectionChanged();
-    }
+    }//*/
 
     
 private void createNodes() {
