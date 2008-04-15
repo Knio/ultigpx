@@ -54,7 +54,7 @@ public class WayptView extends JComponent{
     MainView parent;
     TextArea tArealabel;
     String mainfile = null;
-    int first;
+    
        
     public WayptView(UltiGPX main) {
         super();
@@ -450,7 +450,9 @@ public class WayptView extends JComponent{
                     {
                         UGPXData d = (UGPXData)o;
                         d.setEnabled(false);
+                        
                         main.view.refresh();
+                        
                     }
                     System.out.println("unckecked "+path);
                 }
@@ -475,7 +477,8 @@ public class WayptView extends JComponent{
             } 
         } 
      
-        public CheckTreeSelectionModel getSelectionModel(){ 
+
+		public CheckTreeSelectionModel getSelectionModel(){ 
             return selectionModel; 
         } 
      
@@ -543,8 +546,9 @@ public class WayptView extends JComponent{
        
        if(main.file != null){
        
-	       first = 1;
+	       
     	   checkTreeManager = new CheckTreeManager(tree);
+    	   expandAll(tree,true);
 	       
 	      
 	       
@@ -585,7 +589,33 @@ public class WayptView extends JComponent{
 }
      	
 
-   	class ActionHandler implements ActionListener{
+//  If expand is true, expands all nodes in the tree.
+    // Otherwise, collapses all nodes in the tree.
+    public void expandAll(JTree tree, boolean expand) {
+        TreeNode root = (TreeNode)tree.getModel().getRoot();
+    
+        // Traverse tree from root
+        expandAll(tree, new TreePath(root), expand);
+    }
+    private void expandAll(JTree tree, TreePath parent, boolean expand) {
+        // Traverse children
+        TreeNode node = (TreeNode)parent.getLastPathComponent();
+        if (node.getChildCount() >= 0) {
+            for (Enumeration e=node.children(); e.hasMoreElements(); ) {
+                TreeNode n = (TreeNode)e.nextElement();
+                TreePath path = parent.pathByAddingChild(n);
+                expandAll(tree, path, expand);
+            }
+        }
+        // Expansion or collapse must be done bottom-up
+        if (expand) {
+            tree.expandPath(parent);
+        } else {
+            tree.collapsePath(parent);
+        }
+    }
+
+	class ActionHandler implements ActionListener{
    	 /**
     	 * Creates the ActionListener
     	 */
@@ -691,7 +721,7 @@ public class WayptView extends JComponent{
    	public void selectEvent(TreePath e)
     {
         System.out.println("SELECT: "+ e);
-        first =0;
+        
         main.selected.clear();
         TreePath p[] = tree.getSelectionModel().getSelectionPaths();
         if (p!=null)
