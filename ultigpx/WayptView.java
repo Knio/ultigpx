@@ -856,8 +856,10 @@ private void createNodes() {
     	  
            count = group.size();
            
-           if(count != 0){
-        	   category = new DefaultMutableTreeNode("Groups");
+           
+        	   category = new DefaultMutableTreeNode("Groups"); 
+        	   top.add(category);
+        	   if(count != 0){ 
         for(int j =0; j<count;j++){
            	DefaultMutableTreeNode subcategory = new DefaultMutableTreeNode(group.get(j).name);
            	DefaultMutableTreeNode subcatinfo_t = new DefaultMutableTreeNode("Tracks");
@@ -870,7 +872,7 @@ private void createNodes() {
                subcategory.add(subcatinfo_r);
                subcategory.add(subcatinfo_w);
                
-                           
+                               
               
             List<Track> tracks = group.get(j).tracks();
            for(int i = 0;i<tracks.size();i++)
