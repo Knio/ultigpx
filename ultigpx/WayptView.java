@@ -877,7 +877,7 @@ private void createNodes() {
            {
               
                Object o = tracks.get(i);
-               info = new DefaultMutableTreeNode(((Track)o).getName());
+               info = new DefaultMutableTreeNode(o) ;//((Track)o).getName());
               	subcatinfo_t.add(info);
            } 
            List<Route> routes = group.get(j).routes();
@@ -885,7 +885,7 @@ private void createNodes() {
            {
               
                Object o = routes.get(i);
-               info = new DefaultMutableTreeNode(((Route)o).getName());
+               info = new DefaultMutableTreeNode(o); //((Route)o).getName());
               	subcatinfo_r.add(info);
            }
            List<Waypoint> wypts = group.get(j).waypoints();
@@ -893,7 +893,7 @@ private void createNodes() {
            {
               
                Object o = wypts.get(i);
-               info = new DefaultMutableTreeNode(((Waypoint)o).getName());
+               info = new DefaultMutableTreeNode(o); //((Waypoint)o).getName());
               	subcatinfo_w.add(info);
            }  
                
