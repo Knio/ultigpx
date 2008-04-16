@@ -1,5 +1,6 @@
 package ultigpx;
 
+
 /**
  * Class GPX Exporter is used for Exporting the UltiGPXFile to a GPX file, a KML file or an ultiGPX file
  * The KML file can then be view using Google Earth
@@ -13,7 +14,7 @@ import java.util.Date.*;
 import java.io.*;
 import org.jdom.*;
 import org.jdom.input.*;
-
+import java.text.*;
 
 public class GPXExporter implements GPXImporterExporterConstants {
     
@@ -632,7 +633,7 @@ public class GPXExporter implements GPXImporterExporterConstants {
      * @param toConvert, a double, the time in milis since 1970
      * @returns String, a string representing time in the GPX file
      */
-    private static String convertTime(double toConvert) {
+    private static String convertTimeOld(double toConvert) {
         
         //Create a calender for converting times
         GregorianCalendar timeConverter = new GregorianCalendar();
@@ -650,5 +651,17 @@ public class GPXExporter implements GPXImporterExporterConstants {
         return year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + "Z";
     } //end getTime
     
+    /**
+     * Convert Time extracks the time and converts it to a string to be exported in the GPXFile.
+     * Time in a GPX file is stored as YYYY_MM_DDTHH:MM:SSZ
+     * This method uses a Gregorian calendar to convert time in milis into the string.
+     * This method is private because it is only used when exporting GPX files
+     * @param toConvert, a double, the time in milis since 1970
+     * @returns String, a string representing time in the GPX file
+     */
+    private static String convertTime(long toConvert) {
+        return new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").format(toConvert);
+        
+    } //end getTime
     
-} //end GPXExporter
+} //end GPXExporter       

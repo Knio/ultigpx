@@ -14,6 +14,7 @@ import java.util.*;
 import java.io.*;
 import org.jdom.*;
 import org.jdom.input.*;
+import java.text.*;
 
 public class GPXImporter implements GPXImporterExporterConstants {
     
@@ -25,7 +26,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-    public static void importGPX(Group inputGroup, String filename) throws JDOMException, IOException {
+    public static void importGPX(Group inputGroup, String filename) throws JDOMException, IOException, ParseException {
         //public static Group importGPX(String filename) throws JDOMException, IOException {
         // Create a new UGPXFile to put data in
         //Group returnValue = new Group();
@@ -58,7 +59,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     String name = "";
                     String desc = "";
                     double ele = 0;
-                    double time = -1;
+                    long time = -1;
                     
                     //Extrack name, description, elevation, and time
                     while(waypointChildIterator.hasNext()) {
@@ -74,7 +75,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     } //end while
                     
                     //Add the waypoint to the GPXFile
-                    inputGroup.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time));
+                    inputGroup.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
                 } //end if waypoint
                 
                 //If it is a route
@@ -94,7 +95,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             String name = "";
                             String desc = "";
                             double ele = 0;
-                            double time = -1;
+                            long time = -1;
                             
                             //Extract name, description, elevation, and time
                             while(waypointChildIterator.hasNext()) {
@@ -110,7 +111,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             } //end while
                             
                             //Add point to the route
-                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
+                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
                             newRoute.add(newWaypoint);
                             
                         } //end if waypoint
@@ -147,7 +148,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     String name = "";
                                     String desc = "";
                                     double ele = 0;
-                                    double time = -1;
+                                    long time = -1;
                                     
                                     //Extract name, description, elevation, and time
                                     while(waypointChildIterator.hasNext()) {
@@ -163,7 +164,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     } //end while
                                     
                                     //Add trackpoints to track segments
-                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
+                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
                                     newTrackSegment.add(newWaypoint);
                                     
                                     
@@ -196,7 +197,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-    public static void importGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
+    public static void importGPX(Database inputDatabase, String filename) throws JDOMException, IOException, ParseException {
         Group inputGroup = new Group();
         importGPX(inputGroup, filename);
         List<Route> routesToInput = inputGroup.routes();
@@ -219,7 +220,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws IOException if a problem occurs when importing the file
      */
     //public static void importUltiGPX(Group inputGroup, String filename) throws JDOMException, IOException {
-    public static void importUltiGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
+    public static void importUltiGPX(Database inputDatabase, String filename) throws JDOMException, IOException, ParseException {
         // Create a new UGPXFile to put data in
         Group returnValue = new Group();
         
@@ -251,7 +252,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     String name = "";
                     String desc = "";
                     double ele = 0;
-                    double time = -1;
+                    long time = -1;
                     
                     //Extrack name, description, elevation, and time
                     while(waypointChildIterator.hasNext()) {
@@ -267,7 +268,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     } //end while
                     
                     //Add the waypoint to the GPXFile
-                    returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time));
+                    returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
                 } //end if waypoint
                 
                 //If it is a route
@@ -287,7 +288,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             String name = "";
                             String desc = "";
                             double ele = 0;
-                            double time = -1;
+                            long time = -1;
                             
                             //Extract name, description, elevation, and time
                             while(waypointChildIterator.hasNext()) {
@@ -303,7 +304,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             } //end while
                             
                             //Add point to the route
-                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
+                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
                             newRoute.add(newWaypoint);
                             
                         } //end if waypoint
@@ -344,7 +345,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     String name = "";
                                     String desc = "";
                                     double ele = 0;
-                                    double time = -1;
+                                    long time = -1;
                                     
                                     //Extract name, description, elevation, and time
                                     while(waypointChildIterator.hasNext()) {
@@ -360,7 +361,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     } //end while
                                     
                                     //Add trackpoints to track segments
-                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, (long)time);
+                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
                                     newTrackSegment.add(newWaypoint);
                                     
                                     
@@ -415,8 +416,9 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * If there is a formating problem, the time of -1 is returned
      * @param toParse, a String, the string representing time in the GPX file
      * @returns double, the time in milis since 1970
+     * This method is old, and has been replaced by getTime, do not use this method
      */
-    private static double getTime(String toParse) {
+    private static double getTimeOld(String toParse) {
         
         //Create a calender for converting times
         Calendar timeConverter = new GregorianCalendar();
@@ -447,6 +449,11 @@ public class GPXImporter implements GPXImporterExporterConstants {
         //Otherwise, convert the time to Millis using the gregorian calendar
         timeConverter.set(year, month, day, hour, minute, second);
         return timeConverter.getTimeInMillis();
+    } //end getTimeOld
+    
+    private static long getTime(String toParse) throws ParseException {
+        Date newDate = new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").parse(toParse);
+        return newDate.getTime();
     } //end getTime
     
-} //end GPXImporter
+} //end GPXImporter   

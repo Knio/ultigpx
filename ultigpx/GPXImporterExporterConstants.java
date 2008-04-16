@@ -1,5 +1,6 @@
 package ultigpx;
 
+
 /**
  * GPXImporterExporterConsants is an interface containing constants for the GPX importer and Exporter
  * @author jillainsworth
@@ -32,9 +33,8 @@ public interface GPXImporterExporterConstants {
     public static final String GROUP = "group";
     
     //KML Constants
+    //I am thinking about adding more constants here
     public static final String KML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.2\">\n";
     public static final String KML_FOOTER = "</kml>";
-    
-    
     
 } //end GPXImporterExporterConstants
