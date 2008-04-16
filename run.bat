@@ -1,1 +1,1 @@
-java -jar UltiGPX.jar example2.gpx
+java -jar UltiGPX.jar

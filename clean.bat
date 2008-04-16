@@ -1,5 +1,5 @@
 rmdir /S /Q org
-rmdir /S /Q com
+rmdir /S /Q bin
 rmdir /S /Q resources
 rmdir /S /Q jdic-0.9.4-bin-cross-platform
 
