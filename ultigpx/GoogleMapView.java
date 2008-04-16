@@ -251,7 +251,7 @@ public class GoogleMapView extends MapView {
 			wtext.append("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n");
 			wtext.append("<title>Google Maps JavaScript API Example</title>\n");
 			wtext.append("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAv8I7SSVba2lHsj8Pc-r5SBTTdj5zBXD9jRFEjQGoMBeg8N65dBQ1Q8m1Xi4E-Q4o6l_EaKjx6--APw\" type=\"text/javascript\"></script>\n");
-			wtext.append("<script src=\"PolylineEncoder.js\" type=\"text/javascript\"></script>");
+			//wtext.append("<script src=\"PolylineEncoder.js\" type=\"text/javascript\"></script>");
 			wtext.append("<script type=\"text/javascript\">\n");
 			wtext.append("//<![CDATA[\n");
 			wtext.append("function load() {\n");
@@ -262,7 +262,7 @@ public class GoogleMapView extends MapView {
 			wtext.append("		map.addControl(new GScaleControl());\n");
 			wtext.append("		map.setCenter(new GLatLng(" + lat + "," + lon + ")," + calcZoom() + ");\n\n");
 			
-			wtext.append("		var polylineEncoder = new PolylineEncoder();");
+			//wtext.append("		var polylineEncoder = new PolylineEncoder();");
 			
 			// Full-size pins
 			wtext.append("		var icon1 = new GIcon();\n");
