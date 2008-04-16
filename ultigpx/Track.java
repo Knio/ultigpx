@@ -152,11 +152,14 @@ public class Track implements UGPXData
      * Get the total distance of the Track
      * @return Double value for the total distance of the Track in meters
      */
-	public Double getDistance() {
-		Double distance = 0.0;
-        for (TrackSegment s:this.trackSegments)
-            distance = distance + s.getDistance();
-			System.out.println("Distance so far is: " + distance);
+	public double getDistance() {
+		double distance = 0.0;
+		double ndist;
+        for (TrackSegment s:this.trackSegments) {
+			ndist = s.getDistance();
+            distance = distance + ndist;
+			System.out.println("Distance adding " + ndist + " so far is: " + distance);
+		}
 		return distance;
 	}
 	

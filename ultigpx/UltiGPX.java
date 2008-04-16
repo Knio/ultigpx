@@ -131,6 +131,7 @@ public class UltiGPX
             	GPXImporter.importGPX(file, filename);
 			}
 			view.exportGPXMenuItem.setEnabled(true);
+			view.exportHTMLMenuItem.setEnabled(true);
 			view.exportMenuItem.setEnabled(true);
             //file = GPXImporter.importGPX(filename);
             //reduceFile(file);

@@ -36,6 +36,7 @@ public class MainView extends JFrame
     JMenuItem importMenuItem;
     JMenuItem exportMenuItem;
     JMenuItem exportGPXMenuItem;
+    JMenuItem exportHTMLMenuItem;
     JMenuItem exitMenuItem;
     
     JMenuItem undoMenuItem;
@@ -162,11 +163,19 @@ public class MainView extends JFrame
         fileMenu.add(exportGPXMenuItem);
         exportGPXMenuItem.setActionCommand("ExportGPX");
         exportGPXMenuItem.setEnabled(false);
+
+        exportHTMLMenuItem = new JMenuItem();
+        exportHTMLMenuItem.setText("Export HTML");
+        exportHTMLMenuItem.setVisible(true);
+        fileMenu.add(exportHTMLMenuItem);
+        exportHTMLMenuItem.setActionCommand("ExportHTML");
+        exportHTMLMenuItem.setEnabled(false);
         
         MenuListener ml = new MenuListener();
         importMenuItem.addActionListener(ml);
         exportMenuItem.addActionListener(ml);
         exportGPXMenuItem.addActionListener(ml);
+		exportHTMLMenuItem.addActionListener(ml);
         
         fileMenu.add(exitMenuItem);
         exitMenuItem.addActionListener(ml);
@@ -244,6 +253,8 @@ public class MainView extends JFrame
         add(ele, c);
         
         setSize(600, 600);
+
+	map3.load();
         
         
     }
@@ -395,10 +406,26 @@ public class MainView extends JFrame
                 String GPXfile = fd.getFile();
                 if (GPXfile == null)
                 {}
-                else if (GPXfile.substring(GPXfile.length()-4, GPXfile.length()).equalsIgnoreCase(".kml"))
+                else if (GPXfile.substring(Math.max(GPXfile.length()-4,0), GPXfile.length()).equalsIgnoreCase(".kml"))
                 	main.exportKML(GPXfile);
                 else
                     main.exportKML(GPXfile+".kml");
+            }
+
+            if (e.getActionCommand().equals("ExportHTML"))
+            {
+                Frame parent = new Frame();
+                FileDialog fd = new FileDialog(parent, "Choose an HTML file:",
+                           FileDialog.SAVE);
+                fd.setVisible(true);
+                fd.setFilenameFilter(new HTMLFilter());
+                String HTMLfile = fd.getFile();
+                if (HTMLfile == null)
+                {}
+                else if (HTMLfile.substring(Math.max(HTMLfile.length()-5,0), HTMLfile.length()).equalsIgnoreCase(".html"))
+                	((GoogleMapView)map3).outputHTML(HTMLfile);
+                else
+                    ((GoogleMapView)map3).outputHTML(HTMLfile+".html");
             }
             
             if (e.getActionCommand().equals("ExportGPX"))
@@ -411,7 +438,7 @@ public class MainView extends JFrame
                 String GPXfile = fd.getFile();
                 if (GPXfile == null)
                 {}
-                else if (GPXfile.substring(GPXfile.length()-4, GPXfile.length()).equalsIgnoreCase(".gpx"))
+                else if (GPXfile.substring(Math.max(GPXfile.length()-4,0), GPXfile.length()).equalsIgnoreCase(".gpx"))
                 	main.exportKML(GPXfile);
                 else
                     main.exportKML(GPXfile+".gpx");
@@ -424,6 +451,13 @@ public class MainView extends JFrame
     class GPXFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
             return (name.endsWith(".gpx"));
+        }
+    }
+
+    // filter for importing/exporting an HTML file
+    class HTMLFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            return (name.endsWith(".html"));
         }
     }
     

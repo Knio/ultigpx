@@ -84,16 +84,21 @@ public class GoogleMapView extends MapView {
                 for (Waypoint i:s)
                     entities.add(i);
         
-        outputHTML();
+		fill();
+        outputHTML(null);
     }
 
 	
-	// Take a java Color and convert it to a hex string prefixed with #
+	/**
+	 * Take a java Color and convert it to a hex color (NOT prefixed with #)
+	 * @param Java Color object to convert to a hex value
+	 * @return String value of the hex conversion of the color
+	 */
 	public String getHex (Color color) {
 		// Didn't pass a Color, don't get one back!
 		if (color == null) return null;
 		
-		// Het the hex values
+		// Get the hex values
 		String hexRed = Integer.toHexString(color.getRed());
 		String hexGreen = Integer.toHexString(color.getGreen());
 		String hexBlue = Integer.toHexString(color.getBlue());
@@ -107,6 +112,10 @@ public class GoogleMapView extends MapView {
 	}
 
 	
+	/**
+	 * Get the javascript string to output a Route or TrackSegment
+	 *
+	 */
 	private String getPolyString (Color color, ArrayList<Waypoint> elements) {
 		if (elements.size() == 0) return "";
 		
@@ -169,7 +178,7 @@ public class GoogleMapView extends MapView {
 				// Add the Waypoint to the javascript array of waypoints
 				retString = retString + "new GLatLng("+Double.toString(tempWP.lat)+","+Double.toString(tempWP.lon)+"),";
 				// Add the Waypoint to the beginning to have a dot drawn on it
-				retString = "		map.addOverlay(new GMarker(new GLatLng("+Double.toString(tempWP.lat)+","+Double.toString(tempWP.lon)+"),{clickable:false, icon:icon1}));\n" + retString;
+				//retString = "		map.addOverlay(new GMarker(new GLatLng("+Double.toString(tempWP.lat)+","+Double.toString(tempWP.lon)+"),{clickable:false, icon:icon1}));\n" + retString;
 			}
 			
 		}
@@ -177,27 +186,32 @@ public class GoogleMapView extends MapView {
 		retString = retString.substring(0, retString.length() - 1);
 		retString = retString + "];\n";
 		retString = retString + "		map.addOverlay(new GPolyline(points,'#" + drawcolor + "',2,1));\n\n";
+		//retString = retString + "		map.addOverlay(polylineEncoder.dpEncodeToGPolyline(points));\n\n";
 		
 		return retString;
 		
 	}
 	
-	private String getPointString (Color color, Waypoint wp) {
+	private String getPointString (Waypoint wp) {
 		
 		// Add a comment with the Waypoint info
-		String retString = "		//Waypoint: ";
+		/*String retString = "		//Waypoint: ";
 		if (wp.getName() != null) retString = retString + wp.getName();
 		else retString = retString + "Null";
 		retString = retString + " - ";
 		if (wp.getDesc() != null) retString = retString + wp.getDesc();
 		else retString = retString + "Null";
-		retString = retString + "\n";
+		retString = retString + "\n";*/
 		
-		retString = retString + "		map.addOverlay(new GMarker(new GLatLng("+Double.toString(wp.lat)+","+Double.toString(wp.lon)+"),{clickable:false, icon:icon1}));\n";
+		String retString = "		map.addOverlay(new GMarker(new GLatLng("+Double.toString(wp.lat)+","+Double.toString(wp.lon)+"),{clickable:false, icon:icon1}));\n";
 		return retString;
 	}
 
-	public void outputHTML () {
+	/**
+	 * Output the HTML to the given filename. Update the GoogleMapView tab if the filename is null.
+	 * @param The output filename, null to update the GoogleMapView tab.
+	 */
+	public void outputHTML (String filename) {
 		
 		file = main.file;
 		if (file == null) return;
@@ -205,13 +219,15 @@ public class GoogleMapView extends MapView {
 		if (DEBUG_MODE) System.out.println("GoogleMapView: outputting HTML.");
 		
 		// Construct a platform-independent file name
-		File infile = new File(HTML_OUT_FILE);	
+		File infile;
+		if (filename == null) infile = new File(HTML_OUT_FILE);
+		else infile = new File(filename);
 		
 		try {
 			// If the file does not exist, create it
 			if (!infile.exists()) infile.createNewFile();
 			
-			String wtext;
+			StringBuilder wtext = new StringBuilder();
 			StringBuilder drawcode = new StringBuilder();
 			
 			// For each TrackSegment in each Track, append the string to draw it
@@ -226,60 +242,72 @@ public class GoogleMapView extends MapView {
 					drawcode.append(getPolyString(rt.color, rt));
 			
 			// For each Waypoint, append the string to draw it
-			Waypoint lastPoint = null;
-			for (Waypoint wp : file.waypoints())
-					if ((lastPoint == null) || (!(wp.getName()).equals("")) || (wp.distanceTo(lastPoint) >= CUTOFF)) {
-						lastPoint = wp;
-						drawcode.append(getPointString(wp.color, wp));
-					}
+			for (Waypoint wp : file.waypoints()) drawcode.append(getPointString(wp));
 					
-				
-			// Write the HTML file
-			//char dc = '"';
+			wtext.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n");
+			wtext.append("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
+			wtext.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n");
+  			wtext.append("<head>\n");
+			wtext.append("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n");
+			wtext.append("<title>Google Maps JavaScript API Example</title>\n");
+			wtext.append("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAv8I7SSVba2lHsj8Pc-r5SBTTdj5zBXD9jRFEjQGoMBeg8N65dBQ1Q8m1Xi4E-Q4o6l_EaKjx6--APw\" type=\"text/javascript\"></script>\n");
+			wtext.append("<script src=\"PolylineEncoder.js\" type=\"text/javascript\"></script>");
+			wtext.append("<script type=\"text/javascript\">\n");
+			wtext.append("//<![CDATA[\n");
+			wtext.append("function load() {\n");
+			wtext.append("	if (GBrowserIsCompatible()) {\n");
+			wtext.append("		var map = new GMap2(document.getElementById(\"map\"));\n");
+			wtext.append("		map.addControl(new GLargeMapControl());\n");
+			wtext.append("		map.addControl(new GMapTypeControl());\n");
+			wtext.append("		map.addControl(new GScaleControl());\n");
+			wtext.append("		map.setCenter(new GLatLng(" + lat + "," + lon + ")," + calcZoom() + ");\n\n");
 			
-			wtext = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n";
-			wtext = wtext + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-			wtext = wtext + "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n";
-  			wtext = wtext + "<head>\n";
-			wtext = wtext + "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n";
-			wtext = wtext + "<title>Google Maps JavaScript API Example</title>\n";
-			wtext = wtext + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAv8I7SSVba2lHsj8Pc-r5SBTTdj5zBXD9jRFEjQGoMBeg8N65dBQ1Q8m1Xi4E-Q4o6l_EaKjx6--APw\" type=\"text/javascript\"></script>\n";
-			wtext = wtext + "<script type=\"text/javascript\">\n";
-			wtext = wtext + "//<![CDATA[\n";
-			wtext = wtext + "function load() {\n";
-			wtext = wtext + "	if (GBrowserIsCompatible()) {\n";
-			wtext = wtext + "		var map = new GMap2(document.getElementById(\"map\"));\n";
-			wtext = wtext + "		map.addControl(new GLargeMapControl());\n";
-			wtext = wtext + "		map.addControl(new GMapTypeControl());\n";
-			wtext = wtext + "		map.setCenter(new GLatLng(" + lat + "," + lon + ")," + calcZoom() + ");\n\n";
+			wtext.append("		var polylineEncoder = new PolylineEncoder();");
 			
-			wtext = wtext + "		var icon1 = new GIcon();\n";
-   			wtext = wtext + "		icon1.image = 'point_b.png';\n";
-			wtext = wtext + "		icon1.iconSize = new GSize(8, 8);\n";
-			wtext = wtext + "		icon1.iconAnchor = new GPoint(4,4);\n";
-			wtext = wtext + "		var points;\n\n";
+			// Full-size pins
+			wtext.append("		var icon1 = new GIcon();\n");
+			wtext.append("		icon1.image = G_DEFAULT_ICON.image;\n");
+			wtext.append("		icon1.iconSize = G_DEFAULT_ICON.iconSize;\n");
+			wtext.append("		icon1.iconAnchor = G_DEFAULT_ICON.iconAnchor;\n");
 			
-			wtext = wtext + drawcode.toString();
+			// Make them baby pins
+			wtext.append("		icon1.iconSize.width = icon1.iconSize.width / 2;\n");
+			wtext.append("		icon1.iconSize.height = icon1.iconSize.height / 2;\n");
+			wtext.append("		icon1.iconAnchor.x = icon1.iconAnchor.x / 2;\n");
+			wtext.append("		icon1.iconAnchor.y = icon1.iconAnchor.y / 2;\n");
 			
-			wtext = wtext + "	}\n";
-			wtext = wtext + "}\n";
+			/* Small circle pins
+			wtext.append("		var icon2 = new GIcon();\n");
+   			wtext.append("		icon2.image = 'point_b.png';\n");
+			wtext.append("		icon2.iconSize = new GSize(8,8);\n");
+			wtext.append("		icon2.iconAnchor = new GPoint(4,4);\n");
+			*/
 			
-			wtext = wtext + "//]]>\n";
-  			wtext = wtext + "</script>\n";
-			wtext = wtext + "</head>\n";
-  			wtext = wtext + "<body onload=\"load()\" scroll=no style='width: 100%; height: 100%'>\n";
-			wtext = wtext + "<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:0px; bottom:0px; width: 100%; height: 100%\"></div>\n";
-			wtext = wtext + "</body>\n";
-			wtext = wtext + "</html>\n";
+			wtext.append("		var points;\n\n");
+			
+			wtext.append(drawcode.toString());
+			
+			wtext.append("	}\n");
+			wtext.append("}\n");
+			
+			wtext.append("//]]>\n");
+  			wtext.append("</script>\n");
+			wtext.append("</head>\n");
+  			wtext.append("<body onload=\"load()\" scroll=no style='width: 100%; height: 100%'>\n");
+			wtext.append("<div id=\"map\" style=\"position:absolute; top: 0px; left: 0px; right:0px; bottom:0px; width: 100%; height: 100%\"></div>\n");
+			wtext.append("</body>\n");
+			wtext.append("</html>\n");
 			
 			//Open the file, write the text, close the file
 			FileWriter writer = new FileWriter(infile);	
-			writer.write(wtext);
+			writer.write(wtext.toString());
 			writer.close();
 			
 		} catch (IOException e) {
 			System.out.println("Error writing file.");
 		}
+		
+		if (filename != null) return;
 		
 		try {
 			webBrowser.setURL(new URL("file://" + new File(HTML_OUT_FILE).getCanonicalPath()));
@@ -297,7 +325,7 @@ public class GoogleMapView extends MapView {
 	
 	public int calcZoom () {
 		
-		double prevDiff = 100000;
+		double prevDiff = 100000000;
 		double curDiff;
 		
 		int i;

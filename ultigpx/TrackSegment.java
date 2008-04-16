@@ -32,16 +32,19 @@ public class TrackSegment extends ArrayList<Waypoint>
      * Get the total distance of the TrackSegment
      * @return Double value for the total distance of the TrackSegment in meters
      */
-	public Double getDistance() {
+	public double getDistance() {
 		double distance = 0.0;
 		Iterator iter = this.iterator();
 		Waypoint lastPoint = null;
 		Waypoint tempWP;
+		double dto;
 		
 		if (iter.hasNext()) lastPoint = (Waypoint)iter.next();
 		for(;iter.hasNext();) {
 			tempWP = (Waypoint)iter.next();
-			distance = distance + lastPoint.distanceTo(tempWP);
+			dto = lastPoint.distanceTo(tempWP);
+			distance = distance + dto;
+			if ("NaN".equals("" + dto)) System.out.println("Distance to is NaN ASDASDASDASDASDASDAS");
 		}
 		
 		return distance;

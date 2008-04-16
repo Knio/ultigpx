@@ -177,16 +177,18 @@ public class Waypoint implements UGPXData
 	 */
 	public double distanceTo(Waypoint wpt)
 	{
-		if (wpt == null) return 0.0;
+		if (wpt == null) return (double)0.0;
 		double lat1 = Math.toRadians(this.getLat());
 		double lon1 = Math.toRadians(this.getLon());
 		double lat2 = Math.toRadians(wpt.getLat());
 		double lon2 = Math.toRadians(wpt.getLon());
-		double radius = 6371000;			// Approx radius of the earth in meters
+		double radius = 6378100;			// Approx radius of the earth in meters
 		
 		// Spherical law of cosines
 		double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1)) * radius;
 		
+		// Temporary fix for if
+		if ("NaN".equals("" + distance)) { distance = 0.0; }
 		return distance;
 	}
 }
