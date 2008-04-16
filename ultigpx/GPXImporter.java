@@ -1,6 +1,5 @@
 package ultigpx;
 
-
 /**
  * Class GPX Importer is used for importing a GPX file into the UltiGPXFile structure.  It uses JDOM for processing XML.
  * For more information about JDOM visit http://www.jdom.org/
@@ -26,7 +25,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-    public static void importGPX(Group inputGroup, String filename) throws JDOMException, IOException, ParseException {
+    public static void importGPX(Group inputGroup, String filename) throws JDOMException, IOException {
         //public static Group importGPX(String filename) throws JDOMException, IOException {
         // Create a new UGPXFile to put data in
         //Group returnValue = new Group();
@@ -197,7 +196,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-    public static void importGPX(Database inputDatabase, String filename) throws JDOMException, IOException, ParseException {
+    public static void importGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
         Group inputGroup = new Group();
         importGPX(inputGroup, filename);
         List<Route> routesToInput = inputGroup.routes();
@@ -219,8 +218,8 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-    //public static void importUltiGPX(Group inputGroup, String filename) throws JDOMException, IOException {
-    public static void importUltiGPX(Database inputDatabase, String filename) throws JDOMException, IOException, ParseException {
+
+    public static void importUltiGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
         // Create a new UGPXFile to put data in
         Group returnValue = new Group();
         
@@ -451,9 +450,13 @@ public class GPXImporter implements GPXImporterExporterConstants {
         return timeConverter.getTimeInMillis();
     } //end getTimeOld
     
-    private static long getTime(String toParse) throws ParseException {
-        Date newDate = new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").parse(toParse);
-        return newDate.getTime();
+    private static long getTime(String toParse) {
+        try{
+            Date newDate = new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").parse(toParse);
+            return newDate.getTime();
+        } catch (ParseException e) {
+            return -1;
+        }
     } //end getTime
     
-} //end GPXImporter   
+} //end GPXImporter
