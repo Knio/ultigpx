@@ -54,7 +54,7 @@ public class Route extends ArrayList<Waypoint>  implements UGPXDataList
     
     /**
      * Get name parameter
-     * @return
+     * @return String name
      */
     public String getName() {
     	return name;

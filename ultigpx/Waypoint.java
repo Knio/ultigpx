@@ -15,6 +15,15 @@ public class Waypoint implements UGPXData
     public double ele;
     public long time;
     
+    /**
+     * Constructor with pre-existing information
+     * @param _name String name
+     * @param _desc String description
+     * @param _lat	double latitude
+     * @param _lon	double longitude
+     * @param _ele  double elevation
+     * @param _time long time
+     */
     public Waypoint(String _name, 
                     String _desc, 
                     double _lat,

@@ -37,7 +37,7 @@ public class Track implements UGPXData
     /**
      * Constructor for collection of track segments, populated by c with specified name
      * @param name of track
-     * @ param Collection of track segments
+     * @param Collection of track segments
      */
     public Track(String name, List<TrackSegment> c)
     {
@@ -77,7 +77,7 @@ public class Track implements UGPXData
     
     /**
      * Get Track name
-     * @return name
+     * @return String name
      */
     public String getName() {
         return name;
@@ -93,7 +93,7 @@ public class Track implements UGPXData
 	
     /**
      * Get Track description
-     * @return description
+     * @return String description
      */
 	public String getDesc() {
         return desc;
@@ -109,7 +109,7 @@ public class Track implements UGPXData
     
     /**
      * Get enabled status
-     * @return enabled
+     * @return boolean enabled status
      */
     public boolean getEnabled() {
         return enabled;

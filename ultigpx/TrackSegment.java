@@ -8,6 +8,9 @@ public class TrackSegment extends ArrayList<Waypoint>
     static final long serialVersionUID = 0;
     public Track parent;
     
+    /**
+     * Constructor for empty track segment
+     */
     public TrackSegment() {
         super();
     }
@@ -22,7 +25,7 @@ public class TrackSegment extends ArrayList<Waypoint>
     
     /**
      * return parent Track of TrackSegment
-     * @return
+     * @return Track
      */
     public Track getParent() {
         return parent;
