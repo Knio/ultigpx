@@ -9,7 +9,7 @@ public class Waypoint implements UGPXData
     private String desc;
     
     public boolean enabled;
-    public Color  color;
+    public Color color;
     public double lat;
     public double lon;
     public double ele;
