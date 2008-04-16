@@ -177,8 +177,6 @@ public class PropertiesView extends JPanel {
     /**
      * Changes the information to be displayed on the panel depending on the
      * type of the selected point.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      */
     protected void paintinfo() {
     	// prints a changing test string to the frame
@@ -209,8 +207,6 @@ public class PropertiesView extends JPanel {
     
     /**
      * Disables both buttons and displays nothing in the TextArea.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      */
     protected void paintnull() {
     	// disables button
@@ -222,8 +218,6 @@ public class PropertiesView extends JPanel {
     
     /**
      * Displays some information about the group.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      * @see		Group
      */
     protected void paintgrp() {
@@ -247,8 +241,6 @@ public class PropertiesView extends JPanel {
      * A testing method that displays a Waypoint, a Track, and a Route. These three
      * are displayed in a predefined order such that on every repaint what is displayed
      * will change.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      */
     protected void painttest() {
     	// prints a waypoint and then on repaint prints
@@ -282,8 +274,6 @@ public class PropertiesView extends JPanel {
     /**
      * Displays the information contained within a Waypoint in an easy to
      * understand manner.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      * @see		Waypoint
      */
     protected void paintwp(){
@@ -322,8 +312,6 @@ public class PropertiesView extends JPanel {
     /**
      * Displays the information contained within a Track in an easy to
      * understand manner.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      * @see		Track
      */
     protected void painttrk(){
@@ -354,8 +342,6 @@ public class PropertiesView extends JPanel {
     /**
      * Displays the information contained within a Route in an easy to
      * understand manner.
-     * 
-     * @param g2d	the Graphics2D element to draw onto
      * @see		Route
      */
     protected void paintrt(){

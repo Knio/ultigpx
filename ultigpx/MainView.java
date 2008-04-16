@@ -320,7 +320,7 @@ public class MainView extends JFrame
         map2.refresh();
         map3.refresh();
         ele.repaint();
-        prop.paintThis();
+        //prop.paintThis();
         
         setVisible(true);
     }
