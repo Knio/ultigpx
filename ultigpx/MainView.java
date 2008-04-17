@@ -16,6 +16,7 @@ public class MainView extends JFrame
     UltiGPX main;
     
     JTabbedPane pane;
+    JTabbedPane pane2;
     
     MapView map1;
     MapView map2;
@@ -23,7 +24,8 @@ public class MainView extends JFrame
     
     WayptView wpview;
     PropertiesView prop;
-    MapView ele;
+    MapView ele1;
+    MapView ele2;
     
     SearchResult searchresult;
     
@@ -249,8 +251,16 @@ public class MainView extends JFrame
         add(prop, c);
         
         c.weightx = 5.0;
-        ele = new ElevationView(this.main);
-        add(ele, c);
+        pane2 = new JTabbedPane();        
+        add(pane2,c);
+        pane2.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        
+        ele1 = new ElevationView(this.main);
+        ele2 = new ElevationViewDist(this.main);
+        
+        pane2.add("Longitude",ele1);
+        pane2.add("Distance",ele2);
+        pane2.setSelectedComponent(ele1);
         
         setSize(600, 600);
 
@@ -266,7 +276,8 @@ public class MainView extends JFrame
         map2.selectionChanged();
         //map3.selectionChanged(x); // google maps doesn't work with selecting
         prop.select(main.selected);
-    	ele.selectionChanged();
+    	ele1.selectionChanged();
+    	ele2.selectionChanged();
     }
     
     /**
@@ -289,7 +300,8 @@ public class MainView extends JFrame
         map2.select(x);
         map3.select(x);
     	prop.select(x);
-    	ele.select(x);
+    	ele1.select(x);
+    	ele2.select(x);
     }
     /**
      * @deprecated
@@ -300,7 +312,8 @@ public class MainView extends JFrame
         map2.select(x);
         map3.select(x);
     	prop.select(x);
-    	ele.select(x);
+    	ele1.select(x);
+    	ele2.select(x);
     }
     /**
      * @deprecated
@@ -311,7 +324,8 @@ public class MainView extends JFrame
         map2.select(x);
         map3.select(x);
     	prop.select(x);
-    	ele.select(x);
+    	ele1.select(x);
+    	ele2.select(x);
     }
     
     // refreshes the maps and most of the other components
@@ -319,7 +333,8 @@ public class MainView extends JFrame
         map1.refresh();
         map2.refresh();
         map3.refresh();
-        ele.repaint();
+        ele1.repaint();
+        ele2.repaint();
         //prop.paintThis();
         
         setVisible(true);

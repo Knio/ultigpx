@@ -15,6 +15,12 @@ public class Waypoint implements UGPXData
     public double ele;
     public long time;
     
+    //added by Nathan
+    // This is so my elevation view can project on this dimension,
+    // which is distance from track start.
+    // If you can think of a slicker way to do this, by all means be my guest.
+    public double dist;
+    
     /**
      * Constructor with pre-existing information
      * @param _name String name

@@ -178,4 +178,23 @@ public class Track implements UGPXData
 	public int size() {
 		return this.trackSegments.size();
 	}
+	
+	/**
+	 * Refreshes the internal waypoints "dist" parameter,
+	 * which denotes the distance from the start of the track.
+	 * this is used for the distance x height projection.
+	 * (added by Nathan)
+	 */
+	public void refreshDist() {
+		double dist = 0.0;
+		Waypoint last = null;
+		for(TrackSegment ts : this.trackSegments)
+			for(Waypoint wp : ts) {
+				if(last != null) {
+					dist += last.distanceTo(wp);
+				}
+				wp.dist = dist;
+				last = wp;
+			}
+	}
 }

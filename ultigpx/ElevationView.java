@@ -145,23 +145,20 @@ class ElevationView extends BasicMapView
              return;
          }
          
-         double max_lon = entities.get(0).lon;
          double max_ele = entities.get(0).getEle();
-         double min_lon = max_lon;
          double min_ele = max_ele;
          
          for (Waypoint i:entities)
          {
-             max_lon = Math.max(max_lon, i.lon);
              max_ele = Math.max(max_ele, i.getEle());
-             min_lon = Math.min(min_lon, i.lon);
              min_ele = Math.min(min_ele, i.getEle());
          }
          
-         double lon = (max_lon + min_lon) / 2;
          double ele = (max_ele + min_ele) / 2;
          
-         scroll(lon, ele);
+         //we let the main map views adjust the global
+         // longitudinal fit.
+         scroll(this.lon, ele);
 
          double s1 = 0.001 * getHeight() / Math.abs(max_ele - min_ele);
          //double s2 = 0.6 * getWidth() / Math.abs(max_lon - min_lon);
@@ -173,7 +170,7 @@ class ElevationView extends BasicMapView
      * 	Again, we don't want a legend.
      */
     protected void renderLegend()
-    {    	
+    { 
     }
     
     

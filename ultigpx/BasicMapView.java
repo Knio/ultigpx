@@ -323,6 +323,73 @@ public abstract class BasicMapView extends MapView
         g.drawString(name, (float)x, (float)y);
     }
     
+    /**
+     * I had to pull this out of the EventHandler so it
+     * could be reimplemented by subclasses. (If this is wrong
+     * feel free to fix as you see fit.)
+     */
+    State state;
+    Object data;
+    
+    public void select(int x, int y) {
+
+    	if (file == null)
+    		return;
+
+    	Point2D click = new Point2D.Double(x,y);
+
+    	Route       min_r  = null;
+    	Track       min_t  = null;
+    	Waypoint    min_w  = null;
+
+    	if (state == State.TK_RT || state == State.TK_RT_WP)
+    	{
+    		// REFACTOR FOR UGPXDATA
+    		if (data instanceof Track) min_w = getTrackPoint((Track)data, click);
+    		if (data instanceof Route) min_w = getRoutePoint((Route)data, click);
+
+    		if (min_w != null)
+    		{
+    			//main.view.select(min_w);
+    			main.selected.select(min_w);
+
+    			state = State.TK_RT_WP;
+    			return;
+    		}
+    	}
+
+
+
+    	min_r  = getRoute(click);
+    	min_t  = getTrack(click);
+    	min_w  = getWaypoint(click);
+    	UGPXData min_tr = min_r != null ? min_r : min_t;
+
+
+    	if (min_tr != null)
+    	{
+    		//main.view.select(min_tr);
+    		main.selected.select(min_tr);
+    		state = State.TK_RT;
+    		data = min_tr;
+    	}
+    	else
+    	{
+    		//main.view.select(min_w);
+    		main.selected.select(min_w);
+    		if (min_w == null)
+    		{
+    			state = State.MAIN;
+    			data  = null;
+    		}
+    		else
+    		{
+    			state = State.WP;
+    			data  = min_w;
+    		}
+    	}
+    }
+
     
     public enum State  { MAIN, WP, TK_RT, TK_RT_WP, DR_WP, ADD }
     
@@ -335,9 +402,6 @@ public abstract class BasicMapView extends MapView
         int sx;
         int sy;
         
-        
-        State state;
-        Object data;
         DragOperation op;
         
         public EventHandler()
@@ -350,62 +414,7 @@ public abstract class BasicMapView extends MapView
         
         public void mouseClicked(MouseEvent e) 
         {
-            System.out.println("\nCLICK "+e);
-            if (file == null)
-                return;
-            
-            Point2D click = new Point2D.Double(e.getX(), e.getY());
-            
-            Route       min_r  = null;
-            Track       min_t  = null;
-            Waypoint    min_w  = null;
-            
-            if (state == State.TK_RT || state == State.TK_RT_WP)
-            {
-                // REFACTOR FOR UGPXDATA
-                if (data instanceof Track) min_w = getTrackPoint((Track)data, click);
-                if (data instanceof Route) min_w = getRoutePoint((Route)data, click);
-                
-                if (min_w != null)
-                {
-                    //main.view.select(min_w);
-                    main.selected.select(min_w);
-                    
-                    state = State.TK_RT_WP;
-                    return;
-                }
-            }
-            
-            
-            
-            min_r  = getRoute(click);
-            min_t  = getTrack(click);
-            min_w  = getWaypoint(click);
-            UGPXData min_tr = min_r != null ? min_r : min_t;
-            
-            
-            if (min_tr != null)
-            {
-                //main.view.select(min_tr);
-                main.selected.select(min_tr);
-                state = State.TK_RT;
-                data = min_tr;
-            }
-            else
-            {
-                //main.view.select(min_w);
-                main.selected.select(min_w);
-                if (min_w == null)
-                {
-                    state = State.MAIN;
-                    data  = null;
-                }
-                else
-                {
-                    state = State.WP;
-                    data  = min_w;
-                }
-            }
+        	select(e.getX(), e.getY());
         }
         
         public void mouseEntered(MouseEvent e) 
