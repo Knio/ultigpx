@@ -1,70 +1,101 @@
 package ultigpx;
-
-import junit.framework.TestCase;
-
-/**
- * 
+/*
+ * need to make 2 changes to get it working
+ *  1) make fill method return type as boolean in WayptView.java
+ *  2) make return type of importGPX as Database...and "return file" at the end of method;
+ *  make both the methods as public
  */
+import java.io.IOException;
+
+import org.jdom.JDOMException;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 
 /**
  * @author Bindu Varre
  *
  */
 public class WayptViewTest extends TestCase {
+	WayptView v = null;
+	UltiGPX ugpx = null;
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
+	public WayptViewTest(){
+	log(" created");
 	}
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public WayptViewTest(String str){
+	super(str);
+	log(str + " created");
+	}
+	
+
+	/* optional setUp method for intialization*/
+	public void setUp(){
+	        try
+	        {
+	            Installer.install();
+	        }
+	        catch (IOException e)
+	        {
+	            System.out.println("Failed to install UltiGPX");
+	            System.out.println(e);
+	        }
+	        
+	ugpx = new UltiGPX();
+	v= new WayptView(ugpx ); 
+
+	}
+	/* optional tearDown method to release resources*/
+	public void tearDown(){
 	}
 
-	/**
-	 * Test method for { ultigpx.WayptView#getList(javax.swing.tree.TreePath)}.
-	 */
-	public final void testgetList() {
-		
-		
-		
-		
-	}
+	public static Test suite() {
 
+		Test tsuite = new TestSuite(WayptViewTest.class);
+
+		return tsuite;
+	}
+	
+	
+	public void test_importGPX() {
+		Database file = null;
+		try {
+			file = ugpx.importGPX("C:/Documents and Settings/Bindu Varre/My Documents/301/example1.gpx");
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.assertNotNull(file);
+	}	
+
+	public void test_fill() {
+		boolean result = v.fill();
+		assertTrue(result == true);
+	}
 	
 	
 	
-	/**
-	 * Test method for { ultigpx.WayptView#selectEvent(javax.swing.tree.TreePath)}.
-	 */
-	public final void testSelectEvent() {
-		fail("Not yet implemented"); // TODO
+
+	public static void main (String[] args) {
+		junit.textui.TestRunner.run(suite());
 	}
 
-	/**
-	 * Test method for {@link ulti.WayptView#clickEvent(javax.swing.tree.TreePath)}.
-	 */
-	public final void testClickEvent() {
-		fail("Not yet implemented"); // TODO
-	}
 
-	/**
-	 * Test method for {@link java.awt.Component#setName(java.lang.String)}.
-	 */
-	public final void testSetName() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link java.awt.Component#isValid()}.
-	 */
-	public final void testIsValid() {
-		fail("Not yet implemented"); // TODO
+	public void log(String s){
+		System.out.println(s);
 	}
 
 }
+
+
+
+	
+
+	
+
+
+
