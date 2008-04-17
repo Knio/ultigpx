@@ -99,7 +99,7 @@ public abstract class BasicMapView extends MapView
         g.setColor(Color.WHITE);
         g.fill(getVisibleRect());
         
-        
+        g.setFont(new Font("Arial", 0, FONT_SIZE));
         
         render();
         
@@ -152,6 +152,7 @@ public abstract class BasicMapView extends MapView
             s = "Km";
         }
         
+        
         g.drawString(String.format("%.0f%s", dist2, s), sx+2, sy+10);
         
         
@@ -170,7 +171,8 @@ public abstract class BasicMapView extends MapView
         
         renderLegend();
         
-        g.setFont(new Font("Arial", 0, FONT_SIZE));
+        
+        
         
         // render selected wps so they have label priority
         forcecolor  = true;
@@ -429,12 +431,12 @@ public abstract class BasicMapView extends MapView
         
         public void mousePressed(MouseEvent e) 
         {
-            System.out.println("\nPRESS "+e);
+            //System.out.println("\nPRESS "+e);
             sx = e.getX();
             sy = e.getY();
             
             
-            System.out.println(state);
+            //System.out.println(state);
             if (state == State.WP || state == State.TK_RT_WP)
             {
                 
@@ -459,7 +461,7 @@ public abstract class BasicMapView extends MapView
         
         public void mouseReleased(MouseEvent e)
         {
-            System.out.println("\nRELEASE "+e);
+            //System.out.println("\nRELEASE "+e);
             
             if (state == State.DR_WP)
             {
@@ -475,7 +477,7 @@ public abstract class BasicMapView extends MapView
             		op.setEnd(pt.getX(), null, pt.getY());
             	}
                 main.addOperation(op);
-                System.out.println("Added drag op");
+                //System.out.println("Added drag op");
             }
             
             if (data instanceof Track) state = State.TK_RT_WP;
@@ -486,7 +488,7 @@ public abstract class BasicMapView extends MapView
         
         public void mouseDragged(MouseEvent e)
         {
-            System.out.println("\nDRAG "+e);
+            //System.out.println("\nDRAG "+e);
             
             
             if (state == State.DR_WP)
