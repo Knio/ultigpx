@@ -33,7 +33,6 @@ public class MainView extends JFrame
     
     JMenu fileMenu;
     JMenu editMenu;
-    JMenu waypMenu;
     
     JMenuItem importMenuItem;
     JMenuItem exportMenuItem;
@@ -44,7 +43,7 @@ public class MainView extends JFrame
     JMenuItem undoMenuItem;
     JMenuItem redoMenuItem;
     
-    JMenuItem addwp;
+    //JMenuItem addwp;
     JMenuItem delwp;
     
     // sets up the GUI with all the components
@@ -92,18 +91,14 @@ public class MainView extends JFrame
         editMenu = new javax.swing.JMenu();
         editMenu.setText("Edit");
         
-        waypMenu = new javax.swing.JMenu();
-        waypMenu.setText("Waypoint");
-        
         exitMenuItem = new javax.swing.JMenuItem();
         exitMenuItem.setActionCommand("Exit");
         exitMenuItem.setText("Exit");
         
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
-        menuBar.add(waypMenu);
         
-        addwp = new JMenuItem();
+        /*addwp = new JMenuItem();
         addwp.setText("Add");
         addwp.setVisible(true);
         waypMenu.add(addwp);
@@ -111,15 +106,61 @@ public class MainView extends JFrame
         	{public void actionPerformed(ActionEvent e)
         		{ // TODO do something
         		}});
-        addwp.setEnabled(false);
+        addwp.setEnabled(false);*/
         
         delwp = new JMenuItem();
         delwp.setText("Delete");
         delwp.setVisible(true);
-        waypMenu.add(delwp);
+        editMenu.add(delwp);
         delwp.addActionListener(new ActionListener()
         	{public void actionPerformed(ActionEvent e)
-        		{ // TODO do something
+        		{ 
+        		for (Track i : main.selected.track)
+        		{
+        			main.file.tracks().remove(i);
+        			for (Group j : main.file.groups())
+        			{
+        				j.track.remove(i);
+        			}
+        		}
+        		for (Waypoint i : main.selected.waypoint)
+        		{
+        			main.file.waypoints().remove(i);
+        			for (Track j : main.file.tracks())
+        			{
+        				for (TrackSegment k : j.getArray())
+        				{
+        					k.remove(i);
+        				}
+        			}
+        			for (Route j : main.file.routes())
+        			{
+        				j.remove(i);
+        			}
+        			for (Group j : main.file.groups())
+        			{
+        				j.waypoint.remove(i);
+            			for (Track k : main.file.tracks())
+            			{
+            				for (TrackSegment l : k.getArray())
+            				{
+            					l.remove(i);
+            				}
+            			}
+            			for (Route k : main.file.routes())
+            			{
+            				k.remove(i);
+            			}
+        			}
+        		}
+        		for (Route i : main.selected.route)
+        		{
+        			main.file.routes().remove(i);
+        			for (Group j : main.file.groups())
+        				j.route.remove(i);
+        		}
+        		wpview.fill();
+        		refresh();
         		}});
         delwp.setEnabled(false);
         
@@ -278,6 +319,10 @@ public class MainView extends JFrame
         prop.select(main.selected);
     	ele1.selectionChanged();
     	ele2.selectionChanged();
+    	if ((main.selected.route.size() > 0) || (main.selected.track.size() > 0) || (main.selected.waypoint.size() > 0))
+    		delwp.setEnabled(true);
+    	else
+    		delwp.setEnabled(false);
     }
     
     /**
