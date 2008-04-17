@@ -1,9 +1,15 @@
 package ultigpx;
 
+//needed imports
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,34 +17,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.plaf.ActionMapUIResource;
-import javax.swing.tree.*;
-import javax.swing.event.*;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+/*
+ * Displays the waypoints, Tracks, Routes and Groups info on the left panel
+ * creates checkboxes for the JTree and also creates Group
+ * 
+ * @author Bindu
+ */
 public class WayptView extends JComponent{
+	
 	UltiGPX   main;
     
-    //protected List<Object>  select_list;
-    //protected List<Group> groups;
-    
-        
     protected JButton group_button;
     private JScrollPane wtrPanel;
     private JTree tree;
@@ -47,18 +60,23 @@ public class WayptView extends JComponent{
     private CheckTreeManager checkTreeManager;
     
     
-    MainView parent;
-    TextArea tArealabel;
+   // MainView parent;
+  //  TextArea tArealabel;
     String mainfile = null;
     
-       
+      /*
+       * @param main UltiGPX file
+       */ 
     public WayptView(UltiGPX main) {
         super();
         this.main = main;
         this.setPreferredSize(new Dimension(100, 300));
-        //select_list = new ArrayList<Object>();
-        //groups = new ArrayList<Group>();
     }
+   /*
+    * JTree has two selections: one is normal selection and another is checkSelection (checkbox selected)
+    * Used TreeSelectionModel to maintain checkSelection and modified DefaultTreeSelectionModel
+    *
+    */
     public class CheckTreeSelectionModel extends DefaultTreeSelectionModel{ 
         private TreeModel model; 
      
@@ -66,8 +84,13 @@ public class WayptView extends JComponent{
             this.model = model; 
             setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION); 
         } 
-     
-        // tests whether there is any unselected node in the subtree of given path 
+     /*
+      *  @param TreePath path that needs to be tested for any unselected node in the 
+      *                  subtree of given path
+      *  @return boolean true if  there is a unselected node
+      *                  otherwise false
+      */
+         
         public boolean isPartiallySelected(TreePath path){ 
             if(isPathSelected(path, true)) 
                 return false; 
@@ -80,9 +103,15 @@ public class WayptView extends JComponent{
             } 
             return false; 
         } 
-        // tells whether given path is selected. 
-        // if dig is true, then a path is assumed to be selected, if 
-        // one of its ancestor is selected. 
+        /* tells whether given path is selected.
+         * if dig is true, then a path is assumed to be selected, if 
+         * one of its ancestor is selected.
+         *  @param1 TreePath path - path to be tested
+         *  @param2 boolean dig
+         *  @return boolean true if path is selected
+         *          otherwise false
+         */
+        
         public boolean isPathSelected(TreePath path, boolean dig){ 
             if(!dig) 
                 return super.isPathSelected(path); 
@@ -91,7 +120,12 @@ public class WayptView extends JComponent{
             return path!=null; 
         } 
      
-        // is path1 descendant of path2 
+        /* 
+         * is path1 descendant of path2
+         * @param1 TreePath path1
+         * @param2 TreePath path2
+         * @return boolean true if path is descendant of path2
+         */ 
         private boolean isDescendant(TreePath path1, TreePath path2){ 
             Object obj1[] = path1.getPath(); 
             Object obj2[] = path2.getPath(); 
@@ -101,11 +135,19 @@ public class WayptView extends JComponent{
             } 
             return true; 
         } 
-     
+     /*
+      * (non-Javadoc)
+      * @see javax.swing.tree.DefaultTreeSelectionModel#setSelectionPaths(javax.swing.tree.TreePath[])
+      */
+        //TODO need to implement inorder to set the paths
         public void setSelectionPaths(TreePath[] pPaths){ 
             throw new UnsupportedOperationException("not implemented yet!!!"); 
         } 
-     
+     /*
+      *  adds selectionPaths
+      *  @param TreePath[] array of TreePaths
+      * 
+      */
         public void addSelectionPaths(TreePath[] paths){ 
             // unselect all descendants of paths[] 
             for(int i = 0; i<paths.length; i++){ 
@@ -145,7 +187,13 @@ public class WayptView extends JComponent{
             } 
         } 
      
-        // tells whether all siblings of given path are selected. 
+        /* 
+         * tells whether all siblings of given path are selected. 
+         * @param TreePath path 
+         * @return boolean true if all siblings are selected
+         *         otherwise false
+         * */
+        
         private boolean areSiblingsSelected(TreePath path){ 
             TreePath parent = path.getParentPath(); 
             if(parent==null) 
@@ -163,7 +211,11 @@ public class WayptView extends JComponent{
             } 
             return true; 
         } 
-     
+     /*
+      * removes given selection paths
+      * @param TreePath[]  array of TreePaths
+      * 
+      */
         public void removeSelectionPaths(TreePath[] paths){ 
             for(int i = 0; i<paths.length; i++){ 
                 TreePath path = paths[i]; 
@@ -174,9 +226,12 @@ public class WayptView extends JComponent{
             } 
         } 
      
-        // if any ancestor node of given path is selected then unselect it 
-        //  and selection all its descendants except given path and descendants. 
-        // otherwise just unselect the given path 
+        /*  if any ancestor node of given path is selected then unselect it 
+         *  and selection all its descendants except given path and descendants. 
+         *   otherwise just unselect the given path
+         *   @param TreePath 
+         */
+        
         private void toggleRemoveSelection(TreePath path){ 
             Stack<Object> stack = new Stack<Object>(); 
             TreePath parent = path.getParentPath(); 
@@ -188,8 +243,7 @@ public class WayptView extends JComponent{
                 stack.push(parent); 
             else{ 
                 super.removeSelectionPaths(new TreePath[]{path});
-                //select_list.remove(((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject());
-                return; 
+                 return; 
             } 
      
             while(!stack.isEmpty()){ 
@@ -207,6 +261,10 @@ public class WayptView extends JComponent{
             super.removeSelectionPaths(new TreePath[]{parent}); 
         } 
     }
+    
+    /*
+     * adds functionality to the checkboxes created
+     */
     public static class TristateCheckBox extends JCheckBox {
     	  /** This is a type-safe enumerated type */
     	  public static class State { private State() { } }
@@ -255,11 +313,17 @@ public class WayptView extends JComponent{
     	  /**
     	   * Set the new state to either SELECTED, NOT_SELECTED or
     	   * DONT_CARE.  If state == null, it is treated as DONT_CARE.
+    	   * @param State checkbox state
     	   */
     	  public void setState(State state) { model.setState(state); }
     	  /** Return the current state, which is determined by the
     	   * selection status of the model. */
     	  public State getState() { return model.getState(); }
+    	  /*
+    	   * sets the state to the checkbox
+    	   * @param boolean 
+    	   * 
+    	   */
     	  public void setSelected(boolean b) {
     	    if (b) {
     	      setState(SELECTED);
@@ -375,7 +439,9 @@ public class WayptView extends JComponent{
     	  }
 		
     	}
-   	  
+   	  /*
+   	   *   TreeCellRenderer for the checkboxTree
+   	   */
     public class CheckTreeCellRenderer extends JPanel implements TreeCellRenderer{ 
         private CheckTreeSelectionModel selectionModel; 
         private TreeCellRenderer delegate; 
@@ -389,7 +455,16 @@ public class WayptView extends JComponent{
             checkBox.setOpaque(false); 
         } 
      
-     
+     /*
+      * this method is called whenever there is a change in the CheckBoxTree
+      * @param1 tree 
+      * @param2 Object value - node of the tree
+      * @param3 boolean selected - node selection
+      * @param4 boolean  expanded - true if node is expanded
+      * @param5 boolean leaf - true if node is a leaf
+      * @param6 int row - node level
+      * @param7 boolean true if node has focus
+      */
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus){ 
             Component renderer = delegate.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus); 
      
@@ -406,6 +481,7 @@ public class WayptView extends JComponent{
                 
             } 
             removeAll();
+            
            if (!(((DefaultMutableTreeNode)value).getUserObject() instanceof String))
             	if(((UGPXData)((DefaultMutableTreeNode)value).getUserObject()).getEnabled())
             		checkBox.setState(TristateCheckBox.SELECTED); 
@@ -416,21 +492,23 @@ public class WayptView extends JComponent{
             return this; 
         } 
     } 
-    
+    /*
+     * Manages the checkTree implements TreeSelectionListener
+     */
     public class CheckTreeManager extends MouseAdapter implements TreeSelectionListener{ 
         private CheckTreeSelectionModel selectionModel; 
         private JTree tree = new JTree(); 
         int hotspot = new JCheckBox().getPreferredSize().width; 
      
         public CheckTreeManager(JTree tree){ 
-            this.tree = tree; 
-            selectionModel = new CheckTreeSelectionModel(tree.getModel()); 
-            tree.setCellRenderer(new CheckTreeCellRenderer(tree.getCellRenderer(), selectionModel)); 
-            tree.addMouseListener(this); 
-            selectionModel.addTreeSelectionListener(this); 
-        } 
-     
-        public void mouseClicked(MouseEvent me){ 
+		    this.tree = tree; 
+		    selectionModel = new CheckTreeSelectionModel(tree.getModel()); 
+		    tree.setCellRenderer(new CheckTreeCellRenderer(tree.getCellRenderer(), selectionModel)); 
+		    tree.addMouseListener(this); 
+		    selectionModel.addTreeSelectionListener(this); 
+		}
+
+		public void mouseClicked(MouseEvent me){ 
             TreePath path = tree.getPathForLocation(me.getX(), me.getY()); 
             if(path==null) 
                 return; 
@@ -452,9 +530,7 @@ public class WayptView extends JComponent{
                         UGPXData d = (UGPXData)o;
                         d.setEnabled(false);
                         main.view.refresh();
-                        //if(select_list.contains(o))
-                        //   select_list.remove(o);
-                        
+                       
                     }
                      
                     System.out.println("unckecked "+path);
@@ -468,8 +544,7 @@ public class WayptView extends JComponent{
                         UGPXData d = (UGPXData)o;
                         d.setEnabled(true);
                         main.view.refresh();
-                        //if(!select_list.contains(o))
-                        //    select_list.add(o);
+                      
                     }
                     
                     System.out.println("check "+path);
@@ -483,15 +558,25 @@ public class WayptView extends JComponent{
             } 
         } 
      
-
+		/*
+		 *  gets the selectionmodel of the checkTree
+		 *  @return selectionModel
+		 */
 		public CheckTreeSelectionModel getSelectionModel(){ 
             return selectionModel; 
         } 
      
+		/*
+		 * notifies the tree if value is changed
+		 * @param TreeSelectionEvent e
+		 */
         public void valueChanged(TreeSelectionEvent e){ 
             tree.treeDidChange(); 
         } 
     }
+    /*
+     *  overides the fill() method
+     */
     void fill()
     {
         removeAll();
@@ -502,7 +587,7 @@ public class WayptView extends JComponent{
         c.weightx = 1;
         c.weighty = 1;
         
-	
+	// if file is not loaded created default tree with no data
 	 top =
         new DefaultMutableTreeNode((mainfile == null ? "GPX File" : mainfile));
 	 
@@ -551,7 +636,7 @@ public class WayptView extends JComponent{
        tree.addTreeSelectionListener(sl);
        
        if(main.file != null){
-              
+           // inserts check boxes for the tree    
     	   checkTreeManager = new CheckTreeManager(tree);
     	    	   
            	       
@@ -581,8 +666,7 @@ public class WayptView extends JComponent{
            {
         	   if((e.getClickCount() == 2) && (e.getButton() == e.BUTTON1))
                    dblclickEvent(tree.getPathForLocation(e.getX(), e.getY()));
-               /*if((e.getClickCount() == 1) && (e.getButton() == e.BUTTON3))
-                   rightclickEvent(tree.getPathForLocation(e.getX(), e.getY()));//*/
+               
            }
        };
        
@@ -604,10 +688,7 @@ public class WayptView extends JComponent{
    	public void actionPerformed(ActionEvent e) {
    		String s = e.getActionCommand();
    		if (s.equals("createGroup")){
-   	      	//if(select_list.size() == 0){
-   		//		ShowSelectMessageDialogBox();
-   			//	return;
-   			//}
+   	   
    			String input = "";
    			while(input.equals("")){
    				 input = ShowDialogBox();
@@ -616,15 +697,13 @@ public class WayptView extends JComponent{
    					 // prompt user to enter file name
    					 ShowMessageDialogBox();
    				 }
-   				 //System.out.println("input from user =" +input);
+   				
    			}// end while
-   			if(input != null){
+   			if(input != null && input != " "){
    				filename = input;
    				creategroup(); //select_list);
    				fill();
-   				
-   				//select_list.clear();
-   				main.view.refreshmap();
+  				main.view.refreshmap();
    			}
    			
    		}
@@ -633,7 +712,7 @@ public class WayptView extends JComponent{
      
     
 	/* Creates a group with user selected list */	
-   	private void creategroup() // List<Object> s_list)
+   	private void creategroup() 
     {   
         
         Group g = new Group(main.selected.waypoints(),
@@ -646,37 +725,7 @@ public class WayptView extends JComponent{
         main.file.addGroup(g);
         fill();
         main.view.refresh();
-        /*
-        List<Waypoint> wp = new ArrayList<Waypoint>(); 
-   		List<Track> tk = new ArrayList<Track>(); 
-   		List<Route> rt =  new ArrayList<Route>();
-   		
-        
-        
-        
-   		for(int i = 0;i<s_list.size();i++){
-   			Object o = s_list.get(i);
-   			if(o instanceof Track){
-   				tk.add((Track) o);
-   				
-   			}else if(o instanceof Route){
-   				rt.add((Route) o);
-   				
-   			}else if(o instanceof Waypoint){
-   				wp.add((Waypoint) o);
-   				
-   			}else{
-   				System.out.println("debug not an instance of objects(tk,rt,wp)");
-   			}
-   			
-   		}
-   		
-   		
-   		Group newgrp = new Group( wp, tk,  rt);
-   		newgrp.name = filename;
-   		groups.add(newgrp);
-   		main.file.addGroup(newgrp);
-   	//*/
+     
 	}
    	 @SuppressWarnings("static-access")
    	private void ShowSelectMessageDialogBox() {
@@ -718,7 +767,7 @@ public class WayptView extends JComponent{
         System.out.println("SELECT: "+ e);
         
         main.selected.clear();
-        //*
+        
         TreePath p[] = tree.getSelectionModel().getSelectionPaths();
         if (p!=null)
         for (TreePath i : p)
@@ -730,49 +779,14 @@ public class WayptView extends JComponent{
                 System.out.println((UGPXData)o);
             }
         }
-        //*/
+        
         main.selected.selectionChanged();
         
         Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
-        /*
-        if(select_list.contains(o)){
-        	select_list.remove(o);
-        }else if(o.equals("Tracks")){
-        	List<Track> tracks = main.file.tracks();
-        	select_list.addAll(tracks);
-        	
-        }else if(o.equals("Routes")){
-        	 List<Route> routes = main.file.routes();
-        	select_list.addAll(routes);
-        	
-        }else if(o.equals("Waypoints")){
-       	 List<Waypoint> waypoints = main.file.waypoints();
-     	 select_list.addAll(waypoints);
-     	
-        }else{
-        	select_list.add(o);
-        }
-       */
+        
     }
 
-   	// deprecated in favour of check boxes
-    /*public void dblclickEvent(TreePath e)
-    {
-        System.out.println("CLICK: "+ e);
-        if (e==null) return;
-        
-        Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
-        
-        // these things should be refactored
-        if (o instanceof Track)
-            ((Track)o).enabled = !((Track)o).enabled;
-        if (o instanceof Route)
-            ((Route)o).enabled = !((Route)o).enabled;
-        if (o instanceof Waypoint)
-            ((Waypoint)o).enabled = !((Waypoint)o).enabled;
-        
-        main.view.refreshmap();
-    }//*/
+  
     
    	// on double click zoom to fit selected on screen
     public void dblclickEvent(TreePath e)
@@ -811,20 +825,10 @@ public class WayptView extends JComponent{
         main.view.refreshmap();
     }
     
-    // deprecated as click already selects the object
-    /*public void selectThis(TreePath e)
-    {
-        System.out.println("   SELECTED: "+ e);
-        
-        main.selected.clear();
-            Object o = ((DefaultMutableTreeNode)e.getLastPathComponent()).getUserObject();
-            if (o instanceof UGPXData)
-            {
-                main.selected.add((UGPXData)o);
-            }
-        main.selected.selectionChanged();
-    }//*/
-
+   
+/*
+ * creates nodes for the tree
+ */
     
 private void createNodes() {
 	DefaultMutableTreeNode category = null;
@@ -851,9 +855,7 @@ private void createNodes() {
     	createsubnodes();
     	
     	   group = main.file.groups();
-//    	 if database works properly then the following line of code must work
-    	   //count = group.size();
-    	  
+	  
            count = group.size();
            
            
@@ -879,7 +881,7 @@ private void createNodes() {
            {
               
                Object o = tracks.get(i);
-               info = new DefaultMutableTreeNode(o) ;//((Track)o).getName());
+               info = new DefaultMutableTreeNode(o) ;
               	subcatinfo_t.add(info);
            } 
            List<Route> routes = group.get(j).routes();
@@ -887,7 +889,7 @@ private void createNodes() {
            {
               
                Object o = routes.get(i);
-               info = new DefaultMutableTreeNode(o); //((Route)o).getName());
+               info = new DefaultMutableTreeNode(o); 
               	subcatinfo_r.add(info);
            }
            List<Waypoint> wypts = group.get(j).waypoints();
@@ -895,7 +897,7 @@ private void createNodes() {
            {
               
                Object o = wypts.get(i);
-               info = new DefaultMutableTreeNode(o); //((Waypoint)o).getName());
+               info = new DefaultMutableTreeNode(o); 
               	subcatinfo_w.add(info);
            }  
                
@@ -909,7 +911,9 @@ private void createNodes() {
     }
     
 }
-
+/*
+ * created subnodes for the nodes in the tree
+ */
 private void createsubnodes() {
 	
 	List<Track> track = main.file.tracks();
@@ -922,9 +926,8 @@ private void createsubnodes() {
     DefaultMutableTreeNode info;
 	for(int i = 0;i<count;i++)
     {
-        //System.out.println(" track = " + track.get(i)+ " count " + i);
+        
         info = new DefaultMutableTreeNode(track.get(i));
-        //select_list.add(track.get(i));
         category.add(info);
     }
     
@@ -935,10 +938,10 @@ private void createsubnodes() {
     
     for(int i = 0;i<count;i++)
     {
-        //System.out.println(" route = " + route.get(i)+ " count " + i);
+       
         info = new DefaultMutableTreeNode(route.get(i));
         category.add(info);
-        //select_list.add(route.get(i));
+        
         
     }
     
@@ -949,9 +952,8 @@ private void createsubnodes() {
     
     for(int i = 0;i<count;i++)
     {
-        //System.out.println(" waypt = " + waypoint.get(i).getName()+ "count " + i);
+       
         info = new DefaultMutableTreeNode(waypoint.get(i));
-        //select_list.add(waypoint.get(i));
         category.add(info);
     }
 	
