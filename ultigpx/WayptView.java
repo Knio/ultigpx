@@ -485,7 +485,8 @@ public class WayptView extends JComponent{
            if (!(((DefaultMutableTreeNode)value).getUserObject() instanceof String))
             	if(((UGPXData)((DefaultMutableTreeNode)value).getUserObject()).getEnabled())
             		checkBox.setState(TristateCheckBox.SELECTED); 
-           
+            	else
+            		checkBox.setState(TristateCheckBox.NOT_SELECTED); 
         	   
             add(checkBox, BorderLayout.WEST); 
             add(renderer, BorderLayout.CENTER); 
@@ -550,11 +551,18 @@ public class WayptView extends JComponent{
                     System.out.println("check "+path);
                     
                 }
+            }else{
+            	
             }
+            if(selected) 
+                selectionModel.removeSelectionPath(path); 
+            else 
+                selectionModel.addSelectionPath(path); 
                         
             } finally{ 
                 selectionModel.addTreeSelectionListener(this); 
                 tree.treeDidChange(); 
+                
             } 
         } 
      
@@ -577,7 +585,7 @@ public class WayptView extends JComponent{
     /*
      *  overides the fill() method
      */
-    void fill()
+    boolean fill()
     {
         removeAll();
         
@@ -671,6 +679,9 @@ public class WayptView extends JComponent{
        };
        
        tree.addMouseListener(ml);
+       if (main.file==null)
+    	   return false;
+	return true;
        
 
 }
@@ -701,7 +712,7 @@ public class WayptView extends JComponent{
    			}// end while
    			if(input != null && input != " "){
    				filename = input;
-   				creategroup(); //select_list);
+   				creategroup();
    				fill();
   				main.view.refreshmap();
    			}
