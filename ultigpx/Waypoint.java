@@ -61,7 +61,7 @@ public class Waypoint implements UGPXData
      * @param String x
      */
     public void setName(String x) {
-    	name = x;
+        name = x;
     }
     
     /**
@@ -77,7 +77,7 @@ public class Waypoint implements UGPXData
      * @param String x
      */
     public void setDesc(String x) {
-    	desc = x;
+        desc = x;
     }
     
     /**
@@ -93,7 +93,7 @@ public class Waypoint implements UGPXData
      * @param double x
      */
     public void setLat(double x) {
-    	lat = x;
+        lat = x;
     }
     
     /**
@@ -109,7 +109,7 @@ public class Waypoint implements UGPXData
      * @param double x
      */
     public void setLon(double x) {
-    	lon = x;
+        lon = x;
     }
     
     /**
@@ -125,7 +125,7 @@ public class Waypoint implements UGPXData
      * @param double x
      */
     public void setEle(double x) {
-    	ele = x;
+        ele = x;
     }
     
     /**
@@ -141,7 +141,7 @@ public class Waypoint implements UGPXData
      * @param long x
      */
     public void setTime(long x) {
-    	time = x;
+        time = x;
     }
     
     /**
@@ -157,7 +157,7 @@ public class Waypoint implements UGPXData
      * @param boolean x
      */
     public void setEnabled(boolean x) {
-    	enabled = x;
+        enabled = x;
     }
     
     /**
@@ -173,7 +173,7 @@ public class Waypoint implements UGPXData
      * @param Color x
      */
     public void setColor(Color x) {
-    	color = x;
+        color = x;
     }
     
     /**
@@ -184,26 +184,26 @@ public class Waypoint implements UGPXData
     {
         return String.format("<WP name=%s lat=%.3f lon=%.3f>", name, lat, lon);
     }
-	
-	/**
-	 * Get the distance between this point and the given point
-	 * @param wpt The other waypoint
-	 * @return Double value of the distance in meters
-	 */
-	public double distanceTo(Waypoint wpt)
-	{
-		if (wpt == null) return (double)0.0;
-		double lat1 = Math.toRadians(this.getLat());
-		double lon1 = Math.toRadians(this.getLon());
-		double lat2 = Math.toRadians(wpt.getLat());
-		double lon2 = Math.toRadians(wpt.getLon());
-		double radius = 6378100;			// Approx radius of the earth in meters
-		
-		// Spherical law of cosines
-		double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1)) * radius;
-		
-		// Temporary fix for if
-		if ("NaN".equals("" + distance)) { distance = 0.0; }
-		return distance;
-	}
+    
+    /**
+     * Get the distance between this point and the given point
+     * @param wpt The other waypoint
+     * @return Double value of the distance in meters
+     */
+    public double distanceTo(Waypoint wpt)
+    {
+        if (wpt == null) return (double)0.0;
+        double lat1 = Math.toRadians(this.getLat());
+        double lon1 = Math.toRadians(this.getLon());
+        double lat2 = Math.toRadians(wpt.getLat());
+        double lon2 = Math.toRadians(wpt.getLon());
+        double radius = 6378100;			// Approx radius of the earth in meters
+        
+        // Spherical law of cosines
+        double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1)) * radius;
+        
+        // Temporary fix for if acos returns NaN
+        if ("NaN".equals("" + distance)) { distance = 0.0; }
+        return distance;
+    }
 }

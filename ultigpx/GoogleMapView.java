@@ -16,7 +16,6 @@ public class GoogleMapView extends MapView {
 	WebBrowser	webBrowser;
 
 	static final Double     CUTOFF		= 50.0;
-	static final Boolean	DEBUG_MODE	= true;
 
 	// HTML file to output
 	static final String 	HTML_OUT_FILE 	= "maps.html";	
@@ -24,7 +23,6 @@ public class GoogleMapView extends MapView {
 	public GoogleMapView (UltiGPX main) {
 		super(main);
 		
-		if (DEBUG_MODE) System.out.println("GoogleMapView initialization started.");
 		this.main = main;
 		
 		webBrowser = new WebBrowser();
@@ -215,8 +213,6 @@ public class GoogleMapView extends MapView {
 		
 		file = main.file;
 		if (file == null) return;
-        
-		if (DEBUG_MODE) System.out.println("GoogleMapView: outputting HTML.");
 		
 		// Construct a platform-independent file name
 		File infile;
@@ -249,7 +245,7 @@ public class GoogleMapView extends MapView {
 			wtext.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n");
   			wtext.append("<head>\n");
 			wtext.append("<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n");
-			wtext.append("<title>Google Maps JavaScript API Example</title>\n");
+			wtext.append("<title>UltiGPX Google Maps Export</title>\n");
 			wtext.append("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAv8I7SSVba2lHsj8Pc-r5SBTTdj5zBXD9jRFEjQGoMBeg8N65dBQ1Q8m1Xi4E-Q4o6l_EaKjx6--APw\" type=\"text/javascript\"></script>\n");
 			//wtext.append("<script src=\"PolylineEncoder.js\" type=\"text/javascript\"></script>");
 			wtext.append("<script type=\"text/javascript\">\n");

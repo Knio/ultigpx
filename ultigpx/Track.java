@@ -6,9 +6,9 @@ import java.awt.Color;
 
 public class Track implements UGPXData
 {
-	//static final long serialVersionUID = 0;
+    //static final long serialVersionUID = 0;
     String name;
-	String desc;
+    String desc;
     public boolean enabled;
     public Color color;
     private ArrayList<TrackSegment> trackSegments = new ArrayList<TrackSegment>();
@@ -41,9 +41,9 @@ public class Track implements UGPXData
      */
     public Track(String name, List<TrackSegment> c)
     {
-    	for (int x = 0; x < c.size(); x++) {
-    		add(c.get(x));
-    	}
+        for (int x = 0; x < c.size(); x++) {
+            add(c.get(x));
+        }
         this.name = name;
         enabled = true;
         color = null;
@@ -54,7 +54,7 @@ public class Track implements UGPXData
      * @param TrackSegment t
      */
     public void add(TrackSegment t) {
-    	this.trackSegments.add(t);
+        this.trackSegments.add(t);
     
     }
     
@@ -63,7 +63,7 @@ public class Track implements UGPXData
      * @param TrackSegment t
      */
     public void remove(TrackSegment t) {
-    	this.trackSegments.remove(t);
+        this.trackSegments.remove(t);
     }
     
     /**
@@ -72,7 +72,7 @@ public class Track implements UGPXData
      * @return true is t is in this Track, false otherwise
      */
     public boolean contains(TrackSegment t) {
-    	return this.trackSegments.contains(t);
+        return this.trackSegments.contains(t);
     }
     
     /**
@@ -88,23 +88,23 @@ public class Track implements UGPXData
      * @param String x
      */
     public void setName(String x) {
-    	name = x;
+        name = x;
     }
-	
+    
     /**
      * Get Track description
      * @return String description
      */
-	public String getDesc() {
+    public String getDesc() {
         return desc;
     }
-	
-	/**
-	 * Set Track description
-	 * @param String x
-	 */
+    
+    /**
+     * Set Track description
+     * @param String x
+     */
     public void setDesc(String x) {
-    	desc = x;
+        desc = x;
     }
     
     /**
@@ -120,7 +120,7 @@ public class Track implements UGPXData
      * @param boolean x
      */
     public void setEnabled(boolean x) {
-    	enabled = x;
+        enabled = x;
     }
     
     /**
@@ -136,7 +136,7 @@ public class Track implements UGPXData
      * @param Color x
      */
     public void setColor(Color x) {
-    	color = x;
+        color = x;
     }
     
     /**
@@ -147,54 +147,52 @@ public class Track implements UGPXData
     {
         return String.format("<TRACK name=%s n=%d>", name, this.trackSegments.size());
     }
-	
+    
     /**
      * Get the total distance of the Track
      * @return Double value for the total distance of the Track in meters
      */
-	public double getDistance() {
-		double distance = 0.0;
-		double ndist;
+    public double getDistance() {
+        double distance = 0.0;
+        double ndist;
         for (TrackSegment s:this.trackSegments) {
-			ndist = s.getDistance();
-            distance = distance + ndist;
-			System.out.println("Distance adding " + ndist + " so far is: " + distance);
-		}
-		return distance;
-	}
-	
-	/**
-	 * Return an ArrayList of track segments
-	 * @return ArrayList<TrackSegment>
-	 */
-	public ArrayList<TrackSegment> getArray() {
-		return this.trackSegments;
-	}
-	
-	/**
-	 * Return the size of the track segment array
-	 * @return int
-	 */
-	public int size() {
-		return this.trackSegments.size();
-	}
-	
-	/**
-	 * Refreshes the internal waypoints "dist" parameter,
-	 * which denotes the distance from the start of the track.
-	 * this is used for the distance x height projection.
-	 * (added by Nathan)
-	 */
-	public void refreshDist() {
-		double dist = 0.0;
-		Waypoint last = null;
-		for(TrackSegment ts : this.trackSegments)
-			for(Waypoint wp : ts) {
-				if(last != null) {
-					dist += last.distanceTo(wp);
-				}
-				wp.dist = dist;
-				last = wp;
-			}
-	}
+            distance = distance + s.getDistance();
+        }
+        return distance;
+    }
+    
+    /**
+     * Return an ArrayList of track segments
+     * @return ArrayList<TrackSegment>
+     */
+    public ArrayList<TrackSegment> getArray() {
+        return this.trackSegments;
+    }
+    
+    /**
+     * Return the size of the track segment array
+     * @return int
+     */
+    public int size() {
+        return this.trackSegments.size();
+    }
+    
+    /**
+     * Refreshes the internal waypoints "dist" parameter,
+     * which denotes the distance from the start of the track.
+     * this is used for the dstance x height projection.
+     * (added by Nathan)
+     */
+    public void refreshDist() {
+        double dist = 0.0;
+        Waypoint last = null;
+        for(TrackSegment ts : this.trackSegments)
+            for(Waypoint wp : ts) {
+                if(last != null) {
+                    dist += last.distanceTo(wp);
+                }
+                wp.dist = dist;
+                last = wp;
+            }
+    }
 }
