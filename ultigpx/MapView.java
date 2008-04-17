@@ -22,16 +22,19 @@ abstract public class MapView extends JPanel
     static public double scale;
     
     public static Color            WAYPOINT_COLOR  = Color.BLACK;
+    public static Color            POINT_COLOR     = Color.BLUE;
     public static Color            TRACK_COLOR     = Color.BLUE;
     public static Color            ROUTE_COLOR     = Color.GREEN;
     public static Color            SELECTED_COLOR  = Color.RED;
     
     public static final int        WAYPOINT_SIZE   = 5;
+    public static final int        POINT_SIZE      = 3;
+    public static final int        LINE_SIZE       = 2;
     public static final int        FONT_SIZE       = 9;
     public static final int        CLICK_THRESHOLD = 5;
     
     public static final double     MAX_SCALE       = 500000.0;
-    public static final double     MIN_SCALE       = 5.0;
+    public static final double     MIN_SCALE       = 20.0;
     
     public static final double     ZOOM_IN         = 1.10;
     public static final double     ZOOM_OUT        = 0.90909090909;

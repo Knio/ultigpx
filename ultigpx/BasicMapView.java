@@ -13,13 +13,24 @@ public abstract class BasicMapView extends MapView
     EventHandler    evt;
     Graphics2D      g;
     BasicMapView me = this;
-	
-	int mouseX;
-	int mouseY;
+    
+    int mouseX;
+    int mouseY;
+    
+    boolean forcecolor;
+    Color linecolor;
+    Color pointcolor;
+    float linesize;
+    float pointsize;
+    
+    
     
     ArrayList<Rectangle2D> labelhints;
     RectQuadTree labelhints2;
-
+    
+    
+    
+    
     /**
     * Creates a new BasicMapView
     * @param UltiGPX main
@@ -47,33 +58,24 @@ public abstract class BasicMapView extends MapView
         repaint();
     }
     
-    protected void selectEvent(Waypoint wp)
+    
+    protected void setLineColor(Color c)
     {
-        selected = wp;
-        //repaint();
-    }
-    
-    protected void selectEvent(Track tk)
-    {
-        selected = tk;
-        //repaint();
-    }
-    
-    protected void selectEvent(Route rt)
-    {
-        selected = rt;
-        //repaint();
-    }
-    
-    
-    
-    protected void setColor(Color c1, Color c2)
-    {
-        if (c1 != null)
-            g.setPaint(c1);
+        if (c != null && !forcecolor)
+            g.setPaint(c);
         else
-            g.setPaint(c2);
+            g.setPaint(linecolor);
     }
+    
+    protected void setPointColor(Color c)
+    {
+        if (c != null && !forcecolor)
+            g.setPaint(c);
+        else
+            g.setPaint(pointcolor);
+    }
+    
+    
     
     /**
     * Renders this map
@@ -111,8 +113,8 @@ public abstract class BasicMapView extends MapView
         int left = 0;
         int right= getWidth();
         
-        Point2D topleft     = inverseproject(left,  top);
-        Point2D topright    = inverseproject(right, top);
+        Point2D topleft     = inverseproject(left,  getHeight()/2.0);
+        Point2D topright    = inverseproject(right, getHeight()/2.0);
         
         double lat1 = Math.toRadians(topleft.getY());
         double lon1 = Math.toRadians(topleft.getX());
@@ -168,49 +170,58 @@ public abstract class BasicMapView extends MapView
         
         renderLegend();
         
-        
-        
         g.setFont(new Font("Arial", 0, FONT_SIZE));
         
+        // render selected wps so they have label priority
+        forcecolor  = true;
         
-        // render selected so it has label priority
-        if (main.selected.get() != null)
+        linecolor   = SELECTED_COLOR;
+        pointcolor  = SELECTED_COLOR;
+        
+        linesize    = 5.0f;
+        pointsize   = 2*WAYPOINT_SIZE;
+        
+        g.setStroke(new BasicStroke(5.0f));
+        for (Waypoint i : main.selected.waypoints())
+            render(i);
+        for (Route rt : main.selected.routes())
         {
-            g.setPaint(SELECTED_COLOR);
-            g.setStroke(new BasicStroke(5.0f));
-            render(main.selected.get());
+            render(rt, null);
+            for (Waypoint i : rt)
+                render(i);
         }
-        
+        for (Track tk : main.selected.tracks())
+            render(tk);
         
         // render tracks and routes
+        
+        forcecolor  = false;
+        
+        linecolor   = TRACK_COLOR;
+        pointcolor  = POINT_COLOR;
+        
+        linesize    = LINE_SIZE;
+        pointsize   = POINT_SIZE;
+        
+        
         g.setStroke(new BasicStroke(2.0f));
         
         for (Track i : file.tracks())
             if (i.enabled)
-            {
-                setColor(i.color, TRACK_COLOR);
                 render(i);
-            }
+            
+            
+        linecolor   = ROUTE_COLOR;
+        pointcolor  = WAYPOINT_COLOR;
         for (Route i : file.routes())
             if (i.enabled)
-            {
-                setColor(i.color, ROUTE_COLOR);
-                render(i);
-            }
+                render(i, i.getColor());
         
         
         // render all waypoints
-        g.setColor(WAYPOINT_COLOR);
-        g.setStroke(new BasicStroke(1.0f));
         
-        /*
-        for (Track tk : file.tracks())
-            if (tk.enabled)
-                for (TrackSegment ts : tk)
-                    for (Waypoint i : ts)
-                        render(i);
-        */
-        
+        pointcolor  = WAYPOINT_COLOR;
+        pointsize   = WAYPOINT_SIZE;
         for (Route rt : file.routes())
             if (rt.enabled)
                 for (Waypoint i : rt)
@@ -218,57 +229,21 @@ public abstract class BasicMapView extends MapView
         
         for (Waypoint i : file.waypoints())
             if (i.enabled)
-            {
-                setColor(i.color, WAYPOINT_COLOR);
                 render(i);
-            }
         
-        // rerender selected so that it is on top
-        /*
-        
-        System.out.println("Selected = "+main.selected.get());
-        if (main.selected.get() != null)
-        {
-            g.setPaint(SELECTED_COLOR);
-            g.setStroke(new BasicStroke(3.0f));
-            render(main.selected.get());
-        } //*/
-        
-        g.setStroke(new BasicStroke(3.0f));
-        
-        for (Track i : main.selected.tracks())
-        {
-            setColor(null, SELECTED_COLOR);
-            render(i);
-        }
-        for (Route i : main.selected.routes())
-        {
-            setColor(null, SELECTED_COLOR);
-            render(i);
-        }
-        for (Waypoint i : main.selected.waypoints())
-        {
-            setColor(null, SELECTED_COLOR);
-            render(i);
-        }
         
     }
     
-    
-    protected void render(Object o)
-    {
-        if (o instanceof Route)     render((Route)o);
-        if (o instanceof Track)     render((Track)o);
-        if (o instanceof Waypoint)  render((Waypoint)o);
-    }
     
     protected void render(Track tk)
     {
         for (TrackSegment i : tk.getArray())
-            render(i);
+        {
+            render(i, tk.getColor());
+        }
     }
     
-    protected void render(ArrayList<Waypoint> ts)
+    protected void render(ArrayList<Waypoint> ts, Color c)
     {
         if (ts.size() == 0) return;
         GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD, ts.size()+1);
@@ -282,11 +257,9 @@ public abstract class BasicMapView extends MapView
             p.lineTo((float)t.getX(), (float)t.getY());
         }
         
-        //setColor(null, TRACK_COLOR);
+        setLineColor(c);
         g.draw(p);
         
-        
-        //setColor(null, WAYPOINT_COLOR);
         
         double x = Math.pow(2.0, (int)(Math.log(10.0/scale)/Math.log(2.0)));
         double d = 0;
@@ -297,6 +270,7 @@ public abstract class BasicMapView extends MapView
         Point2D p1 = new Point2D.Double(i0.lon, i0.lat);
         Point2D p2;
         
+        if (ts instanceof Route) return;
         for (Waypoint i : ts)
         {
             p2 = new Point2D.Double(i.lon, i.lat);
@@ -318,12 +292,13 @@ public abstract class BasicMapView extends MapView
         if (!i.enabled) return;
         Point2D  p = project(i);
         
-        Ellipse2D e = new Ellipse2D.Double(p.getX() - WAYPOINT_SIZE/2,
-                                            p.getY() - WAYPOINT_SIZE/2,
-                                            WAYPOINT_SIZE,
-                                            WAYPOINT_SIZE);
+        Ellipse2D e = new Ellipse2D.Double(p.getX() - pointsize/2.0,
+                                            p.getY() - pointsize/2.0,
+                                            pointsize,
+                                            pointsize);
         
         
+        setPointColor(i.getColor());
         renderLabel(i.getName(), p);
         g.fill(e);
     }
