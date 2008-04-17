@@ -415,7 +415,8 @@ public class MainView extends JFrame
                 Frame parent = new Frame();
                 FileDialog fd = new FileDialog(parent, "Choose a KML file:",
                            FileDialog.SAVE);
-                fd.setFile(filenam.replaceFirst(".gpx", ".kml"));
+                if ((filenam != null) && (filenam.length() >= 4))
+                		fd.setFile(filenam.replaceFirst(".gpx", ".kml"));
                 fd.setVisible(true);
                 fd.setFilenameFilter(new KMLFilter());
                 String GPXfile = fd.getFile();
