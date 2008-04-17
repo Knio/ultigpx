@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
 
@@ -58,11 +59,11 @@ public class WayptView extends JComponent{
     private DefaultMutableTreeNode top;
     private String filename;
     private CheckTreeManager checkTreeManager;
-    
-    
-   // MainView parent;
-  //  TextArea tArealabel;
+     
     String mainfile = null;
+    boolean tracksSelected = true;
+    boolean routesSelected = true;
+    boolean wptsSelected = true;
     
       /*
        * @param main UltiGPX file
@@ -482,12 +483,27 @@ public class WayptView extends JComponent{
             } 
             removeAll();
             
-           if (!(((DefaultMutableTreeNode)value).getUserObject() instanceof String))
+           if (!(((DefaultMutableTreeNode)value).getUserObject() instanceof String)){
             	if(((UGPXData)((DefaultMutableTreeNode)value).getUserObject()).getEnabled())
             		checkBox.setState(TristateCheckBox.SELECTED); 
             	else
             		checkBox.setState(TristateCheckBox.NOT_SELECTED); 
-        	   
+           }else if(((DefaultMutableTreeNode)value).getUserObject().equals("Tracks")){
+        	   if(tracksSelected)
+        		   checkBox.setState(TristateCheckBox.SELECTED); 
+           	   else
+           		   checkBox.setState(TristateCheckBox.NOT_SELECTED);
+           }else if(((DefaultMutableTreeNode)value).getUserObject().equals("Routes")){
+        	   if(routesSelected)
+        		   checkBox.setState(TristateCheckBox.SELECTED); 
+           	   else
+           		   checkBox.setState(TristateCheckBox.NOT_SELECTED);
+           }else if(((DefaultMutableTreeNode)value).getUserObject().equals("Waypoints")){
+        	   if(wptsSelected)
+        		   checkBox.setState(TristateCheckBox.SELECTED); 
+           	   else
+           		   checkBox.setState(TristateCheckBox.NOT_SELECTED);
+           }
             add(checkBox, BorderLayout.WEST); 
             add(renderer, BorderLayout.CENTER); 
             return this; 
@@ -552,7 +568,7 @@ public class WayptView extends JComponent{
                     
                 }
             }else{
-            	
+            	checkNodes(value);
             }
             if(selected) 
                 selectionModel.removeSelectionPath(path); 
@@ -566,6 +582,83 @@ public class WayptView extends JComponent{
             } 
         } 
      
+		private void checkNodes(Object value) {
+			String val = (String) ((DefaultMutableTreeNode)value).getUserObject();
+        	
+        	if(val.equals("Tracks")){
+        		System.out.println("val" + val);
+        		
+        		if(tracksSelected){
+        			tracksSelected = false;
+        			// uncheck its children
+        			Enumeration e =((DefaultMutableTreeNode)value).children();
+            		while(e.hasMoreElements()){
+            			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            			((UGPXData)(node.getUserObject())).setEnabled(false);
+            	
+            		}
+        		}else{
+        			tracksSelected = true;
+        			// check all its children
+        			Enumeration e =((DefaultMutableTreeNode)value).children();
+            		while(e.hasMoreElements()){
+            			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            			((UGPXData)(node.getUserObject())).setEnabled(true);
+            	
+            		}
+        		}
+
+        	}else if(val.equals("Routes")){
+        		System.out.println("val" + val);
+        		
+        		if(routesSelected){
+        			routesSelected = false;
+        			// uncheck its children
+        			Enumeration e =((DefaultMutableTreeNode)value).children();
+            		while(e.hasMoreElements()){
+            			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            			((UGPXData)(node.getUserObject())).setEnabled(false);
+            	
+            		}
+        		}else{
+        			routesSelected = true;
+        			// check all its children
+        			Enumeration e =((DefaultMutableTreeNode)value).children();
+            		while(e.hasMoreElements()){
+            			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            			((UGPXData)(node.getUserObject())).setEnabled(true);
+            	
+            		}
+        		}
+        	}else if(val.equals("Waypoints")){
+        		System.out.println("val" + val);
+        		
+        		if(wptsSelected){
+        			wptsSelected = false;
+        			// uncheck its children
+        			Enumeration e =((DefaultMutableTreeNode)value).children();
+            		while(e.hasMoreElements()){
+            			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            			((UGPXData)(node.getUserObject())).setEnabled(false);
+            	
+            		}
+        		}else{
+        			 wptsSelected = true;
+        			// check all its children
+        			Enumeration e =((DefaultMutableTreeNode)value).children();
+            		while(e.hasMoreElements()){
+            			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            			((UGPXData)(node.getUserObject())).setEnabled(true);
+            	
+            		}
+        		}
+        	}
+
+
+        	
+			
+		}
+
 		/*
 		 *  gets the selectionmodel of the checkTree
 		 *  @return selectionModel
