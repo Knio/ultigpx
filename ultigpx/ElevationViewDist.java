@@ -15,14 +15,11 @@ import javax.swing.*;
 import ultigpx.BasicMapView.State;
 
 /**
- * This one is EVEN MORE HIDEOUSLY UGLY because we don't have any way to
- * project points into the "Distance from start of track" space. This is becase
- * waypoints have no sense of where they are relative to their parent tracks.
+ * Similar to the other Elevation view, this one projects based on the
+ * "dist" field of the Waypoints, which is their distance along
+ * their respective tracks.
  * 
- * Thus we have to do all the "projectioney" stuff inside the draw and selection
- * loops themselves. I was considering adding distance info to the waypoints, but
- * that would just need to be updated as points move, and that's ugly... there isn't
- * a really clean way to do it at this point so this will have to do.
+ * 
  * @author Nathan
  *
  */
@@ -44,110 +41,6 @@ class ElevationViewDist extends BasicMapView
         super(main);
     }
     
-    /**
-     * We have to over-ride the selection code, because there is no real
-     *  "distance" value on a waypoint to project/unproject.
-     *
-    protected Waypoint getTrackPoint(Track tk, Point2D click)
-    {
-    	double dist = 0.0;
-
-    	Waypoint last = null;
-        Waypoint min_w = null;
-        double min_d  = CLICK_THRESHOLD*CLICK_THRESHOLD;
-            
-        for (TrackSegment ts : tk.getArray())
-            for (Waypoint i : ts)
-            {
-            	if(last != null) {
-            		dist += last.distanceTo(i);
-            	}
-                if (!i.enabled) continue;
-                double t = click.distanceSq(project(dist,i.getEle()));
-                if (t < min_d)
-                {
-                    min_d = t;
-                    min_w = i;
-                }
-                last = i;
-            }
-        
-        return min_w;
-    }*/
-      
-    
-    /**
-     * We also have to re-implement the rendering because
-     * we can't do a simple projection based on a distance
-     * from start of track. We can't use the Arraylist renderer
-     *  either because it renders track-segments individually...
-     *  and we want to render tracks as a whole.
-     *
-    protected void render(Track tk)
-    {
-    	double dist = 0.0;
-		Waypoint last = null;
-		
-		// I think this draws the lines between points
-    	for (TrackSegment ts : tk.getArray())
-    	{
-    		if (ts.size() == 0) return;
-    		GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD, ts.size()+1);
-    		Point2D t = project(ts.get(0));
-
-    		p.moveTo((float)t.getX(), (float)t.getY());
-
-    		for (Waypoint i : ts)
-    		{
-    			//keep a running total of our distance from the start
-    			if(last != null) {
-    				dist += last.distanceTo(i);
-    			}
-    			t = project(dist, i.getEle());
-    			p.lineTo((float)t.getX(), (float)t.getY());
-    			last = i;
-    		}
-
-    		g.draw(p);
-    	}
-    	
-    	// I think this draws the lines between points
-    	// we're basically doing a 2-pass render so go over the list again.
-    	dist = 0.0;
-		last = null;
-				
-    	for (TrackSegment ts : tk.getArray())
-    	{	
-
-    		//and I think this draws the individual waypoints on the line.
-
-    		double x = Math.pow(2.0, (int)(Math.log(10.0/scale)/Math.log(2.0)));
-    		double d = 0;
-
-    		Waypoint i0 = ts.get(0);
-    		render(i0);
-
-    		Point2D p1 = new Point2D.Double(i0.lon, i0.lat);
-    		Point2D p2;
-
-    		for (Waypoint i : ts)
-    		{
-    			//again, keep a running distance total from track start
-    			if(last != null) {
-    				dist += last.distanceTo(i);
-    			}
-    			p2 = new Point2D.Double(i.lon, i.lat);
-    			d += p2.distance(p1);
-    			p1 = p2;
-    			if (d > x)
-    			{
-    				d %= x;
-    				render(i);
-    			}
-    			last = i;
-    		}
-    	}
-    }*/
     
     /**
      * Override the standard projection in favour of a side-view
