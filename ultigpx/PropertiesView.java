@@ -143,17 +143,14 @@ public class PropertiesView extends JPanel {
         c.weightx = 1.0;
         c.weighty = 20.0;
         c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10,10,0,9);
         // adds text box to panel
     	add(mllabel,c);
     	// creates button
-        c.insets = new Insets(0,10,0,9);
     	setcolor = new Button("Choose Color");
     	setAtt = new Button("Edit");
     	c.weighty = 0.5;
     	add(setAtt, c);
     	// add button
-    	c.insets = new Insets(0,10,9,9);
     	add(setcolor, c);
     	// set up button actions
     	setcolor.setActionCommand("SetColor");
@@ -297,9 +294,9 @@ public class PropertiesView extends JPanel {
     		text=text.concat("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue());
     	else
     		text=text.concat("Color:\n  Default");
-    	System.out.println(text);
+    	//System.out.println(text);
     	mllabel.setText(text);
-    	System.out.println(text);
+    	//System.out.println(text);
     	//scroll window back to top
     	mllabel.setCaretPosition(0);
     }
@@ -525,6 +522,7 @@ public class PropertiesView extends JPanel {
 				parent.refreshmap();
 				editop.setnew(selwp);
 				parent.main.addOperation(editop);
+				me.paintinfo();
 			}
 		});
 		
@@ -570,6 +568,7 @@ public class PropertiesView extends JPanel {
 				parent.refreshmap();
 				editop.setnew(seltrk);
 				parent.main.addOperation(editop);
+				me.paintinfo();
 			}
 		});
     }
@@ -612,6 +611,7 @@ public class PropertiesView extends JPanel {
 				parent.refreshmap();
 				editop.setnew(selrt);
 				parent.main.addOperation(editop);
+				me.paintinfo();
 			}
 		});
     }
@@ -649,6 +649,7 @@ public class PropertiesView extends JPanel {
 				parent.refreshmap();
 				editop.setnew(selgrp);
 				parent.main.addOperation(editop);
+				me.paintinfo();
 			}
 		});
     }
