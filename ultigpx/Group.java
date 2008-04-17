@@ -3,7 +3,10 @@ package ultigpx;
 
 import java.util.*;
 
-
+/*
+ * Group class that contains a listing of waypoints, tracks and routes, as well as name and
+ * enabled status
+ */
 public class Group
 {
     protected List<Waypoint>  waypoint;
@@ -15,9 +18,9 @@ public class Group
     
     /**
      * Constructor to send in list with list of data
-     * @param List<Waypoint> wp
-     * @param List<Track> tk
-     * @param List<Route> rt
+     * @param wp List<Waypoint> 
+     * @param tk List<Track> 
+     * @param rt List<Route> 
      */ 
     public Group(List<Waypoint> wp, List<Track> tk, List<Route> rt)
     {
@@ -47,7 +50,7 @@ public class Group
     
     /**
 	 * Sets enabled status
-	 * @param boolean x value
+	 * @param x : boolean
 	 */
     public void setEnabled(boolean x) {
     	enabled = x;
@@ -82,7 +85,7 @@ public class Group
     
     /**
      * Get track
-     * @param integer n
+     * @param n integer
      * @return Track
      * @throws IndexOutOfBoundsException
      */
@@ -93,7 +96,7 @@ public class Group
     
     /**
      * Get route
-     * @param integer n
+     * @param n integer
      * @return Route
      * @throws IndexOutOfBoundsException
      */
@@ -104,7 +107,7 @@ public class Group
     
     /**
      * Get waypoint
-     * @param integer n
+     * @param n integer
      * @return Waypoint
      * @throws IndexOutOfBoundsException
      */
@@ -120,7 +123,7 @@ public class Group
     
     /**
      * Add track to file
-     * @param Track t
+     * @param t Track
      */
     public void addTrack(Track t) {
     	track.add(t);
@@ -130,7 +133,7 @@ public class Group
     
     /**
      * Add route to file
-     * @param Route r
+     * @param r Route
      */
     public void addRoute(Route r) {
     	route.add(r);
@@ -140,7 +143,7 @@ public class Group
     
     /**
      * Add waypoint to file
-     * @param Waypoint w
+     * @param w Waypoint
      */
     public void addWaypoint(Waypoint w) {
     	waypoint.add(w);
@@ -148,7 +151,7 @@ public class Group
     
     /**
      * Add a UGPXData object to the current group
-     * @param UGPXData x
+     * @param x UGPXData
      */
     public void add(UGPXData x)
     {
@@ -173,7 +176,7 @@ public class Group
     
     /**
      * Check if current group has an instance of a route
-     * @param Route x
+     * @param x Route
      * @return boolean value of search
      */
     public boolean containsRoute(Route x)
@@ -183,7 +186,7 @@ public class Group
     
     /**
      * Check if current group has an instance of a track
-     * @param track x
+     * @param x track
      * @return boolean value of search
      */
     public boolean containsTrack(Track x)
@@ -193,7 +196,7 @@ public class Group
     
     /**
      * Check if current group has an instance of a waypoint
-     * @param waypoint x
+     * @param x waypoint
      * @return boolean value of search
      */
     public boolean containsWaypoint(Waypoint x)
@@ -203,7 +206,7 @@ public class Group
     
     /**
      * Check if current group has an instance of an UGPXData ojbect
-     * @param UGPXData x
+     * @param x UGPXData
      * @return boolean value of search
      */
     public boolean contains(UGPXData x)
