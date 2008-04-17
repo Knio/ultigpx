@@ -97,18 +97,12 @@ public class Route extends ArrayList<Waypoint>  implements UGPXDataList
      * Get the total distance of the Route
      * @return Double value for the total distance of the Route in meters
      */
-	public double getDistance() {
-		double distance = 0.0;
-		Iterator iter = this.iterator();
-		Waypoint lastPoint = null;
-		Waypoint tempWP;
-		
-		if (iter.hasNext()) lastPoint = (Waypoint)iter.next();
-		for(;iter.hasNext();) {
-			tempWP = (Waypoint)iter.next();
-			distance = distance + lastPoint.distanceTo(tempWP);
-		}
-		
-		return distance;
+    public double getDistance()
+    {
+        double distance = 0.0;
+        
+        for (int i=0;i<size()-1; i++)
+            distance += get(i).distanceTo(get(i+1));
+        return distance;
 	}
 }
