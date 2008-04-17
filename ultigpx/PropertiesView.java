@@ -65,7 +65,7 @@ public class PropertiesView extends JPanel {
 		selected = 1;
         if (wp == null)
             selected = 0;
-		paintThis();
+		paintinfo();
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class PropertiesView extends JPanel {
 	public void select(Track trk) {
 		seltrk = trk;
 		selected = 2;
-		paintThis();
+		paintinfo();
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class PropertiesView extends JPanel {
 	public void select(Route rt) {
 		selrt = rt;
 		selected = 3;
-		paintThis();
+		paintinfo();
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class PropertiesView extends JPanel {
 		{
 			selgrp = g;
 			selected = 4;
-			paintThis();
+			paintinfo();
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class PropertiesView extends JPanel {
 	 */
 	public void select() {
 		selected = 0;
-		paintThis();
+		paintinfo();
 	}
 	
 	/**
@@ -163,16 +163,8 @@ public class PropertiesView extends JPanel {
     	// set selected element to nothing
 		selected = 0;
 		this.setPreferredSize(new Dimension(100, 100));
-		paintThis();
+		paintinfo();
 	}
-	
-	/**
-	 * Repaints the panel. Draws the components of the panel on the screen.
-	 */
-    public void paintThis() {
-        // writes the info on the screen
-        paintinfo();
-    }
     
     /**
      * Changes the information to be displayed on the panel depending on the
@@ -225,14 +217,15 @@ public class PropertiesView extends JPanel {
     	setcolor.setEnabled(false);
     	setAtt.setEnabled(true);
     	// sets the text to ""
-    	mllabel.setText("Name: " + selgrp.name + "\n");
+    	String text = "Name: " + selgrp.name + "\n";
     	if (selgrp.getEnabled())
-    		mllabel.append("Status: Enabled\n");
+    		text=text.concat("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n");
-    	mllabel.append("Number of Waypoints: " + selgrp.waypoint.size() + "\n");
-    	mllabel.append("Number of Tracks: " + selgrp.track.size() + "\n");
-    	mllabel.append("Number of Routes: " + selgrp.route.size() + "\n");
+    		text=text.concat("Status: Disabled\n");
+    	text=text.concat("Number of Waypoints: " + selgrp.waypoint.size() + "\n");
+    	text=text.concat("Number of Tracks: " + selgrp.track.size() + "\n");
+    	text=text.concat("Number of Routes: " + selgrp.route.size() + "\n");
+    	mllabel.setText(text);
     	//scroll window back to top
     	mllabel.setCaretPosition(0);
     }
@@ -280,31 +273,33 @@ public class PropertiesView extends JPanel {
     	// enables button
     	setcolor.setEnabled(true);
     	setAtt.setEnabled(true);
-    	// Clear the text
-    	mllabel.setText("");
+    	String text = "";
     	// displays name
-    	mllabel.append("Waypoint: " + selwp.getName() + "\n");
+    	text=text.concat("Waypoint: " + selwp.getName() + "\n");
     	// displays status
     	if (selwp.getEnabled())
-    		mllabel.append("Status: Enabled\n");
+    		text=text.concat("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n");
+    		text=text.concat("Status: Disabled\n");
     	// displays time
     	Date x = new Date((long)selwp.getTime());
-    	mllabel.append("Time: " + x.toString() + "\n");
+    	text=text.concat("Time: " + x.toString() + "\n");
     	// displays description
-    	mllabel.append("Description: " + selwp.getDesc() + "\n");
+    	text=text.concat("Description: " + selwp.getDesc() + "\n");
     	// displays latitude
-    	mllabel.append("Latitude: " + selwp.getLat() + "\n");
+    	text=text.concat("Latitude: " + selwp.getLat() + "\n");
     	// displays longitude
-    	mllabel.append("Longitude: " + selwp.getLon() + "\n");
+    	text=text.concat("Longitude: " + selwp.getLon() + "\n");
     	// displays elevation
-    	mllabel.append("Elevation: " + selwp.getEle() + "\n");
+    	text=text.concat("Elevation: " + selwp.getEle() + "\n");
     	// displays color
     	if (selwp.getColor() != null)
-    		mllabel.append("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue());
+    		text=text.concat("Color:\n  Red: " + selwp.getColor().getRed() + "\n  Green: " + selwp.getColor().getGreen() + "\n  Blue: " + selwp.getColor().getBlue());
     	else
-    		mllabel.append("Color:\n  Default");
+    		text=text.concat("Color:\n  Default");
+    	System.out.println(text);
+    	mllabel.setText(text);
+    	System.out.println(text);
     	//scroll window back to top
     	mllabel.setCaretPosition(0);
     }
@@ -318,23 +313,23 @@ public class PropertiesView extends JPanel {
     	// enables button
     	setcolor.setEnabled(true);
     	setAtt.setEnabled(true);
-    	// Clear the text
-    	mllabel.setText("");
+    	String text = "";
     	// displays name
-    	mllabel.append("Track: " + seltrk.getName() + "\n");
+    	text=text.concat("Track: " + seltrk.getName() + "\n");
     	// displays status
     	if (seltrk.enabled)
-    		mllabel.append("Status: Enabled\n");
+    		text=text.concat("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n");
+    		text=text.concat("Status: Disabled\n");
     	// displays number of track segments in the Track
-    	mllabel.append("Number of Segments: " + seltrk.size() + "\n");
-		mllabel.append("Total Distance: " + formatDistance(seltrk.getDistance()) + "\n");
+    	text=text.concat("Number of Segments: " + seltrk.size() + "\n");
+		text=text.concat("Total Distance: " + formatDistance(seltrk.getDistance()) + "\n");
     	// displays color
     	if (seltrk.color != null)
-    		mllabel.append("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue());
+    		text=text.concat("Color:\n  Red: " + seltrk.getColor().getRed() + "\n  Green: " + seltrk.getColor().getGreen() + "\n  Blue: " + seltrk.getColor().getBlue());
     	else
-    		mllabel.append("Color:\n  Default");
+    		text=text.concat("Color:\n  Default");
+    	mllabel.setText(text);
     	//scroll window back to top
     	mllabel.setCaretPosition(0);
     }
@@ -348,25 +343,25 @@ public class PropertiesView extends JPanel {
     	// enables button
     	setcolor.setEnabled(true);
     	setAtt.setEnabled(true);
-    	// Clear the text
-    	mllabel.setText("");
+    	String text = "";
     	// displays name
-    	mllabel.append("Route: " + selrt.getName() + "\n");
+    	text=text.concat("Route: " + selrt.getName() + "\n");
     	// displays status
     	if (selrt.enabled)
-    		mllabel.append("Status: Enabled\n");
+    		text=text.concat("Status: Enabled\n");
     	else
-    		mllabel.append("Status: Disabled\n");
+    		text=text.concat("Status: Disabled\n");
     	// displays description
-    	mllabel.append("Description: " + selrt.getDesc() + "\n");
+    	text=text.concat("Description: " + selrt.getDesc() + "\n");
     	// displays number of waypoints in the route
-    	mllabel.append("Number of Waypoints: " + selrt.size() + "\n");
-		mllabel.append("Total Distance: " + formatDistance(selrt.getDistance()) + "\n");
+    	text=text.concat("Number of Waypoints: " + selrt.size() + "\n");
+		text=text.concat("Total Distance: " + formatDistance(selrt.getDistance()) + "\n");
     	// displays color
     	if (selrt.color != null)
-    		mllabel.append("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue());
+    		text=text.concat("Color:\n  Red: " + selrt.getColor().getRed() + "\n  Green: " + selrt.getColor().getGreen() + "\n  Blue: " + selrt.getColor().getBlue());
     	else
-    		mllabel.append("Color:\n  Default");
+    		text=text.concat("Color:\n  Default");
+    	mllabel.setText(text);
     	//scroll window back to top
     	mllabel.setCaretPosition(0);
     }
@@ -480,9 +475,10 @@ public class PropertiesView extends JPanel {
 		
 		Calendar cal = Calendar.getInstance();
 		Date initDate = new Date((long)selwp.getTime());
-		Date earliestDate = new Date(0);
+		Date earliestDate = new Date(-1);
 		cal.add(Calendar.YEAR, 200);
 		Date latestDate = cal.getTime();
+		//System.out.println("Start:"+earliestDate+" Time:"+initDate+" End:"+latestDate);
 		SpinnerModel model = new SpinnerDateModel(initDate,
 		                             earliestDate,
 		                             latestDate,
