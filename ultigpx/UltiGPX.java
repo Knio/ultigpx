@@ -106,7 +106,7 @@ public class UltiGPX
     }
     
     // imports a GPX file to the database
-    public void importGPX(String filename) throws JDOMException, IOException
+    public Database importGPX(String filename) throws JDOMException, IOException
     {
         try
         {
@@ -151,6 +151,7 @@ public class UltiGPX
         view.addwp.setEnabled(true);
         view.delwp.setEnabled(true);
         view.refresh();
+        return file;
     }
     
     // export to GPX
