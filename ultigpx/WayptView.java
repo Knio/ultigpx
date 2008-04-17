@@ -569,6 +569,7 @@ public class WayptView extends JComponent{
                 }
             }else{
             	checkNodes(value);
+            	 main.view.refresh();
             }
             if(selected) 
                 selectionModel.removeSelectionPath(path); 
