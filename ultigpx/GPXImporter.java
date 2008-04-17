@@ -1,12 +1,11 @@
 package ultigpx;
 
+
 /**
- * Class GPX Importer is used for importing a GPX file into the UltiGPXFile structure.  It uses JDOM for processing XML.
+ * Class GPX Importer is used for importing a file into the UltiGPXFile structure.  It uses JDOM for processing XML.
  * For more information about JDOM visit http://www.jdom.org/
- * This class was written for Part 1 of the project for CPSC 301, Winter 2008
+ * This class was written for the project for CPSC 301, Winter 2008
  * @author Jill Ainsworth
- *
- * Jill needs to fix time conversion, she is going to bring this up on Monday in lab
  */
 
 import java.util.*;
@@ -14,22 +13,19 @@ import java.io.*;
 import org.jdom.*;
 import org.jdom.input.*;
 import java.text.*;
+import org.jdom.output.XMLOutputter;
 
 public class GPXImporter implements GPXImporterExporterConstants {
     
     /**
-     * importGPX imports a GPX file.  The filename is given as a string, and a UGPXFile is returned.
+     * importGPX imports a GPX file to a group.  The filename is given as a string, and the group is given.
      * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
-     * @param filename, a String, the name of the file you want to import
-     * @return UGPXFile, containing the tracks, routes, and waypoints that were in the file
+     * @param filename a String, the name of the file you want to import
+     * @param inputGroup a Group, contains the tracks, routes, and waypoints that were in the file after this method is run
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
     public static void importGPX(Group inputGroup, String filename) throws JDOMException, IOException {
-        //public static Group importGPX(String filename) throws JDOMException, IOException {
-        // Create a new UGPXFile to put data in
-        //Group returnValue = new Group();
-        
         // Create the document from the input stream using JAXPDOM adapter
         Document inputFile = new SAXBuilder().build(new File(filename));
         
@@ -37,7 +33,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
         if (inputFile.hasRootElement()) {
             Element root = inputFile.getRootElement();
             
-            // If the root is not GPX, throw an execption (HELP!)
+            // If the root is not GPX, throw an execption
             if (!root.getName().equals(GPX))
                 throw new IOException();
             
@@ -55,10 +51,10 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     //Make variables to represent name, description, elevation and time for the waypoint
                     List waypointChildList = currentElement.getChildren();
                     Iterator waypointChildIterator = waypointChildList.iterator();
-                    String name = "";
-                    String desc = "";
-                    double ele = 0;
-                    long time = -1;
+                    String name = DEFAULT_NAME;
+                    String desc = DEFAULT_DESCRIPTION;
+                    double ele = DEFAULT_ELEVATION;
+                    long time = DEFAULT_TIME;
                     
                     //Extrack name, description, elevation, and time
                     while(waypointChildIterator.hasNext()) {
@@ -73,7 +69,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             time = getTime(currentWaypointChild.getText());
                     } //end while
                     
-                    //Add the waypoint to the GPXFile
+                    //Add the waypoint to the group
                     inputGroup.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
                 } //end if waypoint
                 
@@ -91,10 +87,10 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             //Make variable to represent name, description, elevation and time for that point
                             List waypointChildList = currentElement.getChildren();
                             Iterator waypointChildIterator = waypointChildList.iterator();
-                            String name = "";
-                            String desc = "";
-                            double ele = 0;
-                            long time = -1;
+                            String name = DEFAULT_NAME;
+                            String desc = DEFAULT_DESCRIPTION;
+                            double ele = DEFAULT_ELEVATION;
+                            long time = DEFAULT_TIME;
                             
                             //Extract name, description, elevation, and time
                             while(waypointChildIterator.hasNext()) {
@@ -116,7 +112,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                         } //end if waypoint
                     } //end while
                     
-                    //Add route to GPXFILE
+                    //Add route to group
                     inputGroup.addRoute(newRoute);
                 } //end if route
                 
@@ -144,10 +140,10 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                 if (currentTrackSegment.getName().equals(TRACK_POINT)) {
                                     List waypointChildList = currentTrackSegment.getChildren();
                                     Iterator waypointChildIterator = waypointChildList.iterator();
-                                    String name = "";
-                                    String desc = "";
-                                    double ele = 0;
-                                    long time = -1;
+                                    String name = DEFAULT_NAME;
+                                    String desc = DEFAULT_DESCRIPTION;
+                                    double ele = DEFAULT_ELEVATION;
+                                    long time = DEFAULT_TIME;
                                     
                                     //Extract name, description, elevation, and time
                                     while(waypointChildIterator.hasNext()) {
@@ -166,7 +162,6 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
                                     newTrackSegment.add(newWaypoint);
                                     
-                                    
                                 } //end if track point
                             } //end while get trackpoints
                             
@@ -184,41 +179,47 @@ public class GPXImporter implements GPXImporterExporterConstants {
         
         else //!inputFile.hasRootElement()
             throw new JDOMException();
-        
-        //return returnValue;
-    } //end importGPX
+    } //end importGPX (group)
     
     /**
-     * importGPX imports a GPX file.  The filename is given as a string, and a UGPXFile is returned.
+     * importGPX imports a GPX file.  The filename is given as a string, and a database is given.
      * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
-     * @param filename, a String, the name of the file you want to import
-     * @return UGPXFile, containing the tracks, routes, and waypoints that were in the file
+     * @param filename a String, the name of the file you want to import
+     * @param inputDatabase a Database, contains the tracks, routes, and waypoints that were in the file after this method is run
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
     public static void importGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
+        //Create a new group, and input all of the data into that group
         Group inputGroup = new Group();
         importGPX(inputGroup, filename);
+        
+        //Move all the routes from the group to the database
         List<Route> routesToInput = inputGroup.routes();
         for (int counter = 0; counter < routesToInput.size(); counter++)
             inputDatabase.addRoute(routesToInput.get(counter));
+        
+        //Move all the tracks from the group to the database
         List<Track> tracksToInput = inputGroup.tracks();
         for (int counter = 0; counter < tracksToInput.size(); counter++)
             inputDatabase.addTrack(tracksToInput.get(counter));
+        
+        //Move all the waypoints from the group to the database
         List<Waypoint> waypointsToInput = inputGroup.waypoints();
         for (int counter = 0; counter < waypointsToInput.size(); counter++)
             inputDatabase.addWaypoint(waypointsToInput.get(counter));
-    } //end importGPX
+    } //end importGPX (database)
     
     /**
-     * importGPX imports a GPX file.  The filename is given as a string, and a UGPXFile is returned.
+     * importGPX imports an UltiGPX file to a database.  The filename is given as a string, a Database is given.
      * If there are any problems with the file, either a JDOMException or an IO Exception is thrown
-     * @param filename, a String, the name of the file you want to import
-     * @return UGPXFile, containing the tracks, routes, and waypoints that were in the file
+     * Because importUltiGPX imports groups from the file and groups can not be nested, you can not import an UltiGPX file to a group
+     * @param filename a String, the name of the file you want to import
+     * @param inputDatabase a Database, contains the tracks, routes, and waypoints that were in the file after this method is run
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-
+    
     public static void importUltiGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
         // Create a new UGPXFile to put data in
         Group returnValue = new Group();
@@ -230,7 +231,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
         if (inputFile.hasRootElement()) {
             Element root = inputFile.getRootElement();
             
-            // If the root is not GPX, throw an execption (HELP!)
+            // If the root is not Ulti_gpx, throw an execption
             if (!root.getName().equals(ULTI_GPX))
                 throw new IOException();
             
@@ -248,10 +249,10 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     //Make variables to represent name, description, elevation and time for the waypoint
                     List waypointChildList = currentElement.getChildren();
                     Iterator waypointChildIterator = waypointChildList.iterator();
-                    String name = "";
-                    String desc = "";
-                    double ele = 0;
-                    long time = -1;
+                    String name = DEFAULT_NAME;
+                    String desc = DEFAULT_DESCRIPTION;
+                    double ele = DEFAULT_ELEVATION;
+                    long time = DEFAULT_TIME;
                     
                     //Extrack name, description, elevation, and time
                     while(waypointChildIterator.hasNext()) {
@@ -266,7 +267,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             time = getTime(currentWaypointChild.getText());
                     } //end while
                     
-                    //Add the waypoint to the GPXFile
+                    //Add the waypoint to the database
                     returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
                 } //end if waypoint
                 
@@ -284,10 +285,10 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             //Make variable to represent name, description, elevation and time for that point
                             List waypointChildList = currentElement.getChildren();
                             Iterator waypointChildIterator = waypointChildList.iterator();
-                            String name = "";
-                            String desc = "";
-                            double ele = 0;
-                            long time = -1;
+                            String name = DEFAULT_NAME;
+                            String desc = DEFAULT_DESCRIPTION;
+                            double ele = DEFAULT_ELEVATION;
+                            long time = DEFAULT_TIME;
                             
                             //Extract name, description, elevation, and time
                             while(waypointChildIterator.hasNext()) {
@@ -313,7 +314,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
                         
                     } //end while
                     
-                    //Add route to GPXFILE
+                    //Add route to database
                     returnValue.addRoute(newRoute);
                 } //end if route
                 
@@ -341,10 +342,10 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                 if (currentTrackSegment.getName().equals(TRACK_POINT)) {
                                     List waypointChildList = currentTrackSegment.getChildren();
                                     Iterator waypointChildIterator = waypointChildList.iterator();
-                                    String name = "";
-                                    String desc = "";
-                                    double ele = 0;
-                                    long time = -1;
+                                    String name = DEFAULT_NAME;
+                                    String desc = DEFAULT_DESCRIPTION;
+                                    double ele = DEFAULT_ELEVATION;
+                                    long time = DEFAULT_TIME;
                                     
                                     //Extract name, description, elevation, and time
                                     while(waypointChildIterator.hasNext()) {
@@ -377,21 +378,29 @@ public class GPXImporter implements GPXImporterExporterConstants {
                 } //end if track
                 
                 //If it is a group
+                //When we import a group, for each route, track, the index of the object in the default list is given, so add it to the group
                 else if(currentElement.getName().equals(GROUP)) {
                     //Make variables to keep track of points in the route
                     List groupChildList = currentElement.getChildren();
                     Iterator groupChildIterator = groupChildList.iterator();
                     Group newGroup = new Group();
                     
-                    //For each thing in the group
+                    //For each object in the group
                     while(groupChildIterator.hasNext()) {
                         Element currentGroupChild = (Element) groupChildIterator.next();
+                        //Add name
                         if (currentGroupChild.getName().equals(NAME))
                             newGroup.name = currentGroupChild.getText();
+                        
+                        //Add waypoint
                         else if (currentGroupChild.getName().equals(WAYPOINT))
                             newGroup.addWaypoint(returnValue.getWaypoint(Integer.parseInt(currentGroupChild.getText())));
+                        
+                        //Add track
                         else if (currentGroupChild.getName().equals(TRACK))
                             newGroup.addTrack(returnValue.getTrack(Integer.parseInt(currentGroupChild.getText())));
+                        
+                        //Add route
                         else if (currentGroupChild.getName().equals(ROUTE))
                             newGroup.addRoute(returnValue.getRoute(Integer.parseInt(currentGroupChild.getText())));
                         
@@ -403,19 +412,18 @@ public class GPXImporter implements GPXImporterExporterConstants {
         
         else //!inputFile.hasRootElement()
             throw new JDOMException();
-        
-    } //end importUltiGPX
-    
+    } //end importUltiGPX (database)
     
     /**
-     * Get Time extracks the time from the GPXFile.
+     * Get Time Old extracks the time from the GPXFile.
      * Time in a GPX file is stored as YYYY_MM_DDTHH:MM:SSZ
      * This method uses a Gregorian calendar to then convert this into time in milis.
      * This method is private because it is only used when importing GPX files
-     * If there is a formating problem, the time of -1 is returned
-     * @param toParse, a String, the string representing time in the GPX file
-     * @returns double, the time in milis since 1970
+     * If there is a formating problem, the defalut time is returned
      * This method is old, and has been replaced by getTime, do not use this method
+     * @param toParse a String, the string representing time in the GPX file
+     * @return double the time in milis since 1970
+     * @deprecated
      */
     private static double getTimeOld(String toParse) {
         
@@ -442,7 +450,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
         
         //If there was a problem, return -1
         catch (NumberFormatException e) {
-            return -1;
+            return DEFAULT_TIME;
         } //end catch
         
         //Otherwise, convert the time to Millis using the gregorian calendar
@@ -450,12 +458,25 @@ public class GPXImporter implements GPXImporterExporterConstants {
         return timeConverter.getTimeInMillis();
     } //end getTimeOld
     
+    /**
+     * Get Time extracks the time from the GPXFile.
+     * Time in a GPX file is stored as YYYY_MM_DDTHH:MM:SSZ
+     * This method uses a Simple Date Format to parse the date into a long.
+     * This method is private because it is only used when importing GPX files
+     * This method replaces getTimeOld
+     * If there is a formating problem, the default time is returned
+     * @param toParse a String, the string representing time in the GPX file
+     * @return long the time
+     */
     private static long getTime(String toParse) {
+        //Try to format the date and return it
         try{
             Date newDate = new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").parse(toParse);
             return newDate.getTime();
+            
+            //If there is a problem, return a time of -1
         } catch (ParseException e) {
-            return -1;
+            return DEFAULT_TIME;
         }
     } //end getTime
     
