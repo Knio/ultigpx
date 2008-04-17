@@ -4,6 +4,7 @@ package ultigpx;
  *  1) make fill method return type as boolean in WayptView.java
  *  2) make return type of importGPX as Database...and "return file" at the end of method;
  *  make both the methods as public
+ *  NOTE : needs to set the file path correctly inorder to pass the Test
  */
 import java.io.IOException;
 
@@ -90,12 +91,3 @@ public class WayptViewTest extends TestCase {
 	}
 
 }
-
-
-
-	
-
-	
-
-
-
