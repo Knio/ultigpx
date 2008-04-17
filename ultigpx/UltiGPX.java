@@ -148,8 +148,6 @@ public class UltiGPX
             System.out.println(e);
             throw e;
         }
-        //view.addwp.setEnabled(true);
-        view.delwp.setEnabled(true);
         view.refresh();
         return file;
     }

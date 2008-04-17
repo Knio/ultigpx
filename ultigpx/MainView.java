@@ -159,6 +159,8 @@ public class MainView extends JFrame
         			for (Group j : main.file.groups())
         				j.route.remove(i);
         		}
+        		main.selected.clear();
+        		selectionChanged();
         		wpview.fill();
         		refresh();
         		}});
