@@ -9,7 +9,11 @@ import java.net.*;
 import org.jdesktop.jdic.browser.*;
 import java.awt.*;
 
-
+/**
+ * Displays the map in Google Maps, supports exporting to HTML
+ * 
+ * @author Brandon
+ */
 public class GoogleMapView extends MapView {
 
 	Database	file;
@@ -20,9 +24,11 @@ public class GoogleMapView extends MapView {
 	// HTML file to output
 	static final String 	HTML_OUT_FILE 	= "maps.html";	
 
+	/**
+	 * @param main Main UltiGPX class which has a reference to the Database
+	 */
 	public GoogleMapView (UltiGPX main) {
 		super(main);
-		
 		this.main = main;
 		
 		webBrowser = new WebBrowser();
@@ -37,17 +43,7 @@ public class GoogleMapView extends MapView {
 				public void documentCompleted(WebBrowserEvent event) {;}
 				public void titleChange(WebBrowserEvent event) {;}
 				public void statusTextChange(WebBrowserEvent event) {;}
-				public void windowClose(WebBrowserEvent event) {
-					if(JOptionPane.YES_OPTION==JOptionPane.showConfirmDialog(
-						webBrowser,
-						"The webpage you are viewing is trying to close the window.\n Do you want to close this window?",
-						"Warning",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE))
-						{
-							System.exit(0);
-						}
-			}
+				public void windowClose(WebBrowserEvent event) {;}
 		});
 		
 		
@@ -59,6 +55,9 @@ public class GoogleMapView extends MapView {
 		return;
 	}
 	
+	/**
+	 * Update the Google Map View if the main file has changed, not otherwise
+	 */
 	protected void load() {
         if (file == main.file)
             return;
@@ -89,7 +88,7 @@ public class GoogleMapView extends MapView {
 	
 	/**
 	 * Take a java Color and convert it to a hex color (NOT prefixed with #)
-	 * @param Java Color object to convert to a hex value
+	 * @param color Color object to convert to a hex value
 	 * @return String value of the hex conversion of the color
 	 */
 	public String getHex (Color color) {
@@ -112,7 +111,9 @@ public class GoogleMapView extends MapView {
 	
 	/**
 	 * Get the javascript string to output a Route or TrackSegment
-	 *
+	 * @param color Color object to use for the color of the PolyString
+	 * @param elements The Route or TrackSegment to get the PolyString for
+	 * @return String which constructs a polystring in Javascript
 	 */
 	private String getPolyString (Color color, ArrayList<Waypoint> elements) {
 		if (elements.size() == 0) return "";
@@ -176,6 +177,7 @@ public class GoogleMapView extends MapView {
 				// Add the Waypoint to the javascript array of waypoints
 				retString = retString + "new GLatLng("+Double.toString(tempWP.lat)+","+Double.toString(tempWP.lon)+"),";
 				// Add the Waypoint to the beginning to have a dot drawn on it
+				// Dots are no longer
 				//retString = "		map.addOverlay(new GMarker(new GLatLng("+Double.toString(tempWP.lat)+","+Double.toString(tempWP.lon)+"),{clickable:false, icon:icon1}));\n" + retString;
 			}
 			
@@ -190,6 +192,11 @@ public class GoogleMapView extends MapView {
 		
 	}
 	
+	/**
+	 *
+	 * @param
+	 * @returns
+	 */
 	private String getPointString (Waypoint wp) {
 		
 		// Add a comment with the Waypoint info
@@ -318,7 +325,12 @@ public class GoogleMapView extends MapView {
 		
 		return;
 	}
-	
+
+
+	/**
+	 * Calculate the google maps zoom level based on the current scale
+	 * @returns int value for the google maps zoom level closest to the current scale
+	 */
 	public int calcZoom () {
 		
 		double prevDiff = 100000000;
