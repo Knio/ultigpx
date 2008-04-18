@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<UltiGPX>
+
+<trk>
+
+</trk>
+
+<trk>
+    <name>06-SEP-05</name>
+    <desc>Route for running</desc>
+
+<trkseg>
+  <trkpt lat="42.891719257" lon="-0.114148362">
+      </trkpt>
+</trkseg>
+</trk>
+
+  <trk>
+    <name>06-SEP-05</name>
+    <desc>Route for running</desc>
+    <type>Track black</type>
+    <extensions>
+      <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+        <color>000000</color>
+      </line>
+    </extensions>
+<trkseg>
+  <trkpt lat="42.891719257" lon="-0.114148362">
+      </trkpt>
+
+  <trkpt lat="42.791342866" lon="-0.144031858">
+    <ele>2144.810791</ele>
+    <time>1980-01-01T00:00:00Z</time>
+    <name>GEAR</name>
+   <desc>Pretty Waypoint</desc>
+     </trkpt>
+
+  <trkpt lat="50.852423497" lon="4.355069669">
+    <ele>13.584351</ele>
+    <time>1970-01-01T00:00:00Z</time>
+    <name>H01</name>
+    <desc>There is a a tree here</desc>
+    <sym>Waypoint</sym>
+    <extensions>
+      <gpxx:WaypointExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.garmin.com/xmlschemas/GpxExtensions/v2 http://www.garmin.com/xmlschemas/GpxExtensions/v2/GpxExtensionsv2.xsd">
+        <gpxx:DisplayMode>SymbolAndName</gpxx:DisplayMode>
+      </gpxx:WaypointExtension>
+    </extensions>
+  </trkpt>
+</trkseg>
+<trkseg>
+  <trkpt lat="42.891719257" lon="-0.114148362">
+      </trkpt>
+
+  <trkpt lat="42.791342866" lon="-0.144031858">
+    <ele>2144.810791</ele>
+    <time>1980-01-01T00:00:00Z</time>
+    <name>GEAR</name>
+   <desc>Pretty Waypoint</desc>
+     </trkpt>
+
+  <trkpt lat="50.852423497" lon="4.355069669">
+    <ele>13.584351</ele>
+    <time>1970-01-01T00:00:00Z</time>
+    <name>H01</name>
+    <desc>There is a a tree here</desc>
+    <sym>Waypoint</sym>
+    <extensions>
+      <gpxx:WaypointExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.garmin.com/xmlschemas/GpxExtensions/v2 http://www.garmin.com/xmlschemas/GpxExtensions/v2/GpxExtensionsv2.xsd">
+        <gpxx:DisplayMode>SymbolAndName</gpxx:DisplayMode>
+      </gpxx:WaypointExtension>
+    </extensions>
+  </trkpt>
+</trkseg>
+</trk>
+
+<group>
+	<trk>2</trk>
+	<trk>0</trk>
+</group>
+
+</UltiGPX>
