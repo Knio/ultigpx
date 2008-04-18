@@ -1,4 +1,5 @@
 package ultigpx;
+
 /**
  * GPXImporterExporterConsants is an interface containing constants for the GPX importer and Exporter
  * @author Jill Ainsworth
@@ -21,9 +22,11 @@ public interface GPXImporterExporterConstants {
     public static final String TIME = "time";
     public static final long DEFAULT_TIME = -1;
     public static final String ROUTE = "rte";
+    public static final String ROUTE_NAME = "name";
     public static final String ROUTE_POINT = "rtept";
     public static final String TRACK = "trk";
     public static final String TRACK_SEGMENT = "trkseg";
+    public static final String TRACK_NAME = "name";
     public static final String TRACK_POINT = "trkpt";
     public static final String GPX_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n" +
             "<gpx creator=\"UltiGPX\" version=\"1.1\">\n" +

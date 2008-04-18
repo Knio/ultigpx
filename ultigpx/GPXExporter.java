@@ -1,13 +1,6 @@
 package ultigpx;
 
-/**
- * Class GPX Exporter is used for Exporting the UltiGPXFile to a GPX file, a KML file or an ultiGPX file
- * The KML file can then be view using Google Earth
- * For more information about Google Earth, see http://earth.google.com/
- * This class was written for the project for CPSC 301, Winter 2008
- * Many of the methods in this class should be rewritten using a jdom writer rather than a java Buffered Writer
- * @author Jill Ainsworth
- */
+
 
 import java.util.*;
 import java.util.Date.*;
@@ -16,6 +9,14 @@ import org.jdom.*;
 import org.jdom.input.*;
 import java.text.*;
 
+/**
+ * Class GPX Exporter is used for Exporting the UltiGPXFile to a GPX file, a KML file or an ultiGPX file
+ * The KML file can then be view using Google Earth
+ * For more information about Google Earth, see http://earth.google.com/
+ * This class was written for the project for CPSC 301, Winter 2008
+ * Many of the methods in this class should be rewritten using a jdom writer rather than a java Buffered Writer
+ * @author Jill Ainsworth
+ */
 public class GPXExporter implements GPXImporterExporterConstants, KMLConstants {
     
     /**
@@ -75,7 +76,7 @@ public class GPXExporter implements GPXImporterExporterConstants, KMLConstants {
                     outputFile.write(TAB + "<" + KMLConstants.KML_TRACK_ROUTE_HEADER + ">\n");
                     outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_NAME + ">" + currentTrack.getName() + "</" + KMLConstants.KML_TRACK_ROUTE_NAME + ">\n");
                     outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_DESCRIPTION + ">" + currentTrack.getDesc() + "</" + KMLConstants.KML_TRACK_ROUTE_DESCRIPTION + ">\n");
-                    outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_POINT_STYLE + "=\"" + KMLConstants.KML_TRACK_ROUTE_POINT_DEFAULT_STYLE + "\">\n");
+                    outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_STYLE_ID + "=\"" + KMLConstants.KML_TRACK_ROUTE_POINT_DEFAULT_STYLE + "\">\n");
                     outputFile.write(TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_LINE_STYLE + ">\n");
                     outputFile.write(TAB + TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_COLOR + ">" + currentTrack.getColor() + "</" + KMLConstants.KML_TRACK_ROUTE_COLOR + ">\n");
                     outputFile.write(TAB + TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_LINE_WIDTH + ">" + KMLConstants.KML_TRACK_ROUTE_DEFAULT_WIDTH + "</" + KMLConstants.KML_TRACK_ROUTE_LINE_WIDTH + ">\n");
@@ -83,7 +84,7 @@ public class GPXExporter implements GPXImporterExporterConstants, KMLConstants {
                     outputFile.write(TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_POLYGON_STYLE + ">\n");
                     outputFile.write(TAB + TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_POLYGON_COLOR + ">" + currentTrack.getColor() + "</" + KMLConstants.KML_TRACK_ROUTE_POLYGON_COLOR + ">\n");
                     outputFile.write(TAB + TAB + TAB + "</" + KMLConstants.KML_TRACK_ROUTE_POLYGON_STYLE + ">\n");
-                    outputFile.write(TAB + TAB + "</" + KMLConstants.KML_TRACK_ROUTE_POINT_STYLE + ">\n");
+                    outputFile.write(TAB + TAB + "</" + KMLConstants.KML_TRACK_ROUTE_STYLE + ">\n");
                     outputFile.write(TAB + TAB + "<" + KMLConstants.KML_WAYPOINT + ">\n");
                     outputFile.write(TAB + TAB + TAB  + "<" + KMLConstants.KML_WAYPOINT_NAME + ">" + currentTrack.getName() + "</" + KMLConstants.KML_WAYPOINT_NAME + ">\n");
                     outputFile.write(TAB + TAB + TAB + "<" + KMLConstants.KML_WAYPOINT_DESCRIPTION + ">" + currentTrack.getDesc() + "</" + KMLConstants.KML_WAYPOINT_DESCRIPTION + ">\n");
@@ -127,7 +128,7 @@ public class GPXExporter implements GPXImporterExporterConstants, KMLConstants {
                     outputFile.write(TAB + "<" + KMLConstants.KML_TRACK_ROUTE_HEADER + ">\n");
                     outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_NAME + ">" + currentRoute.getName() + "</" + KMLConstants.KML_TRACK_ROUTE_NAME + ">\n");
                     outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_DESCRIPTION + ">" + currentRoute.getDesc() + "</" + KMLConstants.KML_TRACK_ROUTE_DESCRIPTION + ">\n");
-                    outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_POINT_STYLE + "=\"" + KMLConstants.KML_TRACK_ROUTE_POINT_DEFAULT_STYLE + "\">\n");
+                    outputFile.write(TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_STYLE_ID + "=\"" + KMLConstants.KML_TRACK_ROUTE_POINT_DEFAULT_STYLE + "\">\n");
                     outputFile.write(TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_LINE_STYLE + ">\n");
                     outputFile.write(TAB + TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_COLOR + ">" + currentRoute.getColor() + "</" + KMLConstants.KML_TRACK_ROUTE_COLOR + ">\n");
                     outputFile.write(TAB + TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_LINE_WIDTH + ">" + KMLConstants.KML_TRACK_ROUTE_DEFAULT_WIDTH + "</" + KMLConstants.KML_TRACK_ROUTE_LINE_WIDTH + ">\n");
@@ -135,7 +136,7 @@ public class GPXExporter implements GPXImporterExporterConstants, KMLConstants {
                     outputFile.write(TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_POLYGON_STYLE + ">\n");
                     outputFile.write(TAB + TAB + TAB + TAB + "<" + KMLConstants.KML_TRACK_ROUTE_POLYGON_COLOR + ">" + currentRoute.getColor() + "</" + KMLConstants.KML_TRACK_ROUTE_POLYGON_COLOR + ">\n");
                     outputFile.write(TAB + TAB + TAB + "</" + KMLConstants.KML_TRACK_ROUTE_POLYGON_STYLE + ">\n");
-                    outputFile.write(TAB + TAB + "</" + KMLConstants.KML_TRACK_ROUTE_POINT_STYLE + ">\n");
+                    outputFile.write(TAB + TAB + "</" + KMLConstants.KML_TRACK_ROUTE_STYLE + ">\n");
                     outputFile.write(TAB + TAB + "<" + KMLConstants.KML_WAYPOINT + ">\n");
                     outputFile.write(TAB + TAB + TAB  + "<" + KMLConstants.KML_WAYPOINT_NAME + ">" + currentRoute.getName() + "</" + KMLConstants.KML_WAYPOINT_NAME + ">\n");
                     outputFile.write(TAB + TAB + TAB + "<" + KMLConstants.KML_WAYPOINT_DESCRIPTION + ">" + currentRoute.getDesc() + "</" + KMLConstants.KML_WAYPOINT_DESCRIPTION + ">\n");
@@ -652,8 +653,8 @@ public class GPXExporter implements GPXImporterExporterConstants, KMLConstants {
      */
     private static String convertTime(long toConvert) {
         //Return the converted time
-        return new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").format(toConvert);
+        return new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss'z'").format(toConvert);
         
     } //end getTime
     
-} //end GPXExporter    
+} //end GPXExporter

@@ -1,6 +1,5 @@
 package ultigpx;
 
-
 /**
  * KMLConsants is an interface containing constants for the KML Exporter
  * @author Jill Ainsworth
@@ -22,7 +21,8 @@ public interface KMLConstants {
     public static final String KML_TRACK_ROUTE_HEADER = "Document";
     public static final String KML_TRACK_ROUTE_NAME = "name";
     public static final String KML_TRACK_ROUTE_DESCRIPTION = "description";
-    public static final String KML_TRACK_ROUTE_STYLE = "Style id";
+    public static final String KML_TRACK_ROUTE_STYLE_ID = "Style id";
+    public static final String KML_TRACK_ROUTE_STYLE = "Style";
     public static final String KML_TRACK_ROUTE_DEFAULT_STYLE = "yellowLineGreePoly";
     public static final String KML_TRACK_ROUTE_LINE_STYLE = "LineStyle";
     public static final String KML_TRACK_ROUTE_COLOR = "color";

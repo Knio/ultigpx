@@ -1,12 +1,6 @@
 package ultigpx;
 
 
-/**
- * Class GPX Importer is used for importing a file into the UltiGPXFile structure.  It uses JDOM for processing XML.
- * For more information about JDOM visit http://www.jdom.org/
- * This class was written for the project for CPSC 301, Winter 2008
- * @author Jill Ainsworth
- */
 
 import java.util.*;
 import java.io.*;
@@ -15,6 +9,13 @@ import org.jdom.input.*;
 import java.text.*;
 import org.jdom.output.XMLOutputter;
 
+
+/**
+ * Class GPX Importer is used for importing a file into the UltiGPXFile structure.  It uses JDOM for processing XML.
+ * For more information about JDOM visit http://www.jdom.org/
+ * This class was written for the project for CPSC 301, Winter 2008
+ * @author Jill Ainsworth
+ */
 public class GPXImporter implements GPXImporterExporterConstants {
     
     /**
@@ -34,7 +35,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
             Element root = inputFile.getRootElement();
             
             // If the root is not GPX, throw an execption
-            if (!root.getName().equals(GPX))
+            if ((!root.getName().equals(GPX)) && (!root.getName().equals(ULTI_GPX)))
                 throw new IOException();
             
             // Get each of the children
@@ -80,12 +81,14 @@ public class GPXImporter implements GPXImporterExporterConstants {
                     Iterator routeChildIterator = routeChildList.iterator();
                     Route newRoute = new Route();
                     
-                    //For each point in the route
+                    //Get route children
                     while(routeChildIterator.hasNext()) {
+                        //For each route child
                         Element currentRouteChild = (Element) routeChildIterator.next();
+                        
+                        //If it is a rout point
                         if (currentRouteChild.getName().equals(ROUTE_POINT)) {
-                            //Make variable to represent name, description, elevation and time for that point
-                            List waypointChildList = currentElement.getChildren();
+                            List waypointChildList = currentRouteChild.getChildren();
                             Iterator waypointChildIterator = waypointChildList.iterator();
                             String name = DEFAULT_NAME;
                             String desc = DEFAULT_DESCRIPTION;
@@ -105,14 +108,21 @@ public class GPXImporter implements GPXImporterExporterConstants {
                                     time = getTime(currentWaypointChild.getText());
                             } //end while
                             
-                            //Add point to the route
+                            //Add trackpoints to track segments
                             Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
                             newRoute.add(newWaypoint);
                             
-                        } //end if waypoint
-                    } //end while
-                    
-                    //Add route to group
+                        } //end if route point
+                        
+                        //If it is a name for the track, import it
+                        else if (currentRouteChild.getName().equals(ROUTE_NAME))
+                            newRoute.setName(currentRouteChild.getText());
+                        
+                        //If this is the description of the route, read it in
+                        else if (currentRouteChild.getName().equals(DESCRIPTION))
+                            newRoute.setDesc(currentRouteChild.getText());
+                        
+                    } //end while for getting track segments
                     inputGroup.addRoute(newRoute);
                 } //end if route
                 
@@ -170,6 +180,15 @@ public class GPXImporter implements GPXImporterExporterConstants {
                             newTrack.add(newTrackSegment);
                             
                         } //end if track segment
+                        
+                        //If it is a name for the track, import it
+                        else if (currentTrackChild.getName().equals(TRACK_NAME))
+                            newTrack.setName(currentTrackChild.getText());
+                        
+                        //If this is the description of the route, read it in
+                        else if (currentTrackChild.getName().equals(DESCRIPTION))
+                            newTrack.setDesc(currentTrackChild.getText());
+                        
                     } //end while for getting track segments
                     inputGroup.addTrack(newTrack);
                 } //end if track
@@ -219,199 +238,82 @@ public class GPXImporter implements GPXImporterExporterConstants {
      * @throws JDOMException if a problem occurs when importing the file
      * @throws IOException if a problem occurs when importing the file
      */
-    
     public static void importUltiGPX(Database inputDatabase, String filename) throws JDOMException, IOException {
-        // Create a new UGPXFile to put data in
-        Group returnValue = new Group();
+        //Import everything into the database
+        importGPX(inputDatabase, filename);
         
         // Create the document from the input stream using JAXPDOM adapter
         Document inputFile = new SAXBuilder().build(new File(filename));
         
         // Get the root Element document.getRootElement
-        if (inputFile.hasRootElement()) {
-            Element root = inputFile.getRootElement();
-            
-            // If the root is not Ulti_gpx, throw an execption
-            if (!root.getName().equals(ULTI_GPX))
-                throw new IOException();
-            
-            // Get each of the children
-            List childList = root.getChildren();
-            
-            //For every child, read it in
-            Iterator childListIterator = childList.iterator();
-            while (childListIterator.hasNext()) {
-                Element currentElement = (Element) childListIterator.next();
-                
-                //Determine the type of this element
-                //If it is a waypoint
-                if (currentElement.getName().equals(WAYPOINT)) {
-                    //Make variables to represent name, description, elevation and time for the waypoint
-                    List waypointChildList = currentElement.getChildren();
-                    Iterator waypointChildIterator = waypointChildList.iterator();
-                    String name = DEFAULT_NAME;
-                    String desc = DEFAULT_DESCRIPTION;
-                    double ele = DEFAULT_ELEVATION;
-                    long time = DEFAULT_TIME;
-                    
-                    //Extrack name, description, elevation, and time
-                    while(waypointChildIterator.hasNext()) {
-                        Element currentWaypointChild = (Element) waypointChildIterator.next();
-                        if (currentWaypointChild.getName().equals(NAME))
-                            name = currentWaypointChild.getText();
-                        else if (currentWaypointChild.getName().equals(DESCRIPTION))
-                            desc = currentWaypointChild.getText();
-                        else if (currentWaypointChild.getName().equals(ELEVATION))
-                            ele = Double.parseDouble(currentWaypointChild.getText());
-                        else if (currentWaypointChild.getName().equals(TIME))
-                            time = getTime(currentWaypointChild.getText());
-                    } //end while
-                    
-                    //Add the waypoint to the database
-                    returnValue.addWaypoint( new Waypoint(name, desc, currentElement.getAttribute(LATITUDE).getDoubleValue(), currentElement.getAttribute(LONGITUDE).getDoubleValue(), ele, time));
-                } //end if waypoint
-                
-                //If it is a route
-                else if (currentElement.getName().equals(ROUTE)) {
-                    //Make variables to keep track of points in the route
-                    List routeChildList = currentElement.getChildren();
-                    Iterator routeChildIterator = routeChildList.iterator();
-                    Route newRoute = new Route();
-                    
-                    //For each point in the route
-                    while(routeChildIterator.hasNext()) {
-                        Element currentRouteChild = (Element) routeChildIterator.next();
-                        if (currentRouteChild.getName().equals(ROUTE_POINT)) {
-                            //Make variable to represent name, description, elevation and time for that point
-                            List waypointChildList = currentElement.getChildren();
-                            Iterator waypointChildIterator = waypointChildList.iterator();
-                            String name = DEFAULT_NAME;
-                            String desc = DEFAULT_DESCRIPTION;
-                            double ele = DEFAULT_ELEVATION;
-                            long time = DEFAULT_TIME;
-                            
-                            //Extract name, description, elevation, and time
-                            while(waypointChildIterator.hasNext()) {
-                                Element currentWaypointChild = (Element) waypointChildIterator.next();
-                                if (currentWaypointChild.getName().equals(NAME))
-                                    name = currentWaypointChild.getText();
-                                else if (currentWaypointChild.getName().equals(DESCRIPTION))
-                                    desc = currentWaypointChild.getText();
-                                else if (currentWaypointChild.getName().equals(ELEVATION))
-                                    ele = Double.parseDouble(currentWaypointChild.getText());
-                                else if (currentWaypointChild.getName().equals(TIME))
-                                    time = getTime(currentWaypointChild.getText());
-                            } //end while
-                            
-                            //Add point to the route
-                            Waypoint newWaypoint = new Waypoint(name, desc, currentRouteChild.getAttribute(LATITUDE).getDoubleValue(), currentRouteChild.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
-                            newRoute.add(newWaypoint);
-                            
-                        } //end if waypoint
-                        
-                        else if (currentRouteChild.getName().equals(NAME))
-                            newRoute.setName(currentRouteChild.getText());
-                        
-                    } //end while
-                    
-                    //Add route to database
-                    returnValue.addRoute(newRoute);
-                } //end if route
-                
-                //If it is a track
-                else if (currentElement.getName().equals(TRACK)) {
-                    //Make variables to keep track of points in the route
-                    List trackChildList = currentElement.getChildren();
-                    Iterator trackChildIterator = trackChildList.iterator();
-                    Track newTrack = new Track();
-                    
-                    //Get track segments
-                    while(trackChildIterator.hasNext()) {
-                        //For each track segment
-                        Element currentTrackChild = (Element) trackChildIterator.next();
-                        if (currentTrackChild.getName().equals(TRACK_SEGMENT)) {
-                            //Extract Information about that track segment
-                            List trackSegmentList = currentTrackChild.getChildren();
-                            Iterator trackSegmentIterator = trackSegmentList.iterator();
-                            TrackSegment newTrackSegment = new TrackSegment();
-                            
-                            //Get trackpoints
-                            while (trackSegmentIterator.hasNext()){
-                                //Make variable to represent name, description, elevation and time for that point
-                                Element currentTrackSegment = (Element) trackSegmentIterator.next();
-                                if (currentTrackSegment.getName().equals(TRACK_POINT)) {
-                                    List waypointChildList = currentTrackSegment.getChildren();
-                                    Iterator waypointChildIterator = waypointChildList.iterator();
-                                    String name = DEFAULT_NAME;
-                                    String desc = DEFAULT_DESCRIPTION;
-                                    double ele = DEFAULT_ELEVATION;
-                                    long time = DEFAULT_TIME;
-                                    
-                                    //Extract name, description, elevation, and time
-                                    while(waypointChildIterator.hasNext()) {
-                                        Element currentWaypointChild = (Element) waypointChildIterator.next();
-                                        if (currentWaypointChild.getName().equals(NAME))
-                                            name = currentWaypointChild.getText();
-                                        else if (currentWaypointChild.getName().equals(DESCRIPTION))
-                                            desc = currentWaypointChild.getText();
-                                        else if (currentWaypointChild.getName().equals(ELEVATION))
-                                            ele = Double.parseDouble(currentWaypointChild.getText());
-                                        else if (currentWaypointChild.getName().equals(TIME))
-                                            time = getTime(currentWaypointChild.getText());
-                                    } //end while
-                                    
-                                    //Add trackpoints to track segments
-                                    Waypoint newWaypoint = new Waypoint(name, desc, currentTrackSegment.getAttribute(LATITUDE).getDoubleValue(), currentTrackSegment.getAttribute(LONGITUDE).getDoubleValue(), ele, time);
-                                    newTrackSegment.add(newWaypoint);
-                                    
-                                    
-                                } //end if track point
-                            } //end while get trackpoints
-                            
-                            //Add track segments to track
-                            newTrackSegment.setParent(newTrack);
-                            newTrack.add(newTrackSegment);
-                            
-                        } //end if track segment
-                    } //end while for getting track segments
-                    returnValue.addTrack(newTrack);
-                } //end if track
-                
-                //If it is a group
-                //When we import a group, for each route, track, the index of the object in the default list is given, so add it to the group
-                else if(currentElement.getName().equals(GROUP)) {
-                    //Make variables to keep track of points in the route
-                    List groupChildList = currentElement.getChildren();
-                    Iterator groupChildIterator = groupChildList.iterator();
-                    Group newGroup = new Group();
-                    
-                    //For each object in the group
-                    while(groupChildIterator.hasNext()) {
-                        Element currentGroupChild = (Element) groupChildIterator.next();
-                        //Add name
-                        if (currentGroupChild.getName().equals(NAME))
-                            newGroup.name = currentGroupChild.getText();
-                        
-                        //Add waypoint
-                        else if (currentGroupChild.getName().equals(WAYPOINT))
-                            newGroup.addWaypoint(returnValue.getWaypoint(Integer.parseInt(currentGroupChild.getText())));
-                        
-                        //Add track
-                        else if (currentGroupChild.getName().equals(TRACK))
-                            newGroup.addTrack(returnValue.getTrack(Integer.parseInt(currentGroupChild.getText())));
-                        
-                        //Add route
-                        else if (currentGroupChild.getName().equals(ROUTE))
-                            newGroup.addRoute(returnValue.getRoute(Integer.parseInt(currentGroupChild.getText())));
-                        
-                    } //end for each element in the group
-                } //end if group
-                
-            } //end while
-        } //end if has root
+        if (!inputFile.hasRootElement())
+            throw new IOException();
+        Element root = inputFile.getRootElement();
         
-        else //!inputFile.hasRootElement()
-            throw new JDOMException();
+        // If the root is not Ulti_gpx, throw an execption
+        if (!root.getName().equals(ULTI_GPX))
+            throw new IOException();
+        
+        // Get each of the children
+        List childList = root.getChildren();
+        
+        //For every child, read it in
+        Iterator childListIterator = childList.iterator();
+        while (childListIterator.hasNext()) {
+            Element currentElement = (Element) childListIterator.next();
+            
+            //Determine the type of this element
+            //Waypoints, routes and tracks are already in the database, so we only worry about groups
+            //If it is a group
+            //When we import a group, for each route, track, the index of the object in the default list is given, so add it to the group
+            if(currentElement.getName().equals(GROUP)) {
+                //Make variables to keep track of points in the route
+                List groupChildList = currentElement.getChildren();
+                Iterator groupChildIterator = groupChildList.iterator();
+                Group newGroup = new Group();
+                
+                //For each object in the group
+                while(groupChildIterator.hasNext()) {
+                    Element currentGroupChild = (Element) groupChildIterator.next();
+                    //Add name
+                    if (currentGroupChild.getName().equals(NAME))
+                        newGroup.name = currentGroupChild.getText();
+                    
+                    //Add waypoint
+                    else if (currentGroupChild.getName().equals(WAYPOINT)) {
+                        //Get waypoint number
+                        int waypointNumber = Integer.parseInt(currentGroupChild.getText());
+                        //Get waypoint
+                        Waypoint newWaypoint = inputDatabase.waypoints().get(waypointNumber);
+                        //Add waypoint to the group
+                        newGroup.addWaypoint(newWaypoint);
+                    }//end add waypoint
+                    
+                    //Add track
+                    else if (currentGroupChild.getName().equals(TRACK)) {
+                        //Get track number
+                        int trackNumber = Integer.parseInt(currentGroupChild.getText());
+                        //Get track
+                        Track newTrack = inputDatabase.tracks().get(trackNumber);
+                        //Add track to the group
+                        newGroup.addTrack(newTrack);
+                    } //end add track
+                    
+                    //Add route
+                    else if (currentGroupChild.getName().equals(ROUTE)) {
+                        //Get route number
+                        int routeNumber = Integer.parseInt(currentGroupChild.getText());
+                        //Get route
+                        Route newRoute = inputDatabase.routes().get(routeNumber);
+                        //Add route to the group
+                        newGroup.addRoute(newRoute);
+                    } //end add route
+                    
+                } //end for each element in the group
+            } //end if group
+            
+        } //end while
+        
     } //end importUltiGPX (database)
     
     /**
@@ -471,7 +373,7 @@ public class GPXImporter implements GPXImporterExporterConstants {
     private static long getTime(String toParse) {
         //Try to format the date and return it
         try{
-            Date newDate = new SimpleDateFormat("yyy-mm-dd'T'HH:mm:ss'z'").parse(toParse);
+            Date newDate = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss'z'").parse(toParse);
             return newDate.getTime();
             
             //If there is a problem, return a time of -1
